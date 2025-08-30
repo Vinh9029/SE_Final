@@ -7,19 +7,39 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
-            background: linear-gradient(135deg, #fc466b 0%, #3f5efb 100%);
-            min-height: 100vh;
+            background: url('Photos/test2.jpg') no-repeat center center fixed;
+            background-size: cover;
+            /* min-height: 100vh; */
             display: flex;
             align-items: center;
             justify-content: center;
             font-family: 'Segoe UI', Arial, sans-serif;
         }
+        .side-image-box {
+            width: 390px;
+            height: 446px;
+            /* padding-right: 120px; */
+            background: rgba(255,255,255,0.10);
+            border-radius: 30px 10 0 20px;
+            margin-right: 10px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+            border-style: solid 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        @media (max-width: 900px) {
+            .side-image-box {
+                display: none;
+            }
+        }
         .login-container {
-            background: rgba(255,255,255,0.13);
-            border-radius: 20px;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            background: rgba(255,255,255,0.1);
+            border-radius: 0 20px 20px 0;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.32);
             padding: 40px 32px 32px 32px;
-            width: 400px;
+            width: 330px;
             max-width: 95vw;
             display: flex;
             flex-direction: column;
@@ -146,36 +166,42 @@
         .login-btn:hover {
             background: #3f5efb;
         }
+    
     </style>
 </head>
 <body>
-    <div class="login-container">
-        <div class="profile-icon">
-            <i class="fa-solid fa-user"></i>
+    <div style="display: flex; align-items: center; justify-content: center; min-height: 100vh;">
+        <div class="side-image-box">
+            <img id = "login_banner"src="Photos/login_background1 (2).jpg" alt="Login Illustration" style="width:100%; height:100%; object-fit:cover; border-radius:20px 0 0 20px;" />
         </div>
-        <div style="display: flex; gap: 8px; margin-bottom: 10px;">
-            <button class="switch-btn active" id="userBtn" onclick="switchRole('user')">User</button>
-            <button class="switch-btn" id="adminBtn" onclick="switchRole('admin')">Admin</button>
-        </div>
-        <form>
-            <div class="input-group">
+        <div class="login-container">
+            <div class="profile-icon">
                 <i class="fa-solid fa-user"></i>
-                <input type="text" placeholder="Username" required>
             </div>
-            <div class="input-group">
-                <i class="fa-solid fa-lock"></i>
-                <input type="password" placeholder="Password" required id="password">
-                <span class="toggle-password" onclick="togglePassword()">
-                    <i class="fa-regular fa-eye" id="eyeIcon"></i>
-                    <i class="fa-regular fa-eye" id="eyeIcon"></i>
-                </span>
+            <div style="display: flex; gap: 8px; margin-bottom: 10px;">
+                <button class="switch-btn active" id="userBtn" onclick="switchRole('user')">User</button>
+                <button class="switch-btn" id="adminBtn" onclick="switchRole('admin')">Admin</button>
             </div>
-            <div class="options">
-                <label class="remember"><input type="checkbox"> Remember me</label>
-                <span class="forgot" onclick="alert('Password recovery coming soon!')">Forgot your password?</span>
-            </div>
-            <button type="submit" class="login-btn">LOGIN</button>
-        </form>
+            <form>
+                <div class="input-group">
+                    <i class="fa-solid fa-user"></i>
+                    <input type="text" placeholder="Username" required>
+                </div>
+                <div class="input-group">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" placeholder="Password" required id="password">
+                    <span class="toggle-password" onclick="togglePassword()">
+                        <i class="fa-regular fa-eye" id="eyeIcon"></i>
+                        <i class="fa-regular fa-eye" id="eyeIcon"></i>
+                    </span>
+                </div>
+                <div class="options">
+                    <label class="remember"><input type="checkbox"> Remember me</label>
+                    <span class="forgot" onclick="alert('Password recovery coming soon!')">Forgot your password?</span>
+                </div>
+                <button type="submit" class="login-btn">LOGIN</button>
+            </form>
+        </div>
     </div>
     <script>
         function switchRole(role) {
