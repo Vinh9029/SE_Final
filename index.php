@@ -92,6 +92,7 @@
             padding: 0;
             display: flex;
             align-items: center;
+            padding-left: 30px;
         }
         .toggle-password:hover {
             color: #fc466b;
@@ -165,6 +166,7 @@
                 <i class="fa-solid fa-lock"></i>
                 <input type="password" placeholder="Password" required id="password">
                 <span class="toggle-password" onclick="togglePassword()">
+                    <i class="fa-regular fa-eye" id="eyeIcon"></i>
                     <i class="fa-regular fa-eye" id="eyeIcon"></i>
                 </span>
             </div>
