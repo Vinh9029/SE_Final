@@ -17,10 +17,10 @@
         }
         .side-image-box {
             width: 390px;
-            height: 446px;
+            height: 484px;
             /* padding-right: 120px; */
             background: rgba(255,255,255,0.10);
-            border-radius: 30px 10 0 20px;
+            border-radius: 60px 10 0 20px;
             margin-right: 10px;
             box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
             border-style: solid 20px;
@@ -166,7 +166,51 @@
         .login-btn:hover {
             background: #3f5efb;
         }
-    
+        .register-link {
+            margin-top: 16px;
+            text-align: center;
+            color: #fff;
+            font-size: 1rem;
+        }
+        .register-link a {
+            color: #fc466b;
+            text-decoration: underline;
+            margin-left: 6px;
+            cursor: pointer;
+        }
+        .register-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .register-content {
+            background: #fff;
+            border-radius: 16px;
+            padding: 32px 24px;
+            min-width: 320px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .register-content h2 {
+            color: #fc466b;
+            margin-bottom: 18px;
+        }
+        .register-content .input-group i {
+            color: #fc466b;
+        }
+        .register-content .login-btn {
+            width: 100%;
+            margin-top: 12px;
+        }
     </style>
 </head>
 <body>
@@ -192,14 +236,38 @@
                     <input type="password" placeholder="Password" required id="password">
                     <span class="toggle-password" onclick="togglePassword()">
                         <i class="fa-regular fa-eye" id="eyeIcon"></i>
-                        <i class="fa-regular fa-eye" id="eyeIcon"></i>
                     </span>
                 </div>
                 <div class="options">
-                    <label class="remember"><input type="checkbox"> Remember me</label>
-                    <span class="forgot" onclick="alert('Password recovery coming soon!')">Forgot your password?</span>
+                    <label class="remember"><input type="checkbox"><strong>Remember me</strong></label>
+                    <span class="forgot" onclick="alert('Password recovery coming soon!')"><strong>Forgot your password?</strong> </span>
                 </div>
                 <button type="submit" class="login-btn">LOGIN</button>
+                <div class="register-link">
+                    <span><strong>Don't have an account?</strong></span>
+                    <a href="#" onclick="showRegister()"><strong>Register </strong></a>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="register-modal" class="register-modal" style="display:none;">
+        <div class="register-content">
+            <h2>Register Account</h2>
+            <form>
+                <div class="input-group">
+                    <i class="fa-solid fa-user"></i>
+                    <input type="text" placeholder="Username" required>
+                </div>
+                <div class="input-group">
+                    <i class="fa-solid fa-envelope"></i>
+                    <input type="email" placeholder="Email" required>
+                </div>
+                <div class="input-group">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" placeholder="Password" required>
+                </div>
+                <button type="submit" class="login-btn">Create Account</button>
+                <button type="button" class="login-btn" style="background:#888; margin-top:8px;" onclick="hideRegister()">Cancel</button>
             </form>
         </div>
     </div>
@@ -228,6 +296,14 @@
                 passwordInput.type = 'password';
                 eyeIcon.className = 'fa-regular fa-eye';
             }
+        }
+
+        function showRegister() {
+            document.getElementById('register-modal').style.display = 'flex';
+        }
+
+        function hideRegister() {
+            document.getElementById('register-modal').style.display = 'none';
         }
     </script>
 </body>
