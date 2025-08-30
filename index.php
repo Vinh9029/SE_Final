@@ -15,11 +15,12 @@
             font-family: 'Segoe UI', Arial, sans-serif;
         }
         .login-container {
-            background: rgba(255,255,255,0.08);
-            border-radius: 16px;
+            background: rgba(255,255,255,0.13);
+            border-radius: 20px;
             box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-            padding: 40px 32px;
-            width: 350px;
+            padding: 40px 32px 32px 32px;
+            width: 400px;
+            max-width: 95vw;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -51,33 +52,56 @@
             width: 100%;
             margin-bottom: 18px;
             position: relative;
+            display: flex;
+            align-items: center;
         }
         .input-group i {
             position: absolute;
-            left: 12px;
+            left: 16px;
             top: 50%;
             transform: translateY(-50%);
             color: #3f5efb;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
+            z-index: 2;
         }
         .input-group input {
             width: 100%;
-            padding: 12px 12px 12px 38px;
-            border-radius: 8px;
+            padding: 12px 60px 12px 44px;
+            border-radius: 10px;
             border: none;
             background: rgba(255,255,255,0.25);
             color: #222;
             font-size: 1rem;
             outline: none;
+            box-sizing: border-box;
         }
         .input-group input::placeholder {
             color: #888;
+        }
+        .toggle-password {
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            z-index: 2;
+            color: #3f5efb;
+            font-size: 1.3rem;
+            background: transparent;
+            border: none;
+            padding: 0;
+            display: flex;
+            align-items: center;
+        }
+        .toggle-password:hover {
+            color: #fc466b;
         }
         .hint {
             font-size: 0.85rem;
             color: #fc466b;
             margin-top: 2px;
             margin-left: 4px;
+            margin-bottom: -10px;
         }
         .options {
             width: 100%;
@@ -140,7 +164,9 @@
             <div class="input-group">
                 <i class="fa-solid fa-lock"></i>
                 <input type="password" placeholder="Password" required id="password">
-                <div class="hint">Hint: At least 8 characters, 1 uppercase, 1 number</div>
+                <span class="toggle-password" onclick="togglePassword()">
+                    <i class="fa-regular fa-eye" id="eyeIcon"></i>
+                </span>
             </div>
             <div class="options">
                 <label class="remember"><input type="checkbox"> Remember me</label>
@@ -161,6 +187,18 @@
                 adminBtn.classList.add('active');
                 userBtn.classList.remove('active');
                 document.querySelector('.profile-icon i').className = 'fa-solid fa-user-tie';
+            }
+        }
+
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const eyeIcon = document.getElementById('eyeIcon');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeIcon.className = 'fa-regular fa-eye-slash';
+            } else {
+                passwordInput.type = 'password';
+                eyeIcon.className = 'fa-regular fa-eye';
             }
         }
     </script>
