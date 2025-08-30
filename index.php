@@ -150,6 +150,18 @@
         .forgot:hover {
             color: #fc466b;
         }
+        .forgot a,
+        .register-link a {
+            color: #fc466b;
+            text-decoration: underline;
+            margin-left: 6px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .forgot a:hover,
+        .register-link a:hover {
+            color: #3f5efb;
+        }
         .login-btn {
             width: 100%;
             background: #fc466b;
@@ -240,12 +252,12 @@
                 </div>
                 <div class="options">
                     <label class="remember"><input type="checkbox"><strong>Remember me</strong></label>
-                    <span class="forgot" onclick="alert('Password recovery coming soon!')"><strong>Forgot your password?</strong> </span>
+                    <span class="forgot"><a href="resetPassword.php"><strong>Forgot your password?</strong></a></span>
                 </div>
                 <button type="submit" class="login-btn">LOGIN</button>
                 <div class="register-link">
                     <span><strong>Don't have an account?</strong></span>
-                    <a href="#" onclick="showRegister()"><strong>Register </strong></a>
+                    <a href="registerAccount.php"><strong>Register</strong></a>
                 </div>
             </form>
         </div>
