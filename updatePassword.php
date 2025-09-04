@@ -118,6 +118,12 @@
             margin-bottom: 10px;
             font-size: 1rem;
             text-align: center;
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .error-message.show {
+            opacity: 1;
         }
     </style>
 </head>
@@ -132,11 +138,11 @@
             <form id="updateForm" onsubmit="handleUpdate(event)">
                 <div class="input-group">
                     <i class="fa-solid fa-lock"></i>
-                    <input type="password" placeholder="New Password" required id="newPassword">
+                    <input type="password" placeholder="Password" required id="newPassword">
                 </div>
                 <div class="input-group">
                     <i class="fa-solid fa-lock"></i>
-                    <input type="password" placeholder="Confirm New Password" required id="confirmNewPassword">
+                    <input type="password" placeholder="Confirm Password" required id="confirmNewPassword">
                 </div>
                 <div id="errorMessage" class="error-message"></div>
                 <button type="submit" class="update-btn">Update Password</button>
@@ -153,15 +159,34 @@
             var newPassword = document.getElementById('newPassword').value;
             var confirmNewPassword = document.getElementById('confirmNewPassword').value;
             var errorMessage = document.getElementById('errorMessage');
+            var hasSymbol = /[!@#$%^&*(),.?":{}|<>]/.test(newPassword);
+            var hasUppercase = /[A-Z]/.test(newPassword);
             if (newPassword !== confirmNewPassword) {
-                errorMessage.innerText = "Passwords do not match.";
+                errorMessage.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Passwords do not match.';
+                errorMessage.classList.add('show');
+                setTimeout(function(){ errorMessage.classList.remove('show'); errorMessage.innerText = ''; }, 1500);
                 return;
             }
             if (newPassword.length < 8) {
-                errorMessage.innerText = "Password must be at least 8 characters.";
+                errorMessage.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Password must be at least 8 characters.';
+                errorMessage.classList.add('show');
+                setTimeout(function(){ errorMessage.classList.remove('show'); errorMessage.innerText = ''; }, 2500);
+                return;
+            }
+            if (!hasSymbol) {
+                errorMessage.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Password must contain at least one special symbol.';
+                errorMessage.classList.add('show');
+                setTimeout(function(){ errorMessage.classList.remove('show'); errorMessage.innerText = ''; }, 2500);
+                return;
+            }
+            if (!hasUppercase) {
+                errorMessage.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Password must contain at least one uppercase letter.';
+                errorMessage.classList.add('show');
+                setTimeout(function(){ errorMessage.classList.remove('show'); errorMessage.innerText = ''; }, 2500);
                 return;
             }
             errorMessage.innerText = "";
+            errorMessage.classList.remove('show');
             alert("Password updated successfully! (Demo only)");
             window.location.href = "index.php";
         }

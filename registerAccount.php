@@ -94,6 +94,17 @@
         .back-link a:hover {
             color: #3f5efb;
         }
+        .error-message {
+            color: #fc466b;
+            margin-bottom: 10px;
+            font-size: 1rem;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+        .error-message.show {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
@@ -114,12 +125,13 @@
             </div>
             <div class="input-group">
                 <i class="fa-solid fa-lock"></i>
-                <input type="password" placeholder="Password" required id="password">
+                <input type="password" placeholder="New Password" required id="password">
             </div>
             <div class="input-group">
                 <i class="fa-solid fa-lock"></i>
-                <input type="password" placeholder="Confirm Password" required id="confirm_password">
+                <input type="password" placeholder="Confirm New Password" required id="confirm_password">
             </div>
+            <div id="errorMessage" class="error-message"></div>
             <button type="submit" class="register-btn">Create Account</button>
         </form>
         <div class="back-link">
@@ -127,5 +139,44 @@
             <a href="index.php">Login</a>
         </div>
     </div>
+    <script>
+        document.querySelector('form').addEventListener('submit', function(e) {
+            var password = document.getElementById('password').value;
+            var confirmPassword = document.getElementById('confirm_password').value;
+            var errorMessage = document.getElementById('errorMessage');
+            var hasSymbol = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+            var hasUppercase = /[A-Z]/.test(password);
+            if (password !== confirmPassword) {
+                errorMessage.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Passwords do not match.';
+                errorMessage.classList.add('show');
+                e.preventDefault();
+                setTimeout(function(){ errorMessage.classList.remove('show'); errorMessage.innerText = ''; }, 1500);
+                return;
+            }
+            if (password.length < 8) {
+                errorMessage.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Password must be at least 8 characters.';
+                errorMessage.classList.add('show');
+                e.preventDefault();
+                setTimeout(function(){ errorMessage.classList.remove('show'); errorMessage.innerText = ''; }, 2500);
+                return;
+            }
+            if (!hasSymbol) {
+                errorMessage.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Password must contain at least one symbol.';
+                errorMessage.classList.add('show');
+                e.preventDefault();
+                setTimeout(function(){ errorMessage.classList.remove('show'); errorMessage.innerText = ''; }, 2500);
+                return;
+            }
+            if (!hasUppercase) {
+                errorMessage.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Password must contain at least one uppercase letter.';
+                errorMessage.classList.add('show');
+                e.preventDefault();
+                setTimeout(function(){ errorMessage.classList.remove('show'); errorMessage.innerText = ''; }, 2500);
+                return;
+            }
+            errorMessage.innerText = "";
+            errorMessage.classList.remove('show');
+        });
+    </script>
 </body>
 </html>
