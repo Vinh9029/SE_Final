@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,8 +16,9 @@
             font-family: 'Segoe UI', Arial, sans-serif;
             min-height: 100vh;
         }
+
         .register-container {
-            background: rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 20px;
             box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.32);
             padding: 40px 32px 32px 32px;
@@ -26,12 +28,14 @@
             flex-direction: column;
             align-items: center;
         }
+
         .register-header {
             color: #fc466b;
             margin-bottom: 18px;
             font-size: 2rem;
             font-weight: 600;
         }
+
         .input-group {
             width: 100%;
             margin-bottom: 18px;
@@ -39,6 +43,7 @@
             display: flex;
             align-items: center;
         }
+
         .input-group i {
             position: absolute;
             left: 16px;
@@ -48,20 +53,23 @@
             font-size: 1.2rem;
             z-index: 2;
         }
+
         .input-group input {
             width: 100%;
             padding: 12px 12px 12px 44px;
             border-radius: 10px;
             border: none;
-            background: rgba(255,255,255,0.25);
+            background: rgba(255, 255, 255, 0.25);
             color: #222;
             font-size: 1rem;
             outline: none;
             box-sizing: border-box;
         }
+
         .input-group input::placeholder {
             color: #888;
         }
+
         .register-btn {
             width: 100%;
             background: #fc466b;
@@ -75,15 +83,18 @@
             margin-top: 8px;
             transition: background 0.2s;
         }
+
         .register-btn:hover {
             background: #3f5efb;
         }
+
         .back-link {
             margin-top: 16px;
             text-align: center;
             color: #fff;
             font-size: 1rem;
         }
+
         .back-link a {
             color: #fc466b;
             text-decoration: underline;
@@ -91,26 +102,75 @@
             cursor: pointer;
             transition: color 0.2s;
         }
+
         .back-link a:hover {
             color: #3f5efb;
         }
+
         .error-message {
-            color: #fc466b;
+            color: #fff;
+            /* background: linear-gradient(90deg, #bfa76a 0%, #7c5c2e 100%); */
+            background: linear-gradient(90deg, rgb(220, 65, 96) 0%, rgb(151, 102, 28) 100%);
+            border-radius: 8px;
             margin-bottom: 10px;
             font-size: 1rem;
             text-align: center;
             opacity: 0;
-            transition: opacity 0.4s;
+            transition: opacity 0.4s, transform 0.4s;
+            padding: 12px 18px;
+            box-shadow: 0 2px 12px rgba(127, 97, 47, 0.18);
+            position: relative;
+            transform: translateY(-10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
+
         .error-message.show {
             opacity: 1;
+            transform: translateY(0);
+        }
+
+        .error-message i {
+            font-size: 1.3rem;
+            color: #fff;
+            margin-right: 8px;
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0% {
+                transform: translateX(0);
+            }
+
+            20% {
+                transform: translateX(-4px);
+            }
+
+            40% {
+                transform: translateX(4px);
+            }
+
+            60% {
+                transform: translateX(-4px);
+            }
+
+            80% {
+                transform: translateX(4px);
+            }
+
+            100% {
+                transform: translateX(0);
+            }
         }
     </style>
 </head>
+
 <body>
-    
+
     <div class="register-container">
-        <div class="profile-icon"  style="cursor:pointer;" onclick="window.location.href='index.php'">
+        <div class="profile-icon" style="cursor:pointer;" onclick="window.location.href='index.php'">
             <img src="Photos/logo.png" alt="Logo" style="width:210px; height:100px; object-fit:cover;" />
         </div>
         <div class="register-header">Register Account</div>
@@ -146,32 +206,24 @@
             var errorMessage = document.getElementById('errorMessage');
             var hasSymbol = /[!@#$%^&*(),.?":{}|<>]/.test(password);
             var hasUppercase = /[A-Z]/.test(password);
+            let msg = '';
             if (password !== confirmPassword) {
-                errorMessage.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Passwords do not match.';
-                errorMessage.classList.add('show');
-                e.preventDefault();
-                setTimeout(function(){ errorMessage.classList.remove('show'); errorMessage.innerText = ''; }, 1500);
-                return;
+                msg = '<i class="fa-solid fa-triangle-exclamation"></i> Passwords do not match.';
+            } else if (password.length < 8) {
+                msg = '<i class="fa-solid fa-triangle-exclamation"></i> Password must be at least 8 characters.';
+            } else if (!hasSymbol) {
+                msg = '<i class="fa-solid fa-triangle-exclamation"></i> Password must contain at least one special symbol.';
+            } else if (!hasUppercase) {
+                msg = '<i class="fa-solid fa-triangle-exclamation"></i> Password must contain at least one uppercase letter.';
             }
-            if (password.length < 8) {
-                errorMessage.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Password must be at least 8 characters.';
+            if (msg) {
+                errorMessage.innerHTML = msg;
                 errorMessage.classList.add('show');
                 e.preventDefault();
-                setTimeout(function(){ errorMessage.classList.remove('show'); errorMessage.innerText = ''; }, 2500);
-                return;
-            }
-            if (!hasSymbol) {
-                errorMessage.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Password must contain at least one symbol.';
-                errorMessage.classList.add('show');
-                e.preventDefault();
-                setTimeout(function(){ errorMessage.classList.remove('show'); errorMessage.innerText = ''; }, 2500);
-                return;
-            }
-            if (!hasUppercase) {
-                errorMessage.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Password must contain at least one uppercase letter.';
-                errorMessage.classList.add('show');
-                e.preventDefault();
-                setTimeout(function(){ errorMessage.classList.remove('show'); errorMessage.innerText = ''; }, 2500);
+                setTimeout(function() {
+                    errorMessage.classList.remove('show');
+                    errorMessage.innerText = '';
+                }, 2500);
                 return;
             }
             errorMessage.innerText = "";
@@ -179,4 +231,5 @@
         });
     </script>
 </body>
+
 </html>

@@ -114,16 +114,43 @@
         }
 
         .error-message {
-            color: #fc466b;
+            color: #fff;
+            background: linear-gradient(90deg,rgb(220, 65, 96) 0%,rgb(151, 102, 28) 100%);
+            border-radius: 8px;
             margin-bottom: 10px;
             font-size: 1rem;
             text-align: center;
             opacity: 0;
-            transition: opacity 0.4s;
+            transition: opacity 0.4s, transform 0.4s;
+            padding: 12px 18px;
+            box-shadow: 0 2px 12px rgba(127, 97, 47, 0.18);
+            position: relative;
+            transform: translateY(-10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
         .error-message.show {
             opacity: 1;
+            transform: translateY(0);
+        }
+
+        .error-message i {
+            font-size: 1.3rem;
+            color: #fff;
+            margin-right: 8px;
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            20% { transform: translateX(-4px); }
+            40% { transform: translateX(4px); }
+            60% { transform: translateX(-4px); }
+            80% { transform: translateX(4px); }
+            100% { transform: translateX(0); }
         }
     </style>
 </head>
@@ -161,26 +188,18 @@
             var errorMessage = document.getElementById('errorMessage');
             var hasSymbol = /[!@#$%^&*(),.?":{}|<>]/.test(newPassword);
             var hasUppercase = /[A-Z]/.test(newPassword);
+            let msg = '';
             if (newPassword !== confirmNewPassword) {
-                errorMessage.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Passwords do not match.';
-                errorMessage.classList.add('show');
-                setTimeout(function(){ errorMessage.classList.remove('show'); errorMessage.innerText = ''; }, 1500);
-                return;
+                msg = '<i class="fa-solid fa-triangle-exclamation"></i> Passwords do not match.';
+            } else if (newPassword.length < 8) {
+                msg = '<i class="fa-solid fa-triangle-exclamation"></i> Password must be at least 8 characters.';
+            } else if (!hasSymbol) {
+                msg = '<i class="fa-solid fa-triangle-exclamation"></i> Password must contain at least one special symbol.';
+            } else if (!hasUppercase) {
+                msg = '<i class="fa-solid fa-triangle-exclamation"></i> Password must contain at least one uppercase letter.';
             }
-            if (newPassword.length < 8) {
-                errorMessage.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Password must be at least 8 characters.';
-                errorMessage.classList.add('show');
-                setTimeout(function(){ errorMessage.classList.remove('show'); errorMessage.innerText = ''; }, 2500);
-                return;
-            }
-            if (!hasSymbol) {
-                errorMessage.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Password must contain at least one special symbol.';
-                errorMessage.classList.add('show');
-                setTimeout(function(){ errorMessage.classList.remove('show'); errorMessage.innerText = ''; }, 2500);
-                return;
-            }
-            if (!hasUppercase) {
-                errorMessage.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Password must contain at least one uppercase letter.';
+            if (msg) {
+                errorMessage.innerHTML = msg;
                 errorMessage.classList.add('show');
                 setTimeout(function(){ errorMessage.classList.remove('show'); errorMessage.innerText = ''; }, 2500);
                 return;
