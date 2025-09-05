@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Update Password - Coffee Shop</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
@@ -115,7 +117,7 @@
 
         .error-message {
             color: #fff;
-            background: linear-gradient(90deg,rgb(220, 65, 96) 0%,rgb(151, 102, 28) 100%);
+            background: linear-gradient(90deg, rgb(220, 65, 96) 0%, rgb(151, 102, 28) 100%);
             border-radius: 8px;
             margin-bottom: 10px;
             font-size: 1rem;
@@ -145,12 +147,29 @@
         }
 
         @keyframes shake {
-            0% { transform: translateX(0); }
-            20% { transform: translateX(-4px); }
-            40% { transform: translateX(4px); }
-            60% { transform: translateX(-4px); }
-            80% { transform: translateX(4px); }
-            100% { transform: translateX(0); }
+            0% {
+                transform: translateX(0);
+            }
+
+            20% {
+                transform: translateX(-4px);
+            }
+
+            40% {
+                transform: translateX(4px);
+            }
+
+            60% {
+                transform: translateX(-4px);
+            }
+
+            80% {
+                transform: translateX(4px);
+            }
+
+            100% {
+                transform: translateX(0);
+            }
         }
     </style>
 </head>
@@ -165,11 +184,18 @@
             <form id="updateForm" onsubmit="handleUpdate(event)">
                 <div class="input-group">
                     <i class="fa-solid fa-lock"></i>
-                    <input type="password" placeholder="Password" required id="newPassword">
+                    <input type="password" placeholder="New Password" required id="newPassword" oninput="checkStrength()">
                 </div>
+                <div class="w-full flex items-center gap-2 mb-2">
+                    <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                        <div id="progressBar" class="h-2 rounded-full transition-all duration-300 bg-red-500" style="width:0%"></div>
+                    </div>
+                    <span id="progressLabel" class="text-xs font-semibold text-gray-700 min-w-[60px] text-right"></span>
+                </div>
+                <div id="strengthText" class="text-xs mb-1 font-semibold"></div>
                 <div class="input-group">
                     <i class="fa-solid fa-lock"></i>
-                    <input type="password" placeholder="Confirm Password" required id="confirmNewPassword">
+                    <input type="password" placeholder="Confirm New Password" required id="confirmNewPassword">
                 </div>
                 <div id="errorMessage" class="error-message"></div>
                 <button type="submit" class="update-btn">Update Password</button>
@@ -201,13 +227,56 @@
             if (msg) {
                 errorMessage.innerHTML = msg;
                 errorMessage.classList.add('show');
-                setTimeout(function(){ errorMessage.classList.remove('show'); errorMessage.innerText = ''; }, 2500);
+                setTimeout(function() {
+                    errorMessage.classList.remove('show');
+                    errorMessage.innerText = '';
+                }, 2500);
                 return;
             }
             errorMessage.innerText = "";
             errorMessage.classList.remove('show');
             alert("Password updated successfully! (Demo only)");
             window.location.href = "index.php";
+        }
+
+        function checkStrength() {
+            var pwd = document.getElementById('newPassword').value;
+            var bar = document.getElementById('progressBar');
+            var label = document.getElementById('progressLabel');
+            var text = document.getElementById('strengthText');
+            // Criteria
+            var hasLength = pwd.length >= 8;
+            var hasNumber = /[0-9]/.test(pwd);
+            var hasLower = /[a-z]/.test(pwd);
+            var hasUpper = /[A-Z]/.test(pwd);
+            var hasSpecial = /[^A-Za-z0-9]/.test(pwd);
+            var met = [hasLength, hasNumber, hasLower, hasUpper, hasSpecial].filter(Boolean).length;
+            // Progress bar
+            var percent = met * 20;
+            var colors = [
+                "bg-red-500",
+                "bg-orange-400",
+                "bg-yellow-400",
+                "bg-blue-400",
+                "bg-green-500"
+            ];
+            var labels = [
+                "Very Weak",
+                "Weak",
+                "Fair",
+                "Strong",
+                "Very Strong"
+            ];
+            bar.style.width = percent + "%";
+            bar.className = "h-2 rounded-full transition-all duration-300 " + colors[met === 0 ? 0 : met - 1];
+            label.innerText = labels[met === 0 ? 0 : met - 1];
+            if (!pwd) {
+                label.innerText = '';
+                bar.style.width = '0%';
+                text.innerHTML = '<span class="text-gray-400">Start typing to check password strength...</span>';
+            } else {
+                text.innerText = '';
+            }
         }
     </script>
 </body>

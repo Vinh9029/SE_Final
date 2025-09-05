@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register Account - Coffee Shop</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
@@ -185,8 +186,15 @@
             </div>
             <div class="input-group">
                 <i class="fa-solid fa-lock"></i>
-                <input type="password" placeholder="New Password" required id="password">
+                <input type="password" placeholder="New Password" required id="password" oninput="checkStrength()">
             </div>
+            <div class="w-full flex items-center gap-2 mb-2">
+                <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                    <div id="progressBar" class="h-2 rounded-full transition-all duration-300 bg-red-500" style="width:0%"></div>
+                </div>
+                <span id="progressLabel" class="text-xs font-semibold text-gray-700 min-w-[60px] text-right"></span>
+            </div>
+            <div id="strengthText" class="text-xs mb-1 font-semibold"></div>
             <div class="input-group">
                 <i class="fa-solid fa-lock"></i>
                 <input type="password" placeholder="Confirm New Password" required id="confirm_password">
@@ -229,6 +237,47 @@
             errorMessage.innerText = "";
             errorMessage.classList.remove('show');
         });
+
+        function checkStrength() {
+            var pwd = document.getElementById('password').value;
+            var bar = document.getElementById('progressBar');
+            var label = document.getElementById('progressLabel');
+            var text = document.getElementById('strengthText');
+            // Criteria
+            var hasLength = pwd.length >= 8;
+            var hasNumber = /[0-9]/.test(pwd);
+            var hasLower = /[a-z]/.test(pwd);
+            var hasUpper = /[A-Z]/.test(pwd);
+            var hasSpecial = /[^A-Za-z0-9]/.test(pwd);
+            var met = [hasLength, hasNumber, hasLower, hasUpper, hasSpecial].filter(Boolean).length;
+            // Progress bar
+            var percent = met * 20;
+            var colors = [
+                "bg-red-500",
+                "bg-orange-400",
+                "bg-yellow-400",
+                "bg-blue-400",
+                "bg-green-500"
+            ];
+            var labels = [
+                "Very Weak",
+                "Weak",
+                "Fair",
+                "Strong",
+                "Very Strong"
+            ];
+            bar.style.width = percent + "%";
+            bar.className = "h-2 rounded-full transition-all duration-300 " + colors[met === 0 ? 0 : met - 1];
+            label.innerText = labels[met === 0 ? 0 : met - 1];
+            // Optionally, show a checklist or other feedback below
+            if (!pwd) {
+                label.innerText = '';
+                bar.style.width = '0%';
+                text.innerHTML = '<span class="text-gray-400">Start typing to check password strength...</span>';
+            } else {
+                text.innerText = '';
+            }
+        }
     </script>
 </body>
 
