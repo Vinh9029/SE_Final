@@ -8,61 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="bg-gray-50">
-    <!-- Header -->
-    <header class="bg-white shadow-md sticky top-0 z-50">
-        <div class="container mx-auto flex items-center justify-between py-3 px-6">
-            <!-- Logo + Brand -->
-            <div class="flex items-center gap-2">
-                <img src="Photos/logo.png" alt="Logo" class="h-12 w-12 object-cover rounded-full shadow" />
-                <span class="text-2xl font-bold text-pink-600 tracking-wide select-none">Old Favour</span>
-            </div>
-            <!-- Navigation Bar -->
-            <nav class="flex items-center gap-6">
-                <a href="index.php" class="text-gray-700 hover:text-pink-600 font-medium transition">Trang chủ</a>
-                <!-- Dropdown Menu -->
-                <div class="relative group" tabindex="0">
-                    <button type="button" class="flex items-center gap-1 text-gray-700 hover:text-pink-600 font-medium transition focus:outline-none" onclick="toggleDropdown('menuDropdown')">
-                        Thực đơn <i class="fa-solid fa-chevron-down text-xs"></i>
-                    </button>
-                    <div id="menuDropdown" class="absolute left-0 mt-2 w-56 bg-white rounded-lg shadow-lg opacity-0 invisible group-focus-within:opacity-100 group-focus-within:visible transition-all duration-200 z-40">
-                        <div class="py-2 px-4 border-b text-xs text-gray-500 font-semibold">Đồ uống</div>
-                        <a href="#" class="block px-4 py-2 hover:bg-pink-50 text-gray-700">Cà phê phin</a>
-                        <a href="#" class="block px-4 py-2 hover:bg-pink-50 text-gray-700">Cà phê pha máy</a>
-                        <a href="#" class="block px-4 py-2 hover:bg-pink-50 text-gray-700">Trà & Trà sữa</a>
-                        <a href="#" class="block px-4 py-2 hover:bg-pink-50 text-gray-700">Sinh tố & Nước ép</a>
-                        <a href="#" class="block px-4 py-2 hover:bg-pink-50 text-gray-700">Nước ngọt đóng chai</a>
-                        <div class="py-2 px-4 border-b text-xs text-gray-500 font-semibold">Đồ ăn nhẹ</div>
-                        <a href="#" class="block px-4 py-2 hover:bg-pink-50 text-gray-700">Bánh ngọt</a>
-                        <a href="#" class="block px-4 py-2 hover:bg-pink-50 text-gray-700">Bánh mặn & Sandwich</a>
-                        <a href="#" class="block px-4 py-2 hover:bg-pink-50 text-gray-700">Đồ ăn vặt</a>
-                    </div>
-                </div>
-                <a href="#" class="text-gray-700 hover:text-pink-600 font-medium transition">Khuyến mãi</a>
-                <a href="#" class="text-gray-700 hover:text-pink-600 font-medium transition">Liên hệ</a>
-                <a href="aboutUs.php" class="text-gray-700 hover:text-pink-600 font-medium transition">Về chúng tôi</a>
-            </nav>
-            <!-- Search, Cart, User -->
-            <div class="flex items-center gap-4">
-                <!-- Search Bar -->
-                <form class="relative hidden md:block">
-                    <input type="text" placeholder="Tìm kiếm..." class="pl-10 pr-3 py-2 rounded-full border border-gray-300 focus:border-pink-500 focus:ring-2 focus:ring-pink-100 outline-none text-sm w-48 transition" />
-                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"><i class="fa fa-search"></i></span>
-                </form>
-                <!-- Cart Icon -->
-                <a href="#" class="relative text-gray-700 hover:text-pink-600 text-xl">
-                    <i class="fa fa-shopping-cart"></i>
-                    <span class="absolute -top-2 -right-2 bg-pink-500 text-white text-xs rounded-full px-1.5 py-0.5 font-bold">0</span>
-                </a>
-                <!-- User/Login -->
-                <div class="relative group">
-                    <a href="index.php" class="flex items-center gap-2 text-gray-700 hover:text-pink-600 font-medium transition focus:outline-none">
-                        <i class="fa fa-user-circle text-2xl"></i>
-                        <span>Đăng nhập</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </header>
+    <?php include 'header.php'; ?>
     <!-- Body Content -->
     <main class="bg-gray-50">
         <!-- Slider quảng cáo -->
