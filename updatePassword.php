@@ -177,7 +177,7 @@
 <body>
     <div style="display: flex; align-items: center; justify-content: center; min-height: 100vh;">
         <div class="update-container">
-            <div class="profile-icon" style="cursor:pointer;" onclick="window.location.href='index.php'">
+            <div class="profile-icon" style="cursor:pointer;" onclick="window.location.href='user.php'">
                 <img src="Photos/logo.png" alt="Logo" style="width:220px; height:100px; object-fit:cover;" />
             </div>
             <div class="update-header">Update Password</div>
@@ -202,7 +202,7 @@
             </form>
             <div class="back-link">
                 <span>Back to</span>
-                <a href="index.php">Login</a>
+                <a href="user.php">Login</a>
             </div>
         </div>
     </div>

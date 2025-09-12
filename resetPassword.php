@@ -122,7 +122,7 @@
             <img id="login_banner" src="Photos/login_background1 (2).jpg" alt="Login Illustration" style="width:100%; height:100%; object-fit:cover; border-radius:20px 0 0 20px;" />
         </div> -->
         <div class="reset-container">
-            <div class="profile-icon" style="cursor:pointer;" onclick="window.location.href='index.php'">
+            <div class="profile-icon" style="cursor:pointer;" onclick="window.location.href='user.php'">
                 <img src="Photos/logo.png" alt="Logo" style="width:210px; height:100px; object-fit:cover;" />
             </div>
             <div class="reset-header">Reset Password</div>
@@ -146,7 +146,7 @@
             </div>
             <div class="back-link">
                 <span>Remembered your password?</span>
-                <a href="index.php">Login</a>
+                <a href="user.php">Login</a>
             </div>
         </div>
     </div>

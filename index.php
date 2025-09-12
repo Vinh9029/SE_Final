@@ -1,322 +1,260 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coffee Shop Login</title>
+    <title>Old Favour Coffee</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body {
-            background: url('Photos/test2.jpg') no-repeat center center fixed;
-            background-size: cover;
-            /* min-height: 100vh; */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Segoe UI', Arial, sans-serif;
-        }
-        .side-image-box {
-            width: 390px;
-            height: 484px;
-            /* padding-right: 120px; */
-            background: rgba(255,255,255,0.10);
-            border-radius: 60px 10 0 20px;
-            margin-right: 10px;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
-            border-style: solid 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-        @media (max-width: 900px) {
-            .side-image-box {
-                display: none;
-            }
-        }
-        .login-container {
-            background: rgba(255,255,255,0.1);
-            border-radius: 0 20px 20px 0;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.32);
-            padding: 40px 32px 32px 32px;
-            width: 330px;
-            max-width: 95vw;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .profile-icon {
-            background: rgba(255,255,255,0.15);
-            border-radius: 50%;
-            padding: 18px;
-            margin-bottom: 18px;
-            font-size: 2.5rem;
-            color: #fff;
-        }
-        .switch-btn {
-            background: #fff;
-            color: #3f5efb;
-            border: none;
-            border-radius: 20px;
-            padding: 6px 18px;
-            margin-bottom: 18px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: background 0.2s;
-        }
-        .switch-btn.active {
-            background: #fc466b;
-            color: #fff;
-        }
-        .input-group {
-            width: 100%;
-            margin-bottom: 18px;
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
-        .input-group i {
-            position: absolute;
-            left: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #3f5efb;
-            font-size: 1.2rem;
-            z-index: 2;
-        }
-        .input-group input {
-            width: 100%;
-            padding: 12px 60px 12px 44px;
-            border-radius: 10px;
-            border: none;
-            background: rgba(255,255,255,0.25);
-            color: #222;
-            font-size: 1rem;
-            outline: none;
-            box-sizing: border-box;
-        }
-        .input-group input::placeholder {
-            color: #888;
-        }
-        .toggle-password {
-            position: absolute;
-            right: 18px;
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
-            z-index: 2;
-            color: #3f5efb;
-            font-size: 1.3rem;
-            background: transparent;
-            border: none;
-            padding: 0;
-            display: flex;
-            align-items: center;
-            padding-left: 30px;
-        }
-        .toggle-password:hover {
-            color: #fc466b;
-        }
-        .hint {
-            font-size: 0.85rem;
-            color: #fc466b;
-            margin-top: 2px;
-            margin-left: 4px;
-            margin-bottom: -10px;
-        }
-        .options {
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 18px;
-        }
-        .remember {
-            display: flex;
-            align-items: center;
-            font-size: 0.95rem;
-            color: #fff;
-        }
-        .remember input {
-            margin-right: 6px;
-        }
-        .forgot {
-            color: #fff;
-            text-decoration: underline;
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: color 0.2s;
-        }
-        .forgot:hover {
-            color: #fc466b;
-        }
-        .forgot a,
-        .register-link a {
-            color: #fc466b;
-            text-decoration: underline;
-            margin-left: 6px;
-            cursor: pointer;
-            transition: color 0.2s;
-        }
-        .forgot a:hover,
-        .register-link a:hover {
-            color: #3f5efb;
-        }
-        .login-btn {
-            width: 100%;
-            background: #fc466b;
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            padding: 12px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 8px;
-            transition: background 0.2s;
-        }
-        .login-btn:hover {
-            background: #3f5efb;
-        }
-        .register-link {
-            margin-top: 16px;
-            text-align: center;
-            color: #fff;
-            font-size: 1rem;
-        }
-        .register-link a {
-            color: #fc466b;
-            text-decoration: underline;
-            margin-left: 6px;
-            cursor: pointer;
-        }
-        .register-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0,0,0,0.4);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-        }
-        .register-content {
-            background: #fff;
-            border-radius: 16px;
-            padding: 32px 24px;
-            min-width: 320px;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .register-content h2 {
-            color: #fc466b;
-            margin-bottom: 18px;
-        }
-        .register-content .input-group i {
-            color: #fc466b;
-        }
-        .register-content .login-btn {
-            width: 100%;
-            margin-top: 12px;
-        }
-    </style>
 </head>
-<body>
-    <div style="display: flex; align-items: center; justify-content: center; min-height: 100vh;">
-        <div class="side-image-box">
-            <img id = "login_banner"src="Photos/login_background1 (2).jpg" alt="Login Illustration" style="width:100%; height:100%; object-fit:cover; border-radius:20px 0 0 20px;" />
-        </div>
-        <div class="login-container">
-            <div class="profile-icon">
-                <i class="fa-solid fa-user"></i>
+<body class="bg-gray-50">
+    <?php include 'header.php'; ?>
+    <!-- Body Content -->
+    <main class="bg-gray-50">
+        <!-- Slider quảng cáo -->
+        <div class="w-full max-w-5xl mx-auto mt-6 rounded-xl overflow-hidden shadow-lg relative">
+            <div id="slider" class="relative h-64 md:h-80">
+                <img src="Photos/banner.jpg" class="slider-img absolute inset-0 w-full h-full object-cover transition-opacity duration-700 opacity-100" style="z-index:2;" />
+                <img src="Photos/test1.jpg" class="slider-img absolute inset-0 w-full h-full object-cover transition-opacity duration-700 opacity-0" style="z-index:1;" />
+                <img src="Photos/test2.jpg" class="slider-img absolute inset-0 w-full h-full object-cover transition-opacity duration-700 opacity-0" style="z-index:0;" />
+                <button onclick="prevSlide()" class="absolute left-2 top-1/2 -translate-y-1/2 bg-white/70 hover:bg-pink-500 text-pink-600 hover:text-white rounded-full p-2 shadow z-10"><i class="fa fa-chevron-left"></i></button>
+                <button onclick="nextSlide()" class="absolute right-2 top-1/2 -translate-y-1/2 bg-white/70 hover:bg-pink-500 text-pink-600 hover:text-white rounded-full p-2 shadow z-10"><i class="fa fa-chevron-right"></i></button>
+                <div class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+                    <span class="slider-dot w-3 h-3 rounded-full bg-pink-500"></span>
+                    <span class="slider-dot w-3 h-3 rounded-full bg-gray-300"></span>
+                    <span class="slider-dot w-3 h-3 rounded-full bg-gray-300"></span>
+                </div>
             </div>
-            <div style="display: flex; gap: 8px; margin-bottom: 10px;">
-                <button class="switch-btn active" id="userBtn" onclick="switchRole('user')">User</button>
-                <button class="switch-btn" id="adminBtn" onclick="switchRole('admin')">Admin</button>
+        </div>
+        <!-- Giới thiệu ngắn -->
+        <section class="max-w-4xl mx-auto mt-10 text-center">
+            <h2 class="text-2xl font-bold text-pink-600 mb-2">Chào mừng đến với Old Favour Coffee</h2>
+            <p class="text-gray-700 text-lg">Nơi bạn tận hưởng hương vị cà phê nguyên bản, không gian ấm cúng và dịch vụ tận tâm.</p>
+        </section>
+        <!-- Menu nổi bật (Best sellers) -->
+        <section class="max-w-5xl mx-auto mt-12">
+            <h3 class="text-xl font-bold text-gray-800 mb-4">Menu nổi bật</h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div class="bg-white rounded-xl shadow p-4 flex flex-col items-center">
+                    <img src="Photos/test1.jpg" class="w-24 h-24 object-cover rounded-full mb-2" />
+                    <div class="font-semibold text-pink-600">Cà phê sữa đá</div>
+                    <div class="text-gray-500 text-sm">Đậm đà, truyền thống</div>
+                </div>
+                <div class="bg-white rounded-xl shadow p-4 flex flex-col items-center">
+                    <img src="Photos/test2.jpg" class="w-24 h-24 object-cover rounded-full mb-2" />
+                    <div class="font-semibold text-pink-600">Bánh ngọt Pháp</div>
+                    <div class="text-gray-500 text-sm">Ngọt ngào, mềm mịn</div>
+                </div>
+                <div class="bg-white rounded-xl shadow p-4 flex flex-col items-center">
+                    <img src="Photos/banner.jpg" class="w-24 h-24 object-cover rounded-full mb-2" />
+                    <div class="font-semibold text-pink-600">Trà đào cam sả</div>
+                    <div class="text-gray-500 text-sm">Thanh mát, giải nhiệt</div>
+                </div>
+                <div class="bg-white rounded-xl shadow p-4 flex flex-col items-center">
+                    <img src="Photos/login_background.jpg" class="w-24 h-24 object-cover rounded-full mb-2" />
+                    <div class="font-semibold text-pink-600">Sandwich gà nướng</div>
+                    <div class="text-gray-500 text-sm">Bổ dưỡng, tiện lợi</div>
+                </div>
             </div>
-            <form>
-                <div class="input-group">
-                    <i class="fa-solid fa-user"></i>
-                    <input type="text" placeholder="Username" required>
+        </section>
+        <!-- Danh mục menu -->
+        <section class="max-w-5xl mx-auto mt-12">
+            <h3 class="text-xl font-bold text-gray-800 mb-4">Danh mục menu</h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div class="bg-pink-50 rounded-xl shadow p-4 flex flex-col items-center hover:bg-pink-100 cursor-pointer">
+                    <i class="fa fa-coffee text-3xl text-pink-600 mb-2"></i>
+                    <div class="font-semibold">Đồ uống</div>
                 </div>
-                <div class="input-group">
-                    <i class="fa-solid fa-lock"></i>
-                    <input type="password" placeholder="Password" required id="password">
-                    <span class="toggle-password" onclick="togglePassword()">
-                        <i class="fa-regular fa-eye" id="eyeIcon"></i>
-                    </span>
+                <div class="bg-pink-50 rounded-xl shadow p-4 flex flex-col items-center hover:bg-pink-100 cursor-pointer">
+                    <i class="fa fa-birthday-cake text-3xl text-pink-600 mb-2"></i>
+                    <div class="font-semibold">Bánh ngọt</div>
                 </div>
-                <div class="options">
-                    <label class="remember"><input type="checkbox"><strong>Remember me</strong></label>
-                    <span class="forgot"><a href="resetPassword.php"><strong>Forgot your password?</strong></a></span>
+                <div class="bg-pink-50 rounded-xl shadow p-4 flex flex-col items-center hover:bg-pink-100 cursor-pointer">
+                    <i class="fa fa-bread-slice text-3xl text-pink-600 mb-2"></i>
+                    <div class="font-semibold">Bánh mặn & Sandwich</div>
                 </div>
-                <button type="submit" class="login-btn">LOGIN</button>
-                <div class="register-link">
-                    <span><strong>Don't have an account?</strong></span>
-                    <a href="registerAccount.php"><strong>Register</strong></a>
+                <div class="bg-pink-50 rounded-xl shadow p-4 flex flex-col items-center hover:bg-pink-100 cursor-pointer">
+                    <i class="fa fa-ice-cream text-3xl text-pink-600 mb-2"></i>
+                    <div class="font-semibold">Đồ ăn vặt</div>
                 </div>
-            </form>
+            </div>
+        </section>
+        <!-- Khuyến mãi & Ưu đãi -->
+        <section class="max-w-5xl mx-auto mt-12">
+            <h3 class="text-xl font-bold text-gray-800 mb-4">Khuyến mãi & Ưu đãi</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-gradient-to-r from-pink-400 to-yellow-300 rounded-xl shadow p-6 text-white flex flex-col justify-between">
+                    <div class="text-lg font-bold mb-2">Mua 2 tặng 1 - Cà phê phin</div>
+                    <div class="text-sm">Áp dụng đến hết 30/09/2025</div>
+                </div>
+                <div class="bg-gradient-to-r from-pink-400 to-blue-400 rounded-xl shadow p-6 text-white flex flex-col justify-between">
+                    <div class="text-lg font-bold mb-2">Giảm 20% cho hóa đơn trên 200K</div>
+                    <div class="text-sm">Chỉ áp dụng tại cửa hàng</div>
+                </div>
+            </div>
+        </section>
+        <!-- Combo gợi ý -->
+        <section class="max-w-5xl mx-auto mt-12">
+            <h3 class="text-xl font-bold text-gray-800 mb-4">Combo gợi ý</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white rounded-xl shadow p-6 flex items-center gap-4">
+                    <img src="Photos/test1.jpg" class="w-20 h-20 object-cover rounded-lg" />
+                    <div>
+                        <div class="font-bold text-pink-600">Combo Sáng Năng Lượng</div>
+                        <div class="text-gray-600 text-sm">Cà phê sữa đá + Bánh mặn</div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow p-6 flex items-center gap-4">
+                    <img src="Photos/test2.jpg" class="w-20 h-20 object-cover rounded-lg" />
+                    <div>
+                        <div class="font-bold text-pink-600">Combo Trà & Bánh</div>
+                        <div class="text-gray-600 text-sm">Trà đào cam sả + Bánh ngọt</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Đánh giá khách hàng -->
+        <section class="max-w-5xl mx-auto mt-12">
+            <h3 class="text-xl font-bold text-gray-800 mb-4">Khách hàng nói gì về chúng tôi?</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white rounded-xl shadow p-6 flex flex-col items-center">
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" class="w-16 h-16 object-cover rounded-full mb-2" />
+                    <div class="font-semibold">Nguyễn Văn A</div>
+                    <div class="text-gray-500 text-sm text-center">“Không gian rất chill, cà phê ngon, nhân viên thân thiện!”</div>
+                </div>
+                <div class="bg-white rounded-xl shadow p-6 flex flex-col items-center">
+                    <img src="https://randomuser.me/api/portraits/women/44.jpg" class="w-16 h-16 object-cover rounded-full mb-2" />
+                    <div class="font-semibold">Trần Thị B</div>
+                    <div class="text-gray-500 text-sm text-center">“Bánh ngọt mềm, trà đào thơm, giá hợp lý!”</div>
+                </div>
+                <div class="bg-white rounded-xl shadow p-6 flex flex-col items-center">
+                    <img src="https://randomuser.me/api/portraits/men/65.jpg" class="w-16 h-16 object-cover rounded-full mb-2" />
+                    <div class="font-semibold">Lê Minh C</div>
+                    <div class="text-gray-500 text-sm text-center">“Combo bữa sáng tiện lợi, rất thích!”</div>
+                </div>
+            </div>
+        </section>
+        <!-- Bản đồ + thông tin quán -->
+        <!-- <section class="max-w-5xl mx-auto mt-12 mb-10">
+            <h3 class="text-xl font-bold text-gray-800 mb-4">Liên hệ & Địa chỉ</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <iframe src="https://www.google.com/maps?q=10.762622,106.660172&z=15&output=embed" width="100%" height="250" style="border:0; border-radius:12px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+                <div class="flex flex-col justify-center">
+                    <div class="font-bold text-lg text-pink-600 mb-2">Old Favour Coffee</div>
+                    <div class="text-gray-700 mb-1"><i class="fa fa-map-marker-alt mr-2 text-pink-500"></i>123 Main St, Ho Chi Minh City</div>
+                    <div class="text-gray-700 mb-1"><i class="fa fa-phone-alt mr-2 text-pink-500"></i>(123) 456-7890</div>
+                    <div class="text-gray-700 mb-1"><i class="fa fa-envelope mr-2 text-pink-500"></i>info@oldfavourcoffee.com</div>
+                    <div class="text-gray-700"><i class="fa fa-clock mr-2 text-pink-500"></i>Mon-Sat: 7am - 8pm | Sun: 8am - 6pm</div>
+                </div>
+            </div>
+        </section> -->
+    </main>
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-200 pt-10 pb-4 mt-10">
+        <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <!-- Cột 1: Logo + slogan + liên hệ -->
+            <div>
+                <div class="flex items-center gap-2 mb-3">
+                    <img src="Photos/logo.png" alt="Logo" class="h-12 w-12 object-cover rounded-full shadow" />
+                    <span class="text-xl font-bold text-pink-400">Old Favour</span>
+                </div>
+                <div class="mb-2 text-pink-200 italic">Hạnh phúc trong từng tách cà phê!</div>
+                <div class="text-sm flex flex-col gap-1">
+                    <span><i class="fa fa-map-marker-alt text-pink-400 mr-2"></i>123 Main St, Ho Chi Minh City</span>
+                    <span><i class="fa fa-phone-alt text-pink-400 mr-2"></i>(123) 456-7890</span>
+                    <span><i class="fa fa-envelope text-pink-400 mr-2"></i>info@oldfavourcoffee.com</span>
+                </div>
+            </div>
+            <!-- Cột 2: Liên kết nhanh -->
+            <div>
+                <div class="font-semibold text-lg mb-2 text-pink-300">Liên kết nhanh</div>
+                <ul class="space-y-1 text-sm">
+                    <li><a href="user.php" class="hover:text-pink-400 transition">Trang chủ</a></li>
+                    <li><a href="#" class="hover:text-pink-400 transition">Thực đơn</a></li>
+                    <li><a href="#" class="hover:text-pink-400 transition">Khuyến mãi</a></li>
+                    <li><a href="#" class="hover:text-pink-400 transition">Liên hệ</a></li>
+                    <li><a href="registerAccount.php" class="hover:text-pink-400 transition">Đăng ký</a></li>
+                </ul>
+            </div>
+            <!-- Cột 3: Mạng xã hội + đối tác giao hàng -->
+            <div>
+                <div class="font-semibold text-lg mb-2 text-pink-300">Kết nối với chúng tôi</div>
+                <div class="flex gap-3 mb-3">
+                    <a href="#" class="hover:text-pink-400 text-2xl"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="hover:text-pink-400 text-2xl"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="hover:text-pink-400 text-2xl"><i class="fab fa-twitter"></i></a>
+                </div>
+                <div class="font-semibold text-sm mb-1 text-pink-200">Đối tác giao hàng</div>
+                <div class="flex gap-3 items-center">
+                    <img src="Photos/grab.jpg" alt="Grab" class="h-8 w-auto max-w-[60px] bg-white rounded p-1 object-contain shadow" />
+                    <img src="Photos/shopee_food.png" alt="ShopeeFood" class="h-8 w-auto max-w-[60px] bg-white rounded p-1 object-contain shadow" />
+                    <img src="Photos/baemin.png" alt="Baemin" class="h-8 w-auto max-w-[60px] bg-white rounded p-1 object-contain shadow" />
+                </div>
+            </div>
+            <!-- Cột 4: Newsletter + bản đồ nhỏ -->
+            <div>
+                <div class="font-semibold text-lg mb-2 text-pink-300">Nhận ưu đãi & tin mới</div>
+                <form class="flex mb-3">
+                    <input type="email" placeholder="Nhập email của bạn" class="rounded-l px-3 py-2 w-full text-gray-800 focus:outline-none" required />
+                    <button type="submit" class="bg-pink-500 hover:bg-pink-600 text-white px-4 rounded-r">Gửi</button>
+                </form>
+                <div class="font-semibold text-sm mb-1 text-pink-200">Địa chỉ quán</div>
+                <iframe src="https://www.google.com/maps?q=10.762622,106.660172&z=15&output=embed" width="120%" height="200" style="border:0; border-radius:8px;" allowfullscreen="" loading="lazy"></iframe>
+            </div>
         </div>
-    </div>
-    <div id="register-modal" class="register-modal" style="display:none;">
-        <div class="register-content">
-            <h2>Register Account</h2>
-            <form>
-                <div class="input-group">
-                    <i class="fa-solid fa-user"></i>
-                    <input type="text" placeholder="Username" required>
-                </div>
-                <div class="input-group">
-                    <i class="fa-solid fa-envelope"></i>
-                    <input type="email" placeholder="Email" required>
-                </div>
-                <div class="input-group">
-                    <i class="fa-solid fa-lock"></i>
-                    <input type="password" placeholder="Password" required>
-                </div>
-                <button type="submit" class="login-btn">Create Account</button>
-                <button type="button" class="login-btn" style="background:#888; margin-top:8px;" onclick="hideRegister()">Cancel</button>
-            </form>
+        <div class="text-center text-xs text-gray-400 mt-8">
+            &copy; 2025 Old Favour Coffee. All rights reserved.
         </div>
-    </div>
+    </footer>
+    <?php include 'chat-zalo.php'; ?>
     <script>
-        function switchRole(role) {
-            const userBtn = document.getElementById('userBtn');
-            const adminBtn = document.getElementById('adminBtn');
-            if (role === 'user') {
-                userBtn.classList.add('active');
-                adminBtn.classList.remove('active');
-                document.querySelector('.profile-icon i').className = 'fa-solid fa-user';
-            } else {
-                adminBtn.classList.add('active');
-                userBtn.classList.remove('active');
-                document.querySelector('.profile-icon i').className = 'fa-solid fa-user-tie';
-            }
+    // Dropdown for menu
+    function toggleDropdown(id) {
+        var el = document.getElementById(id);
+        if (el.classList.contains('opacity-0')) {
+            el.classList.remove('opacity-0', 'invisible');
+            el.classList.add('opacity-100', 'visible');
+        } else {
+            el.classList.remove('opacity-100', 'visible');
+            el.classList.add('opacity-0', 'invisible');
         }
-
-        function togglePassword() {
-            const passwordInput = document.getElementById('password');
-            const eyeIcon = document.getElementById('eyeIcon');
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                eyeIcon.className = 'fa-regular fa-eye-slash';
-            } else {
-                passwordInput.type = 'password';
-                eyeIcon.className = 'fa-regular fa-eye';
-            }
+    }
+    // Close dropdown when clicking outside
+    window.addEventListener('click', function(e) {
+        var menu = document.getElementById('menuDropdown');
+        if (menu && !menu.contains(e.target) && !e.target.closest('[onclick*="toggleDropdown"]')) {
+            menu.classList.remove('opacity-100', 'visible');
+            menu.classList.add('opacity-0', 'invisible');
         }
-
-        function showRegister() {
-            document.getElementById('register-modal').style.display = 'flex';
-        }
-
-        function hideRegister() {
-            document.getElementById('register-modal').style.display = 'none';
-        }
+    });
+    // Slider JS
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slider-img');
+    const dots = document.querySelectorAll('.slider-dot');
+    function showSlide(idx) {
+        slides.forEach((img, i) => {
+            img.style.opacity = i === idx ? '1' : '0';
+        });
+        dots.forEach((dot, i) => {
+            dot.className = 'slider-dot w-3 h-3 rounded-full ' + (i === idx ? 'bg-pink-500' : 'bg-gray-300');
+        });
+        currentSlide = idx;
+    }
+    function nextSlide() {
+        let idx = (currentSlide + 1) % slides.length;
+        showSlide(idx);
+    }
+    function prevSlide() {
+        let idx = (currentSlide - 1 + slides.length) % slides.length;
+        showSlide(idx);
+    }
+    document.querySelectorAll('.slider-dot').forEach((dot, i) => {
+        dot.onclick = () => showSlide(i);
+    });
+    setInterval(nextSlide, 5000);
+    showSlide(0);
     </script>
 </body>
 </html>

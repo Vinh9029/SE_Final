@@ -171,7 +171,7 @@
 <body>
 
     <div class="register-container">
-        <div class="profile-icon" style="cursor:pointer;" onclick="window.location.href='index.php'">
+        <div class="profile-icon" style="cursor:pointer;" onclick="window.location.href='user.php'">
             <img src="Photos/logo.png" alt="Logo" style="width:210px; height:100px; object-fit:cover;" />
         </div>
         <div class="register-header">Register Account</div>
@@ -204,7 +204,7 @@
         </form>
         <div class="back-link">
             <span>Already have an account?</span>
-            <a href="index.php">Login</a>
+            <a href="user.php">Login</a>
         </div>
     </div>
     <script>

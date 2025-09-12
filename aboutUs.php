@@ -53,11 +53,11 @@
                         <span class="text-5xl text-gray-400"><i class="fa fa-user"></i></span>
                     </div>
                     <div class="flex-1 text-left">
-                        <h3 class="text-xl font-bold text-pink-600 mb-1">Nguyễn Văn Cường</h3>
-                        <div class="text-gray-700 mb-1">MSSV: <span class="font-semibold">523H0003</span></div>
+                        <h3 class="text-xl font-bold text-pink-600 mb-1">Trần Nhật Huy</h3>
+                        <div class="text-gray-700 mb-1">MSSV: <span class="font-semibold">523H0142</span></div>
                         <div class="text-gray-600 mb-1">Vai trò: <span class="font-semibold">Frontend Developer, UI/UX Designer</span></div>
                         <div class="text-gray-500 mb-2 text-sm">Thiết kế giao diện người dùng, tối ưu trải nghiệm, xây dựng các trang web responsive, kiểm thử giao diện và sáng tạo hiệu ứng.</div>
-                        <div class="text-gray-700 text-sm"><i class="fa fa-envelope text-pink-400 mr-2"></i>523h003@student.tdtu.edu.vn</div>
+                        <div class="text-gray-700 text-sm"><i class="fa fa-envelope text-pink-400 mr-2"></i>523h0142@student.tdtu.edu.vn</div>
                     </div>
                 </div>
                 <!-- Member 4 -->
@@ -66,11 +66,11 @@
                         <span class="text-5xl text-gray-400"><i class="fa fa-user"></i></span>
                     </div>
                     <div class="flex-1 text-left">
-                        <h3 class="text-xl font-bold text-pink-600 mb-1">Trần Thị Minh Anh</h3>
-                        <div class="text-gray-700 mb-1">MSSV: <span class="font-semibold">523H0004</span></div>
+                        <h3 class="text-xl font-bold text-pink-600 mb-1">Trương Tuấn Kiệt</h3>
+                        <div class="text-gray-700 mb-1">MSSV: <span class="font-semibold">523H0047</span></div>
                         <div class="text-gray-600 mb-1">Vai trò: <span class="font-semibold">Tester, Content Writer</span></div>
                         <div class="text-gray-500 mb-2 text-sm">Kiểm thử chức năng, đảm bảo chất lượng sản phẩm, viết nội dung mô tả sản phẩm, hỗ trợ truyền thông và sáng tạo nội dung cho website.</div>
-                        <div class="text-gray-700 text-sm"><i class="fa fa-envelope text-pink-400 mr-2"></i>523h0004@student.tdtu.edu.vn</div>
+                        <div class="text-gray-700 text-sm"><i class="fa fa-envelope text-pink-400 mr-2"></i>523h0047@student.tdtu.edu.vn</div>
                     </div>
                 </div>
             </div>
