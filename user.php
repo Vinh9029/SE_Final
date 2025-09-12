@@ -39,6 +39,7 @@
                 </div>
                 <a href="#" class="text-gray-700 hover:text-pink-600 font-medium transition">Khuyến mãi</a>
                 <a href="#" class="text-gray-700 hover:text-pink-600 font-medium transition">Liên hệ</a>
+                <a href="aboutUs.php" class="text-gray-700 hover:text-pink-600 font-medium transition">Về chúng tôi</a>
             </nav>
             <!-- Search, Cart, User -->
             <div class="flex items-center gap-4">
