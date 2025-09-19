@@ -63,19 +63,19 @@
             <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
                 <div class="bg-pink-50 rounded-xl shadow p-4 flex flex-col items-center hover:bg-pink-100 cursor-pointer">
                     <i class="fa fa-coffee text-3xl text-pink-600 mb-2"></i>
-                    <div class="font-semibold">Cà phê</div>
-                </div>
-                <div class="bg-pink-50 rounded-xl shadow p-4 flex flex-col items-center hover:bg-pink-100 cursor-pointer">
-                    <i class="fa fa-mug-hot text-3xl text-pink-600 mb-2"></i>
-                    <div class="font-semibold">Trà & Sữa</div>
-                </div>
-                <div class="bg-pink-50 rounded-xl shadow p-4 flex flex-col items-center hover:bg-pink-100 cursor-pointer">
-                    <i class="fa fa-wine-glass-alt text-3xl text-pink-600 mb-2"></i>
-                    <div class="font-semibold">Nước đặc biệt</div>
+                    <div class="font-semibold">Đồ uống</div>
                 </div>
                 <div class="bg-pink-50 rounded-xl shadow p-4 flex flex-col items-center hover:bg-pink-100 cursor-pointer">
                     <i class="fa fa-birthday-cake text-3xl text-pink-600 mb-2"></i>
-                    <div class="font-semibold">Đồ ăn kèm</div>
+                    <div class="font-semibold">Bánh ngọt</div>
+                </div>
+                <div class="bg-pink-50 rounded-xl shadow p-4 flex flex-col items-center hover:bg-pink-100 cursor-pointer">
+                    <i class="fa fa-bread-slice text-3xl text-pink-600 mb-2"></i>
+                    <div class="font-semibold">Bánh mặn & Sandwich</div>
+                </div>
+                <div class="bg-pink-50 rounded-xl shadow p-4 flex flex-col items-center hover:bg-pink-100 cursor-pointer">
+                    <i class="fa fa-ice-cream text-3xl text-pink-600 mb-2"></i>
+                    <div class="font-semibold">Đồ ăn vặt</div>
                 </div>
             </div>
         </section>
