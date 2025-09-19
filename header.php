@@ -9,18 +9,17 @@
         <nav class="flex-1 flex justify-center">
             <ul class="flex items-center gap-6">
                 <li><a href="index.php" class="text-gray-700 hover:text-pink-600 font-medium transition">Trang chủ</a></li>
-                <li class="relative group">
-                    <a href="menus/menu.php" class="text-gray-700 hover:text-pink-600 font-medium transition flex items-center gap-1">
-                        Thực đơn <i class="fa fa-chevron-down text-xs"></i>
+                <li>
+                    <a href="menus/menu.php" class="text-gray-700 hover:text-pink-600 font-bold transition flex items-center gap-2 cursor-pointer">
+                        Thực đơn
                     </a>
-                    <ul class="absolute left-0 top-full mt-2 w-48 bg-white rounded shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
-                        <li><a href="menus/menu.php?cat=coffee" class="block px-4 py-2 text-gray-700 hover:bg-pink-50 hover:text-pink-600 transition">Cà phê</a></li>
-                        <li><a href="menus/menu.php?cat=tea_milk" class="block px-4 py-2 text-gray-700 hover:bg-pink-50 hover:text-pink-600 transition">Trà & Sữa</a></li>
-                        <li><a href="menus/menu.php?cat=signature" class="block px-4 py-2 text-gray-700 hover:bg-pink-50 hover:text-pink-600 transition">Nước đặc biệt</a></li>
-                        <li><a href="menus/menu.php?cat=food" class="block px-4 py-2 text-gray-700 hover:bg-pink-50 hover:text-pink-600 transition">Đồ ăn kèm</a></li>
-                    </ul>
                 </li>
-                <li><a href="#" class="text-gray-700 hover:text-pink-600 font-medium transition">Khuyến mãi</a></li>
+                <li>
+                    <a href="promotions.php" class="relative text-gray-700 hover:text-pink-600 font-bold transition flex items-center gap-2">
+                        <i class="fa fa-gift text-pink-500"></i> Khuyến mãi
+                        <span class="absolute -top-2 -right-4 bg-pink-500 text-white text-xs rounded-full px-2 py-0.5 font-bold shadow">Mới</span>
+                    </a>
+                </li>
                 <li><a href="aboutUs.php" class="text-gray-700 hover:text-pink-600 font-medium transition">Về chúng tôi</a></li>
                 <li><a href="contactUS.php" class="text-gray-700 hover:text-pink-600 font-medium transition">Liên hệ</a></li>
             </ul>
