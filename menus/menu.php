@@ -53,6 +53,15 @@ $cat_names = [
     'signature' => 'Nước đặc biệt (Signature)',
     'food' => 'Đồ ăn kèm',
 ];
+
+// Xử lý phân trang
+$itemsPerPage = 9;
+$filtered_items = $products[$cat];
+$totalItems = count($filtered_items);
+$totalPages = ceil($totalItems / $itemsPerPage);
+$currentPage = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
+$offset = ($currentPage - 1) * $itemsPerPage;
+$pagedItems = array_slice($filtered_items, $offset, $itemsPerPage);
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -148,6 +157,14 @@ $cat_names = [
     setInterval(nextHeroSlide, 5000);
     showHeroSlide(0);
     </script>
+    <!-- Breadcrumb -->
+    <div class="max-w-6xl mx-auto px-2 mb-4">
+        <nav class="text-lg font-extrabold flex items-center" aria-label="Breadcrumb">
+            <a href="../index.php" class="text-pink-500 hover:text-pink-600">Trang chủ</a>
+            <span class="mx-2 text-pink-300 font-bold">/</span>
+            <span class="text-pink-600"><?php echo $cat_names[$cat] ?? 'Thực đơn'; ?></span>
+        </nav>
+    </div>
     <!-- Menu Tabs/Filter -->
     <div class="max-w-6xl mx-auto px-2">
         <div class="flex flex-wrap justify-between items-center gap-2 mb-8">
@@ -180,8 +197,8 @@ $cat_names = [
         }
         </script>
         <!-- Grid sản phẩm -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-            <?php foreach ($products[$cat] as $item): ?>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-8">
+            <?php foreach ($pagedItems as $item): ?>
             <div class="bg-white rounded-2xl shadow-xl p-6 flex flex-col items-center hover:scale-105 hover:shadow-pink-300 transition duration-200">
                 <img src="<?php echo $item['img']; ?>" alt="<?php echo $item['name']; ?>" class="w-32 h-32 object-cover rounded-xl mb-4 shadow bg-gray-100 border-2 border-pink-100" />
                 <div class="font-extrabold text-pink-600 text-xl text-center mb-1"><?php echo $item['name']; ?></div>
@@ -190,63 +207,19 @@ $cat_names = [
             </div>
             <?php endforeach; ?>
         </div>
+        <!-- Pagination -->
+        <?php if ($totalPages > 1): ?>
+        <div class="flex justify-center mt-6 space-x-2">
+            <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                <a href="?cat=<?php echo urlencode($cat); ?>&sort=<?php echo urlencode($sort); ?>&page=<?php echo $i; ?>"
+                   class="px-4 py-2 rounded-2xl font-extrabold text-lg transition border-2 <?php echo $i === $currentPage ? 'bg-pink-500 text-white border-pink-500 shadow-lg' : 'bg-white text-pink-500 border-pink-200 hover:bg-pink-100 hover:text-pink-600'; ?>">
+                   <?php echo $i; ?>
+                </a>
+            <?php endfor; ?>
+        </div>
+        <?php endif; ?>
     </div>
     <!-- Footer -->
-    <footer class="footer-bg text-gray-200 pt-10 pb-4 mt-10">
-        <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <!-- Logo + slogan + liên hệ -->
-            <div>
-                <div class="flex items-center gap-2 mb-3">
-                    <img src="../Photos/logo.png" alt="Logo" class="h-12 w-12 object-cover rounded-full shadow" />
-                    <span class="text-xl font-bold text-pink-400">Old Favour</span>
-                </div>
-                <div class="mb-2 text-pink-200 italic">Hạnh phúc trong từng tách cà phê!</div>
-                <div class="text-sm flex flex-col gap-1">
-                    <span><i class="fa fa-map-marker-alt text-pink-400 mr-2"></i>123 Main St, Ho Chi Minh City</span>
-                    <span><i class="fa fa-phone-alt text-pink-400 mr-2"></i>(123) 456-7890</span>
-                    <span><i class="fa fa-envelope text-pink-400 mr-2"></i>info@oldfavourcoffee.com</span>
-                </div>
-            </div>
-            <!-- Liên kết nhanh -->
-            <div>
-                <div class="font-semibold text-lg mb-2 text-pink-300">Liên kết nhanh</div>
-                <ul class="space-y-1 text-sm">
-                    <li><a href="../user.php" class="hover:text-pink-400 transition">Trang chủ</a></li>
-                    <li><a href="menu.php" class="hover:text-pink-400 transition">Thực đơn</a></li>
-                    <li><a href="#" class="hover:text-pink-400 transition">Khuyến mãi</a></li>
-                    <li><a href="../contactUS.php" class="hover:text-pink-400 transition">Liên hệ</a></li>
-                    <li><a href="../registerAccount.php" class="hover:text-pink-400 transition">Đăng ký</a></li>
-                </ul>
-            </div>
-            <!-- Mạng xã hội + đối tác giao hàng -->
-            <div>
-                <div class="font-semibold text-lg mb-2 text-pink-300">Kết nối với chúng tôi</div>
-                <div class="flex gap-3 mb-3">
-                    <a href="#" class="hover:text-pink-400 text-2xl"><i class="fab fa-facebook"></i></a>
-                    <a href="#" class="hover:text-pink-400 text-2xl"><i class="fab fa-instagram"></i></a>
-                    <a href="#" class="hover:text-pink-400 text-2xl"><i class="fab fa-twitter"></i></a>
-                </div>
-                <div class="font-semibold text-sm mb-1 text-pink-200">Đối tác giao hàng</div>
-                <div class="flex gap-3 items-center">
-                    <img src="../Photos/grab.jpg" alt="Grab" class="h-8 w-auto max-w-[60px] bg-white rounded p-1 object-contain shadow" />
-                    <img src="../Photos/shopee_food.png" alt="ShopeeFood" class="h-8 w-auto max-w-[60px] bg-white rounded p-1 object-contain shadow" />
-                    <img src="../Photos/baemin.png" alt="Baemin" class="h-8 w-auto max-w-[60px] bg-white rounded p-1 object-contain shadow" />
-                </div>
-            </div>
-            <!-- Newsletter + bản đồ nhỏ -->
-            <div>
-                <div class="font-semibold text-lg mb-2 text-pink-300">Nhận ưu đãi & tin mới</div>
-                <form class="flex mb-3">
-                    <input type="email" placeholder="Nhập email của bạn" class="rounded-l px-3 py-2 w-full text-gray-800 focus:outline-none" required />
-                    <button type="submit" class="btn-orange hover:bg-orange-600 text-white px-4 rounded-r">Gửi</button>
-                </form>
-                <div class="font-semibold text-sm mb-1 text-pink-200">Địa chỉ quán</div>
-                <iframe src="https://www.google.com/maps?q=10.762622,106.660172&z=15&output=embed" width="120%" height="200" style="border:0; border-radius:8px;" allowfullscreen="" loading="lazy"></iframe>
-            </div>
-        </div>
-        <div class="text-center text-xs text-gray-400 mt-8">
-            &copy; 2025 Old Favour Coffee. All rights reserved.
-        </div>
-    </footer>
+    <?php include '../footer.php'; ?>
 </body>
 </html>
