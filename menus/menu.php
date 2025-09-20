@@ -96,7 +96,7 @@ $pagedItems = array_slice($filtered_items, $offset, $itemsPerPage);
                     <li><a href="menu.php?cat=signature" class="text-gray-700 hover:text-pink-600 font-medium transition">Nước đặc biệt</a></li>
                     <li><a href="menu.php?cat=food" class="text-gray-700 hover:text-pink-600 font-medium transition">Đồ ăn kèm</a></li>
                     <li>
-                        <a href="../promotions.php" class="relative text-gray-700 hover:text-pink-600 font-bold transition flex items-center gap-2">
+                        <a href="<?php echo basename($_SERVER['PHP_SELF']) == 'menu.php' ? '#promotion' : '../promotions.php'; ?>" class="relative text-gray-700 hover:text-pink-600 font-bold transition flex items-center gap-2">
                             <i class="fa fa-gift text-pink-500"></i> Khuyến mãi
                             <span class="absolute -top-2 -right-4 bg-pink-500 text-white text-xs rounded-full px-2 py-0.5 font-bold shadow">Mới</span>
                         </a>
@@ -229,6 +229,27 @@ $pagedItems = array_slice($filtered_items, $offset, $itemsPerPage);
         </div>
         <?php endif; ?>
     </div>
+    <!-- Khuyến mãi & Ưu đãi dưới cùng menu -->
+    <section id="promotion">
+        <?php include '../promotion-cards.php'; ?>
+    </section>
+    <script>
+    // Smooth scroll for Khuyến mãi link in menu.php header
+    if (window.location.pathname.endsWith('menu.php')) {
+        document.addEventListener('DOMContentLoaded', function() {
+            var promoLink = document.querySelector('a[href="#promotion"]');
+            if (promoLink) {
+                promoLink.addEventListener('click', function(e) {
+                    var target = document.getElementById('promotion');
+                    if (target) {
+                        e.preventDefault();
+                        target.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+            }
+        });
+    }
+    </script>
      <!-- Footer -->
     <footer class="footer-bg text-gray-200 pt-10 pb-4 mt-10">
         <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">

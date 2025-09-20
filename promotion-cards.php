@@ -1,4 +1,4 @@
-<section class="max-w-6xl mx-auto mt-12 px-2 py-12 rounded-3xl" style="background: linear-gradient(135deg, #fff5f8 0%, #f9f9f9 100%);">
+<section id="promotion" class="max-w-6xl mx-auto mt-12 px-2 py-12 rounded-3xl" style="background: linear-gradient(135deg, #fff5f8 0%, #f9f9f9 100%);">
     <h3 class="text-2xl font-extrabold text-pink-600 mb-8 text-center">Khuyến mãi & Ưu đãi nổi bật</h3>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-10 items-end">
         <!-- Card 1 -->

@@ -15,7 +15,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="promotions.php" class="relative text-gray-700 hover:text-pink-600 font-bold transition flex items-center gap-2">
+                    <a href="<?php echo basename($_SERVER['PHP_SELF']) == 'index.php' ? '#promotion' : (basename($_SERVER['PHP_SELF']) == 'menu.php' ? '#promotion' : 'promotions.php'); ?>" class="relative text-gray-700 hover:text-pink-600 font-bold transition flex items-center gap-2">
                         <i class="fa fa-gift text-pink-500"></i> Khuyến mãi
                         <span class="absolute -top-2 -right-4 bg-pink-500 text-white text-xs rounded-full px-2 py-0.5 font-bold shadow">Mới</span>
                     </a>
@@ -45,3 +45,21 @@
         </div>
     </div>
 </header>
+
+<script>
+// Smooth scroll for Khuyến mãi link in index.php header
+if (window.location.pathname.endsWith('index.php')) {
+    document.addEventListener('DOMContentLoaded', function() {
+        var promoLink = document.querySelector('a[href="#promotion"]');
+        if (promoLink) {
+            promoLink.addEventListener('click', function(e) {
+                var target = document.getElementById('promotion');
+                if (target) {
+                    e.preventDefault();
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        }
+    });
+}
+</script>
