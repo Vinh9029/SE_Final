@@ -1,5 +1,5 @@
-**Ideal folder structure starts following below
-
+## 📁 Cấu trúc thư mục dự án
+```
 project-root/
 │── index.php              # Trang chính (homepage customer)
 │── login.php              # Form đăng nhập chung
@@ -44,3 +44,4 @@ project-root/
 └── api/                   # REST API (nếu có)
     ├── customer_api.php
     └── admin_api.php
+```
