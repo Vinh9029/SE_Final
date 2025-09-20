@@ -80,19 +80,7 @@
             </div>
         </section>
         <!-- Khuyến mãi & Ưu đãi -->
-        <section class="max-w-5xl mx-auto mt-12">
-            <h3 class="text-xl font-bold text-gray-800 mb-4">Khuyến mãi & Ưu đãi</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-gradient-to-r from-pink-400 to-yellow-300 rounded-xl shadow p-6 text-white flex flex-col justify-between">
-                    <div class="text-lg font-bold mb-2">Mua 2 tặng 1 - Cà phê phin</div>
-                    <div class="text-sm">Áp dụng đến hết 30/09/2025</div>
-                </div>
-                <div class="bg-gradient-to-r from-pink-400 to-blue-400 rounded-xl shadow p-6 text-white flex flex-col justify-between">
-                    <div class="text-lg font-bold mb-2">Giảm 20% cho hóa đơn trên 200K</div>
-                    <div class="text-sm">Chỉ áp dụng tại cửa hàng</div>
-                </div>
-            </div>
-        </section>
+        <?php include 'promotion-cards.php'; ?>
         <!-- Combo gợi ý -->
         <section class="max-w-5xl mx-auto mt-12">
             <h3 class="text-xl font-bold text-gray-800 mb-4">Combo gợi ý</h3>
