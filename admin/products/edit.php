@@ -34,7 +34,7 @@
         <img src="../../Photos/test1.jpg" class="h-16 w-16 object-cover rounded shadow mt-2" />
       </div>
       <button type="submit" class="bg-yellow-500 hover:bg-yellow-600 text-white px-8 py-3 rounded-xl font-bold shadow transition w-fit flex items-center gap-2"><i class="fa fa-save"></i> Lưu thay đổi</button>
-      <a href="list.php" class="text-pink-600 hover:underline font-semibold">Quay lại danh sách</a>
+      <a href="#" data-page="products/list.php" class="text-pink-600 hover:underline font-semibold">Quay lại danh sách</a>
     </form>
   </div>
 </body>

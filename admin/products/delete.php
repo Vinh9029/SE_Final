@@ -15,7 +15,7 @@
       <div class="text-gray-500 mb-6">Hành động này không thể hoàn tác.</div>
       <form method="post" class="w-full flex flex-col gap-4">
         <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-8 py-3 rounded-xl font-bold shadow transition mb-2 flex items-center gap-2"><i class="fa fa-trash"></i> Xác nhận xóa</button>
-        <a href="list.php" class="text-pink-600 hover:underline font-semibold">Quay lại danh sách</a>
+        <a href="#" data-page="products/list.php" class="text-pink-600 hover:underline font-semibold">Quay lại danh sách</a>
       </form>
     </div>
   </div>
