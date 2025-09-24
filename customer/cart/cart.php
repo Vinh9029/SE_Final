@@ -57,9 +57,19 @@
                 </div>
                 <!-- Cart Items (Demo dữ liệu tĩnh, thay bằng PHP khi tích hợp backend) -->
                 <div class="p-6">
+                    <!-- Cart Table Header -->
+                    <div class="mb-2 px-2">
+                        <div class="grid grid-cols-12 items-center text-gray-500 font-semibold text-sm py-2 border-b border-gray-200">
+                            <div class="col-span-5">Sản phẩm</div>
+                            <div class="col-span-2 text-center">Đơn giá</div>
+                            <div class="col-span-2 text-center">Số lượng</div>
+                            <div class="col-span-2 text-center">Thành tiền</div>
+                            <div class="col-span-1 text-center"></div>
+                        </div>
+                    </div>
                     <!-- Cart Items -->
                     <div class="space-y-4 mb-8" id="cart-items">
-                        <?php include 'cart-item.php'; ?>
+                        <?php include 'cart_item.php'; ?>
                     </div>
                     <!-- Voucher Section -->
                     <div class="mb-6 flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">

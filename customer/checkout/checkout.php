@@ -208,7 +208,7 @@
                     <h2 class="text-2xl font-bold text-pink-600 mb-6 flex items-center gap-2"><i
                             class="fa fa-receipt"></i> Đơn hàng của bạn</h2>
                     <div class="space-y-4 mb-8" id="order-items">
-                        <?php include '../cart/cart-item.php'; ?>
+                        <?php include '../cart/cart-item_checkout.php'; ?>
                     </div>
                     <div class="bg-gray-50 rounded-xl shadow p-4">
                     <div class="flex justify-between mb-2">
