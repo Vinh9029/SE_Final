@@ -44,10 +44,10 @@
             <div class="bg-white rounded-3xl shadow-2xl overflow-hidden">
                 <!-- Header -->
                 <div class="bg-gradient-to-r from-orange-500 to-red-500 p-6">
-                    <div class="flex items-center justify-between">
+                    <div class="flex items-center justify-between text-pink-600">
                         <div class="flex items-center gap-3">
-                            <i class="fas fa-shopping-cart text-white text-2xl"></i>
-                            <h1 class="text-2xl font-bold text-white">Giỏ hàng của bạn</h1>
+                            <i class="fas fa-shopping-cart text-pink text-2xl"></i>
+                            <h1 class="text-2xl font-bold text-pink">Giỏ hàng của bạn</h1>
                         </div>
                         <div class="text-white">
                             <span class="text-lg">Tổng cộng: </span>
@@ -57,77 +57,12 @@
                 </div>
                 <!-- Cart Items (Demo dữ liệu tĩnh, thay bằng PHP khi tích hợp backend) -->
                 <div class="p-6">
-                    <div class="space-y-4" id="cart-items">
-                        <!-- Danh sach vo hang -->
-                        <div class="cart-item cart-item-anim flex items-center gap-4 p-4 bg-gray-50 rounded-2xl"
-                            data-product-id="1">
-                            <div class="w-20 h-20 bg-white rounded-xl overflow-hidden shadow-md">
-                                <img src="../../Photos/test1.jpg" alt="Cà phê sữa đá"
-                                    class="w-full h-full object-cover">
-                            </div>
-                            <div class="flex-1">
-                                <h3 class="font-bold text-lg text-gray-800">Cà phê sữa đá</h3>
-                                <p class="text-orange-600 font-bold text-xl">29,000đ</p>
-                                <!-- Ghi chú cho món -->
-                                <input type="text"
-                                    class="note-input mt-2 w-full border border-gray-300 rounded px-2 py-1 text-sm"
-                                    placeholder="Ghi chú cho món này (ví dụ: Ít đá, Không đường, Thêm sữa...)">
-                            </div>
-                            <div class="flex items-center gap-3">
-                                <div class="flex items-center gap-2">
-                                    <button
-                                        class="quantity-btn bg-gray-200 hover:bg-gray-300 w-8 h-8 rounded-full flex items-center justify-center transition-colors"><i
-                                            class="fas fa-minus text-sm"></i></button>
-                                    <input type="number" value="2"
-                                        class="quantity-input w-16 text-center border-2 border-gray-300 rounded-lg py-1"
-                                        readonly>
-                                    <button
-                                        class="quantity-btn bg-gray-200 hover:bg-gray-300 w-8 h-8 rounded-full flex items-center justify-center transition-colors"><i
-                                            class="fas fa-plus text-sm"></i></button>
-                                </div>
-                            </div>
-                            <div class="text-right">
-                                <p class="text-orange-600 font-bold text-lg subtotal" data-price="29000">58,000đ</p>
-                                <button class="remove-btn text-red-500 hover:text-red-700 mt-2"><i
-                                        class="fas fa-trash mr-1"></i>Xóa</button>
-                            </div>
-                        </div>
-                        <div class="cart-item cart-item-anim flex items-center gap-4 p-4 bg-gray-50 rounded-2xl"
-                            data-product-id="2">
-                            <div class="w-20 h-20 bg-white rounded-xl overflow-hidden shadow-md">
-                                <img src="../../Photos/test2.jpg" alt="Bánh ngọt Pháp"
-                                    class="w-full h-full object-cover">
-                            </div>
-                            <div class="flex-1">
-                                <h3 class="font-bold text-lg text-gray-800">Bánh ngọt Pháp</h3>
-                                <p class="text-orange-600 font-bold text-xl">35,000đ</p>
-                                <!-- Ghi chú cho món -->
-                                <input type="text"
-                                    class="note-input mt-2 w-full border border-gray-300 rounded px-2 py-1 text-sm"
-                                    placeholder="Ghi chú cho món này (ví dụ: Ít đá, Không đường, Thêm sữa...)">
-                            </div>
-                            <div class="flex items-center gap-3">
-                                <div class="flex items-center gap-2">
-                                    <button
-                                        class="quantity-btn bg-gray-200 hover:bg-gray-300 w-8 h-8 rounded-full flex items-center justify-center transition-colors"><i
-                                            class="fas fa-minus text-sm"></i></button>
-                                    <input type="number" value="1"
-                                        class="quantity-input w-16 text-center border-2 border-gray-300 rounded-lg py-1"
-                                        readonly>
-                                    <button
-                                        class="quantity-btn bg-gray-200 hover:bg-gray-300 w-8 h-8 rounded-full flex items-center justify-center transition-colors"><i
-                                            class="fas fa-plus text-sm"></i></button>
-                                </div>
-                            </div>
-                            <div class="text-right">
-                                <p class="text-orange-600 font-bold text-lg subtotal" data-price="35000">35,000đ</p>
-                                <button class="remove-btn text-red-500 hover:text-red-700 mt-2"><i
-                                        class="fas fa-trash mr-1"></i>Xóa</button>
-                            </div>
-                        </div>
+                    <!-- Cart Items -->
+                    <div class="space-y-4 mb-8" id="cart-items">
+                        <?php include 'cart-item.php'; ?>
                     </div>
-                    <!-- VOUCHER & TÓM TẮT ĐƠN HÀNG (Đặt dưới cùng) -->
-                    <div class="mt-10 flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
+                    <!-- Voucher Section -->
+                    <div class="mb-6 flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
                         <div class="flex flex-col gap-2 w-full md:w-1/2">
                             <label for="voucher-input" class="font-semibold text-gray-700">Nhập mã giảm giá</label>
                             <div class="flex gap-2">
@@ -148,8 +83,8 @@
                                     data-voucher="FREESHIP">FREESHIP</button>
                             </div>
                         </div>
-                        <!-- TÓM TẮT ĐƠN HÀNG -->
-                        <div class="w-full md:w-1/2 bg-gray-50 rounded-xl shadow p-4 mt-4 md:mt-0">
+                        <!-- Tóm tắt đơn hàng -->
+                        <div class="w-full md:w-1/2 bg-gray-50 rounded-xl shadow p-4 mb-8">
                             <div class="flex justify-between mb-2">
                                 <span class="text-gray-700">Tổng số lượng món:</span>
                                 <span id="order-total-qty" class="font-bold">0</span>
@@ -170,13 +105,8 @@
                                 <span class="text-gray-700">Tổng thanh toán:</span>
                                 <span id="order-total-after" class="font-bold text-pink-600">0đ</span>
                             </div>
-                            <!-- <div class="flex justify-between mt-2">
-                                <span class="text-gray-500 text-sm">Thời gian giao dự kiến:</span>
-                                <span class="text-sm text-gray-700 font-semibold">30-45 phút</span>
-                            </div> -->
                         </div>
-                    </div>
-                    <!-- Cart Actions -->
+                    </div <!-- Cart Actions -->
                     <div class="mt-8 flex flex-col lg:flex-row gap-4 justify-between items-center">
                         <a href="../products.php"
                             class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-3 rounded-full font-bold transition-colors"><i
@@ -221,7 +151,7 @@
             subtotals.forEach(subtotal => {
                 const price = parseFloat(subtotal.dataset.price);
                 const quantity = parseInt(subtotal.closest('.cart-item').querySelector('.quantity-input')
-                .value);
+                    .value);
                 total += price * quantity;
                 totalQty += quantity;
             });
