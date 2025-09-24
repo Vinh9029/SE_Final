@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -8,7 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="bg-gray-50">
-    <?php include 'header.php'; ?>
+    <?php include 'includes/header.php'; ?>
     <!-- Body Content -->
     <main class="bg-gray-50">
         <!-- Slider quảng cáo -->
@@ -80,7 +81,7 @@
             </div>
         </section>
         <!-- Khuyến mãi & Ưu đãi -->
-        <?php include 'promotion-cards.php'; ?>
+        <?php include 'pages/promotion-cards.php'; ?>
         <!-- Combo gợi ý -->
         <section class="max-w-5xl mx-auto mt-12">
             <h3 class="text-xl font-bold text-gray-800 mb-4">Combo gợi ý</h3>
@@ -122,81 +123,9 @@
                 </div>
             </div>
         </section>
-        <!-- Bản đồ + thông tin quán -->
-        <!-- <section class="max-w-5xl mx-auto mt-12 mb-10">
-            <h3 class="text-xl font-bold text-gray-800 mb-4">Liên hệ & Địa chỉ</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <iframe src="https://www.google.com/maps?q=10.762622,106.660172&z=15&output=embed" width="100%" height="250" style="border:0; border-radius:12px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-                </div>
-                <div class="flex flex-col justify-center">
-                    <div class="font-bold text-lg text-pink-600 mb-2">Old Favour Coffee</div>
-                    <div class="text-gray-700 mb-1"><i class="fa fa-map-marker-alt mr-2 text-pink-500"></i>123 Main St, Ho Chi Minh City</div>
-                    <div class="text-gray-700 mb-1"><i class="fa fa-phone-alt mr-2 text-pink-500"></i>(123) 456-7890</div>
-                    <div class="text-gray-700 mb-1"><i class="fa fa-envelope mr-2 text-pink-500"></i>info@oldfavourcoffee.com</div>
-                    <div class="text-gray-700"><i class="fa fa-clock mr-2 text-pink-500"></i>Mon-Sat: 7am - 8pm | Sun: 8am - 6pm</div>
-                </div>
-            </div>
-        </section> -->
+        <?php include 'includes/chat-zalo.php'; ?>
     </main>
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-gray-200 pt-10 pb-4 mt-10">
-        <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <!-- Cột 1: Logo + slogan + liên hệ -->
-            <div>
-                <div class="flex items-center gap-2 mb-3">
-                    <img src="Photos/logo.png" alt="Logo" class="h-12 w-12 object-cover rounded-full shadow" />
-                    <span class="text-xl font-bold text-pink-400">Old Favour</span>
-                </div>
-                <div class="mb-2 text-pink-200 italic">Hạnh phúc trong từng tách cà phê!</div>
-                <div class="text-sm flex flex-col gap-1">
-                    <span><i class="fa fa-map-marker-alt text-pink-400 mr-2"></i>123 Main St, Ho Chi Minh City</span>
-                    <span><i class="fa fa-phone-alt text-pink-400 mr-2"></i>(123) 456-7890</span>
-                    <span><i class="fa fa-envelope text-pink-400 mr-2"></i>info@oldfavourcoffee.com</span>
-                </div>
-            </div>
-            <!-- Cột 2: Liên kết nhanh -->
-            <div>
-                <div class="font-semibold text-lg mb-2 text-pink-300">Liên kết nhanh</div>
-                <ul class="space-y-1 text-sm">
-                    <li><a href="user.php" class="hover:text-pink-400 transition">Trang chủ</a></li>
-                    <li><a href="#" class="hover:text-pink-400 transition">Thực đơn</a></li>
-                    <li><a href="#" class="hover:text-pink-400 transition">Khuyến mãi</a></li>
-                    <li><a href="#" class="hover:text-pink-400 transition">Liên hệ</a></li>
-                    <li><a href="registerAccount.php" class="hover:text-pink-400 transition">Đăng ký</a></li>
-                </ul>
-            </div>
-            <!-- Cột 3: Mạng xã hội + đối tác giao hàng -->
-            <div>
-                <div class="font-semibold text-lg mb-2 text-pink-300">Kết nối với chúng tôi</div>
-                <div class="flex gap-3 mb-3">
-                    <a href="#" class="hover:text-pink-400 text-2xl"><i class="fab fa-facebook"></i></a>
-                    <a href="#" class="hover:text-pink-400 text-2xl"><i class="fab fa-instagram"></i></a>
-                    <a href="#" class="hover:text-pink-400 text-2xl"><i class="fab fa-twitter"></i></a>
-                </div>
-                <div class="font-semibold text-sm mb-1 text-pink-200">Đối tác giao hàng</div>
-                <div class="flex gap-3 items-center">
-                    <img src="Photos/grab.jpg" alt="Grab" class="h-8 w-auto max-w-[60px] bg-white rounded p-1 object-contain shadow" />
-                    <img src="Photos/shopee_food.png" alt="ShopeeFood" class="h-8 w-auto max-w-[60px] bg-white rounded p-1 object-contain shadow" />
-                    <img src="Photos/baemin.png" alt="Baemin" class="h-8 w-auto max-w-[60px] bg-white rounded p-1 object-contain shadow" />
-                </div>
-            </div>
-            <!-- Cột 4: Newsletter + bản đồ nhỏ -->
-            <div>
-                <div class="font-semibold text-lg mb-2 text-pink-300">Nhận ưu đãi & tin mới</div>
-                <form class="flex mb-3">
-                    <input type="email" placeholder="Nhập email của bạn" class="rounded-l px-3 py-2 w-full text-gray-800 focus:outline-none" required />
-                    <button type="submit" class="bg-pink-500 hover:bg-pink-600 text-white px-4 rounded-r">Gửi</button>
-                </form>
-                <div class="font-semibold text-sm mb-1 text-pink-200">Địa chỉ quán</div>
-                <iframe src="https://www.google.com/maps?q=10.762622,106.660172&z=15&output=embed" width="120%" height="200" style="border:0; border-radius:8px;" allowfullscreen="" loading="lazy"></iframe>
-            </div>
-        </div>
-        <div class="text-center text-xs text-gray-400 mt-8">
-            &copy; 2025 Old Favour Coffee. All rights reserved.
-        </div>
-    </footer>
-    <?php include 'chat-zalo.php'; ?>
+    <?php include 'includes/footer.php'; ?>
     <script>
     // Dropdown for menu
     function toggleDropdown(id) {

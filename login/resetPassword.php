@@ -9,7 +9,7 @@
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <style>
         body {
-            background: url('Photos/test2.jpg') no-repeat center center fixed;
+            background: url('../Photos/login_background.jpg') no-repeat center center fixed;
             background-size: cover;
             display: flex;
             align-items: center;
@@ -118,12 +118,9 @@
 
 <body>
     <div style="display: flex; align-items: center; justify-content: center; min-height: 100vh;">
-        <!-- <div class="side-image-box">
-            <img id="login_banner" src="Photos/login_background1 (2).jpg" alt="Login Illustration" style="width:100%; height:100%; object-fit:cover; border-radius:20px 0 0 20px;" />
-        </div> -->
         <div class="reset-container">
             <div class="profile-icon" style="cursor:pointer;" onclick="window.location.href='user.php'">
-                <img src="Photos/logo.png" alt="Logo" style="width:210px; height:100px; object-fit:cover;" />
+                <img src="../Photos/logo.png" alt="Logo" style="width:210px; height:100px; object-fit:cover;" />
             </div>
             <div class="reset-header">Reset Password</div>
             <form id="resetForm" onsubmit="handleReset(event)">

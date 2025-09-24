@@ -1,3 +1,4 @@
+<?php include_once __DIR__ . "/../config.php"; ?>
 <section id="promotion" class="max-w-6xl mx-auto mt-12 px-2 py-12 rounded-3xl" style="background: linear-gradient(135deg, #fff5f8 0%, #f9f9f9 100%);">
     <h3 class="text-2xl font-extrabold text-pink-600 mb-8 text-center">Khuyến mãi & Ưu đãi nổi bật</h3>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-10 items-end">
@@ -15,7 +16,7 @@
         <div class="bg-white rounded-3xl shadow-2xl p-10 flex flex-col items-center relative hover:scale-105 hover:shadow-green-300 transition duration-200 border-4 border-green-400 animate-pulse-slow" style="transform: translateY(-15px); z-index:2;">
             <span class="absolute top-6 left-6 bg-gradient-to-r from-green-400 to-green-200 text-white text-xs font-bold px-4 py-1 rounded-full shadow">🎉 Birthday</span>
             <span class="absolute top-6 right-6 bg-pink-500 text-white text-xs font-bold px-4 py-1 rounded-full shadow">🔥 Hot Deal</span>
-            <img src="Photos/test2.jpg" alt="Birthday" class="w-32 h-32 object-cover rounded-2xl mb-4 shadow border-2 border-green-200 animate-bounce-slow" />
+            <img src="<?php echo $base_url; ?>/Photos/banner.jpg" alt="Birthday" class="w-32 h-32 object-cover rounded-2xl mb-4 shadow border-2 border-green-200 animate-bounce-slow" />
             <div class="font-extrabold text-2xl text-green-700 mb-2 text-center">Giảm giá sinh nhật khách hàng</div>
             <div class="text-gray-700 mb-2 text-center">Ưu đãi đặc biệt trong tháng sinh nhật!</div>
             <div class="text-sm text-orange-600 font-bold mb-3">Áp dụng toàn năm</div>

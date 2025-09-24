@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
-            background: url('Photos/test2.jpg') no-repeat center center fixed;
+            background: url('../Photos/login_background.jpg') no-repeat center center fixed;
             background-size: cover;
             /* min-height: 100vh; */
             display: flex;
@@ -228,7 +228,7 @@
 <body>
     <div style="display: flex; align-items: center; justify-content: center; min-height: 100vh;">
         <div class="side-image-box">
-            <img id = "login_banner"src="Photos/login_background1 (2).jpg" alt="Login Illustration" style="width:100%; height:100%; object-fit:cover; border-radius:20px 0 0 20px;" />
+            <img id = "login_banner"src="../Photos/login_banner.jpg" alt="Login Illustration" style="width:100%; height:100%; object-fit:cover; border-radius:20px 0 0 20px;" />
         </div>
         <div class="login-container">
             <div class="profile-icon">

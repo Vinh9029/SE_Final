@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="bg-gray-50 min-h-screen flex flex-col">
-    <?php include 'header.php'; ?>
+    <?php include '../includes/header.php'; ?>
     <main class="flex-1">
         <!-- Section: Giới thiệu chung -->
         <section class="max-w-4xl mx-auto mt-12 mb-8 text-center">
@@ -76,6 +76,6 @@
             </div>
         </section>
     </main>
-    <?php include 'footer.php'; ?>
+    <?php include '../includes/footer.php'; ?>
 </body>
 </html>

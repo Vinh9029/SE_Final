@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
-            background: url('Photos/test2.jpg') no-repeat center center fixed;
+            background: url('../Photos/login_background.jpg') no-repeat center center fixed;
             background-size: cover;
             display: flex;
             align-items: center;
@@ -178,7 +178,7 @@
     <div style="display: flex; align-items: center; justify-content: center; min-height: 100vh;">
         <div class="update-container">
             <div class="profile-icon" style="cursor:pointer;" onclick="window.location.href='user.php'">
-                <img src="Photos/logo.png" alt="Logo" style="width:220px; height:100px; object-fit:cover;" />
+                <img src="../Photos/logo.png" alt="Logo" style="width:220px; height:100px; object-fit:cover;" />
             </div>
             <div class="update-header">Update Password</div>
             <form id="updateForm" onsubmit="handleUpdate(event)">

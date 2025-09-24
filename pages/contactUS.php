@@ -1,3 +1,4 @@
+<?php include_once __DIR__ . "/../config.php"; ?>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -8,7 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="bg-gray-50 min-h-screen flex flex-col">
-    <?php include 'header.php'; ?>
+    <?php include '../includes/header.php'; ?>
     <main class="flex-1">
         <section class="max-w-4xl mx-auto mt-12 mb-8 text-center">
             <h1 class="text-3xl md:text-4xl font-bold text-pink-600 mb-2">Liên hệ với Old Favour Coffee</h1>
@@ -36,7 +37,7 @@
                     </div>
                 </div>
                 <div class="rounded-2xl overflow-hidden shadow">
-                    <img src="Photos/theoldfavour.jpg" alt="Không gian quán" class="w-full h-56 object-cover" />
+                    <img src="<?php echo $base_url; ?>/Photos/theoldfavour.jpg" alt="Không gian quán" class="w-full h-56 object-cover" />
                 </div>
                 <div class="bg-white rounded-2xl shadow p-4 flex flex-col gap-2 items-center">
                     <div class="font-semibold text-pink-600 mb-1">Kết nối mạng xã hội</div>
@@ -68,6 +69,6 @@
             </div>
         </section>
     </main>
-    <?php include 'footer.php'; ?>
+    <?php include '../includes/footer.php'; ?>
 </body>
 </html>

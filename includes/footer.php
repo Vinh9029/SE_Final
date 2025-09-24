@@ -3,7 +3,7 @@
         <!-- Cột 1: Logo + slogan + liên hệ -->
         <div>
             <div class="flex items-center gap-2 mb-3">
-                <img src="Photos/logo.png" alt="Logo" class="h-12 w-12 object-cover rounded-full shadow" />
+                <img src="<?php echo $base_url; ?>/Photos/banner.jpg" alt="Logo" class="h-12 w-10 object-cover rounded-full shadow" />
                 <span class="text-xl font-bold text-pink-400">Old Favour</span>
             </div>
             <div class="mb-2 text-pink-200 italic">Hạnh phúc trong từng tách cà phê!</div>
@@ -21,7 +21,7 @@
                 <li><a href="#" class="hover:text-pink-400 transition">Thực đơn</a></li>
                 <li><a href="#" class="hover:text-pink-400 transition">Khuyến mãi</a></li>
                 <li><a href="#" class="hover:text-pink-400 transition">Liên hệ</a></li>
-                <li><a href="registerAccount.php" class="hover:text-pink-400 transition">Đăng ký</a></li>
+                <li><a href="<?php echo $base_url; ?>/login/registerAccount.php" class="hover:text-pink-400 transition">Đăng ký</a></li>
             </ul>
         </div>
         <!-- Cột 3: Mạng xã hội + đối tác giao hàng -->
@@ -34,9 +34,9 @@
             </div>
             <div class="font-semibold text-sm mb-1 text-pink-200">Đối tác giao hàng</div>
             <div class="flex gap-3 items-center">
-                <img src="Photos/grab.jpg" alt="Grab" class="h-8 w-auto max-w-[60px] bg-white rounded p-1 object-contain shadow" />
-                <img src="Photos/shopee_food.png" alt="ShopeeFood" class="h-8 w-auto max-w-[60px] bg-white rounded p-1 object-contain shadow" />
-                <img src="Photos/baemin.png" alt="Baemin" class="h-8 w-auto max-w-[60px] bg-white rounded p-1 object-contain shadow" />
+                <img src="<?php echo $base_url; ?>/Photos/grab.jpg" alt="Grab" class="h-8 w-auto max-w-[60px] bg-white rounded p-1 object-contain shadow" />
+                <img src="<?php echo $base_url; ?>/Photos/shopee_food.png" alt="ShopeeFood" class="h-8 w-auto max-w-[60px] bg-white rounded p-1 object-contain shadow" />
+                <img src="<?php echo $base_url; ?>/Photos/baemin.png" alt="Baemin" class="h-8 w-auto max-w-[60px] bg-white rounded p-1 object-contain shadow" />
             </div>
         </div>
         <!-- Cột 4: Newsletter + bản đồ nhỏ -->
