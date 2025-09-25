@@ -81,7 +81,7 @@
             </div>
         </section>
         <!-- Khuyến mãi & Ưu đãi -->
-        <?php include 'pages/promotion-cards.php'; ?>
+        <?php include 'pages/promotion.php'; ?>
         <!-- Combo gợi ý -->
         <section class="max-w-5xl mx-auto mt-12">
             <h3 class="text-xl font-bold text-gray-800 mb-4">Combo gợi ý</h3>

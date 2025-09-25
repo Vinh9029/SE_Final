@@ -1,3 +1,4 @@
+<?php include_once __DIR__ . "/../config.php"; ?>
 <?php
 // Dữ liệu sản phẩm mẫu
 $products = [
@@ -65,6 +66,7 @@ $pagedItems = array_slice($filtered_items, $offset, $itemsPerPage);
 ?>
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -72,11 +74,20 @@ $pagedItems = array_slice($filtered_items, $offset, $itemsPerPage);
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .btn-orange { background: #FF7A00; }
-        .btn-orange:hover { background: #ff9800; }
-        .footer-bg { background: #3d2c1a; }
+        .btn-orange {
+            background: #FF7A00;
+        }
+
+        .btn-orange:hover {
+            background: #ff9800;
+        }
+
+        .footer-bg {
+            background: #3d2c1a;
+        }
     </style>
 </head>
+
 <body class="bg-gray-50 font-sans">
     <!-- Header -->
     <header class="bg-white shadow-md sticky top-0 z-50">
@@ -101,7 +112,7 @@ $pagedItems = array_slice($filtered_items, $offset, $itemsPerPage);
                             <span class="absolute -top-2 -right-4 bg-pink-500 text-white text-xs rounded-full px-2 py-0.5 font-bold shadow">Mới</span>
                         </a>
                     </li>
-                    <li><a href="../aboutUs.php" class="text-gray-700 hover:text-pink-600 font-medium transition">Về chúng tôi</a></li>
+                    <li><a href="<?php echo $base_url; ?>/pages/aboutUs.php" class="text-gray-700 hover:text-pink-600 font-medium transition">Về chúng tôi</a></li>
                     <li><a href="../contactUS.php" class="text-gray-700 hover:text-pink-600 font-medium transition">Liên hệ</a></li>
                 </ul>
             </nav>
@@ -112,10 +123,10 @@ $pagedItems = array_slice($filtered_items, $offset, $itemsPerPage);
                     <span class="absolute left-2 top-1.5 text-gray-400"><i class="fa fa-search"></i></span>
                 </form>
                 <a href="#" class="relative text-gray-700 hover:text-pink-600 text-xl transition">
-                <i class="fa fa-shopping-cart"></i>
-                <!-- Badge số lượng (nếu có) -->
-                <!-- <span class="absolute -top-2 -right-2 bg-pink-500 text-white text-xs rounded-full px-1">2</span> -->
-            </a>
+                    <i class="fa fa-shopping-cart"></i>
+                    <!-- Badge số lượng (nếu có) -->
+                    <!-- <span class="absolute -top-2 -right-2 bg-pink-500 text-white text-xs rounded-full px-1">2</span> -->
+                </a>
                 <a href="../user.php" class="text-gray-700 hover:text-pink-600 font-medium transition flex items-center gap-1">
                     <i class="fa fa-user-circle text-lg"></i>
                     <span>Đăng nhập</span>
@@ -142,30 +153,33 @@ $pagedItems = array_slice($filtered_items, $offset, $itemsPerPage);
         </div>
     </section>
     <script>
-    // Hero slider JS
-    let heroCurrent = 0;
-    const heroSlides = document.querySelectorAll('.hero-slide');
-    const heroDots = document.querySelectorAll('.hero-dot');
-    function showHeroSlide(idx) {
-        heroSlides.forEach((img, i) => {
-            img.style.opacity = i === idx ? '1' : '0';
+        // Hero slider JS
+        let heroCurrent = 0;
+        const heroSlides = document.querySelectorAll('.hero-slide');
+        const heroDots = document.querySelectorAll('.hero-dot');
+
+        function showHeroSlide(idx) {
+            heroSlides.forEach((img, i) => {
+                img.style.opacity = i === idx ? '1' : '0';
+            });
+            heroDots.forEach((dot, i) => {
+                dot.className = 'hero-dot w-3 h-3 rounded-full ' + (i === idx ? 'bg-orange-500' : 'bg-gray-300');
+            });
+            heroCurrent = idx;
+        }
+
+        function nextHeroSlide() {
+            showHeroSlide((heroCurrent + 1) % heroSlides.length);
+        }
+
+        function prevHeroSlide() {
+            showHeroSlide((heroCurrent - 1 + heroSlides.length) % heroSlides.length);
+        }
+        document.querySelectorAll('.hero-dot').forEach((dot, i) => {
+            dot.onclick = () => showHeroSlide(i);
         });
-        heroDots.forEach((dot, i) => {
-            dot.className = 'hero-dot w-3 h-3 rounded-full ' + (i === idx ? 'bg-orange-500' : 'bg-gray-300');
-        });
-        heroCurrent = idx;
-    }
-    function nextHeroSlide() {
-        showHeroSlide((heroCurrent + 1) % heroSlides.length);
-    }
-    function prevHeroSlide() {
-        showHeroSlide((heroCurrent - 1 + heroSlides.length) % heroSlides.length);
-    }
-    document.querySelectorAll('.hero-dot').forEach((dot, i) => {
-        dot.onclick = () => showHeroSlide(i);
-    });
-    setInterval(nextHeroSlide, 5000);
-    showHeroSlide(0);
+        setInterval(nextHeroSlide, 5000);
+        showHeroSlide(0);
     </script>
     <!-- Breadcrumb -->
     <div class="max-w-6xl mx-auto px-2 mb-4">
@@ -180,7 +194,7 @@ $pagedItems = array_slice($filtered_items, $offset, $itemsPerPage);
         <div class="flex flex-wrap justify-between items-center gap-2 mb-8">
             <div class="flex flex-wrap gap-2">
                 <?php foreach ($cat_names as $key => $label): ?>
-                    <a href="?cat=<?php echo htmlspecialchars($key); ?><?php echo isset($_GET['sort']) ? '&sort='.htmlspecialchars($_GET['sort']) : ''; ?>" class="px-6 py-2 rounded-t-xl font-bold text-lg text-gray-700 <?php echo ($cat==$key)?'bg-pink-500 text-white shadow-lg':'bg-pink-100 hover:bg-pink-200 shadow'; ?> transition duration-200">
+                    <a href="?cat=<?php echo htmlspecialchars($key); ?><?php echo isset($_GET['sort']) ? '&sort=' . htmlspecialchars($_GET['sort']) : ''; ?>" class="px-6 py-2 rounded-t-xl font-bold text-lg text-gray-700 <?php echo ($cat == $key) ? 'bg-pink-500 text-white shadow-lg' : 'bg-pink-100 hover:bg-pink-200 shadow'; ?> transition duration-200">
                         <?php echo htmlspecialchars($label); ?>
                     </a>
                 <?php endforeach; ?>
@@ -190,122 +204,69 @@ $pagedItems = array_slice($filtered_items, $offset, $itemsPerPage);
                     <i class="fa fa-sort text-gray-500"></i> Sắp xếp:
                 </label>
                 <select id="sort-select" class="border rounded px-3 py-2 text-base font-semibold focus:outline-none focus:ring-2 focus:ring-orange-200 bg-white shadow" onchange="onSortChange(this.value)">
-                    <option value="default" <?php echo ($sort=='default')?'selected':''; ?>>Mặc định</option>
-                    <option value="name_asc" <?php echo ($sort=='name_asc')?'selected':''; ?>>Tên A-Z</option>
-                    <option value="name_desc" <?php echo ($sort=='name_desc')?'selected':''; ?>>Tên Z-A</option>
-                    <option value="price_asc" <?php echo ($sort=='price_asc')?'selected':''; ?>>Giá thấp đến cao</option>
-                    <option value="price_desc" <?php echo ($sort=='price_desc')?'selected':''; ?>>Giá cao xuống thấp</option>
+                    <option value="default" <?php echo ($sort == 'default') ? 'selected' : ''; ?>>Mặc định</option>
+                    <option value="name_asc" <?php echo ($sort == 'name_asc') ? 'selected' : ''; ?>>Tên A-Z</option>
+                    <option value="name_desc" <?php echo ($sort == 'name_desc') ? 'selected' : ''; ?>>Tên Z-A</option>
+                    <option value="price_asc" <?php echo ($sort == 'price_asc') ? 'selected' : ''; ?>>Giá thấp đến cao</option>
+                    <option value="price_desc" <?php echo ($sort == 'price_desc') ? 'selected' : ''; ?>>Giá cao xuống thấp</option>
                 </select>
             </div>
         </div>
         <script>
-        function onSortChange(val) {
-            // JS sort: fallback reload
-            const url = new URL(window.location.href);
-            url.searchParams.set('sort', val);
-            window.location.href = url.toString();
-        }
+            function onSortChange(val) {
+                // JS sort: fallback reload
+                const url = new URL(window.location.href);
+                url.searchParams.set('sort', val);
+                window.location.href = url.toString();
+            }
         </script>
         <!-- Grid sản phẩm -->
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-8">
             <?php foreach ($pagedItems as $item): ?>
-            <div class="bg-white rounded-2xl shadow-xl p-6 flex flex-col items-center hover:scale-105 hover:shadow-pink-300 transition duration-200">
-                <img src="<?php echo $item['img']; ?>" alt="<?php echo $item['name']; ?>" class="w-32 h-32 object-cover rounded-xl mb-4 shadow bg-gray-100 border-2 border-pink-100" />
-                <div class="font-extrabold text-pink-600 text-xl text-center mb-1"><?php echo $item['name']; ?></div>
-                <div class="text-orange-600 font-bold text-lg mb-2 text-center"><?php echo $item['price']; ?></div>
-                <button class="btn-orange hover:bg-orange-600 text-white px-6 py-2 rounded-xl font-bold text-base mt-2 shadow transition duration-200">Đặt món</button>
-            </div>
+                <div class="bg-white rounded-2xl shadow-xl p-6 flex flex-col items-center hover:scale-105 hover:shadow-pink-300 transition duration-200">
+                    <img src="<?php echo $item['img']; ?>" alt="<?php echo $item['name']; ?>" class="w-32 h-32 object-cover rounded-xl mb-4 shadow bg-gray-100 border-2 border-pink-100" />
+                    <div class="font-extrabold text-pink-600 text-xl text-center mb-1"><?php echo $item['name']; ?></div>
+                    <div class="text-orange-600 font-bold text-lg mb-2 text-center"><?php echo $item['price']; ?></div>
+                    <button class="btn-orange hover:bg-orange-600 text-white px-6 py-2 rounded-xl font-bold text-base mt-2 shadow transition duration-200">Đặt món</button>
+                </div>
             <?php endforeach; ?>
         </div>
         <!-- Pagination -->
         <?php if ($totalPages > 1): ?>
-        <div class="flex justify-center mt-6 space-x-2">
-            <?php for ($i = 1; $i <= $totalPages; $i++): ?>
-                <a href="?cat=<?php echo urlencode($cat); ?>&sort=<?php echo urlencode($sort); ?>&page=<?php echo $i; ?>"
-                   class="px-4 py-2 rounded-2xl font-extrabold text-lg transition border-2 <?php echo $i === $currentPage ? 'bg-pink-500 text-white border-pink-500 shadow-lg' : 'bg-white text-pink-500 border-pink-200 hover:bg-pink-100 hover:text-pink-600'; ?>">
-                   <?php echo $i; ?>
-                </a>
-            <?php endfor; ?>
-        </div>
+            <div class="flex justify-center mt-6 space-x-2">
+                <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                    <a href="?cat=<?php echo urlencode($cat); ?>&sort=<?php echo urlencode($sort); ?>&page=<?php echo $i; ?>"
+                        class="px-4 py-2 rounded-2xl font-extrabold text-lg transition border-2 <?php echo $i === $currentPage ? 'bg-pink-500 text-white border-pink-500 shadow-lg' : 'bg-white text-pink-500 border-pink-200 hover:bg-pink-100 hover:text-pink-600'; ?>">
+                        <?php echo $i; ?>
+                    </a>
+                <?php endfor; ?>
+            </div>
         <?php endif; ?>
     </div>
+    <br>
+    <br>
     <!-- Khuyến mãi & Ưu đãi dưới cùng menu -->
-    <section id="promotion">
-        <?php include '../promotion-cards.php'; ?>
-    </section>
+    <?php include_once __DIR__ . "/../pages/promotion.php"; ?>
     <script>
-    // Smooth scroll for Khuyến mãi link in menu.php header
-    if (window.location.pathname.endsWith('menu.php')) {
-        document.addEventListener('DOMContentLoaded', function() {
-            var promoLink = document.querySelector('a[href="#promotion"]');
-            if (promoLink) {
-                promoLink.addEventListener('click', function(e) {
-                    var target = document.getElementById('promotion');
-                    if (target) {
-                        e.preventDefault();
-                        target.scrollIntoView({ behavior: 'smooth' });
-                    }
-                });
-            }
-        });
-    }
+        // Smooth scroll for Khuyến mãi link in menu.php header
+        if (window.location.pathname.endsWith('menu.php')) {
+            document.addEventListener('DOMContentLoaded', function() {
+                var promoLink = document.querySelector('a[href="#promotion"]');
+                if (promoLink) {
+                    promoLink.addEventListener('click', function(e) {
+                        var target = document.getElementById('promotion');
+                        if (target) {
+                            e.preventDefault();
+                            target.scrollIntoView({
+                                behavior: 'smooth'
+                            });
+                        }
+                    });
+                }
+            });
+        }
     </script>
-     <!-- Footer -->
-    <footer class="footer-bg text-gray-200 pt-10 pb-4 mt-10">
-        <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <!-- Logo + slogan + liên hệ -->
-            <div>
-                <div class="flex items-center gap-2 mb-3">
-                    <img src="../Photos/logo.png" alt="Logo" class="h-12 w-12 object-cover rounded-full shadow" />
-                    <span class="text-xl font-bold text-pink-400">Old Favour</span>
-                </div>
-                <div class="mb-2 text-pink-200 italic">Hạnh phúc trong từng tách cà phê!</div>
-                <div class="text-sm flex flex-col gap-1">
-                    <span><i class="fa fa-map-marker-alt text-pink-400 mr-2"></i>123 Main St, Ho Chi Minh City</span>
-                    <span><i class="fa fa-phone-alt text-pink-400 mr-2"></i>(123) 456-7890</span>
-                    <span><i class="fa fa-envelope text-pink-400 mr-2"></i>info@oldfavourcoffee.com</span>
-                </div>
-            </div>
-            <!-- Liên kết nhanh -->
-            <div>
-                <div class="font-semibold text-lg mb-2 text-pink-300">Liên kết nhanh</div>
-                <ul class="space-y-1 text-sm">
-                    <li><a href="../user.php" class="hover:text-pink-400 transition">Trang chủ</a></li>
-                    <li><a href="menu.php" class="hover:text-pink-400 transition">Thực đơn</a></li>
-                    <li><a href="#" class="hover:text-pink-400 transition">Khuyến mãi</a></li>
-                    <li><a href="../contactUS.php" class="hover:text-pink-400 transition">Liên hệ</a></li>
-                    <li><a href="../registerAccount.php" class="hover:text-pink-400 transition">Đăng ký</a></li>
-                </ul>
-            </div>
-            <!-- Mạng xã hội + đối tác giao hàng -->
-            <div>
-                <div class="font-semibold text-lg mb-2 text-pink-300">Kết nối với chúng tôi</div>
-                <div class="flex gap-3 mb-3">
-                    <a href="#" class="hover:text-pink-400 text-2xl"><i class="fab fa-facebook"></i></a>
-                    <a href="#" class="hover:text-pink-400 text-2xl"><i class="fab fa-instagram"></i></a>
-                    <a href="#" class="hover:text-pink-400 text-2xl"><i class="fab fa-twitter"></i></a>
-                </div>
-                <div class="font-semibold text-sm mb-1 text-pink-200">Đối tác giao hàng</div>
-                <div class="flex gap-3 items-center">
-                    <img src="../Photos/grab.jpg" alt="Grab" class="h-8 w-auto max-w-[60px] bg-white rounded p-1 object-contain shadow" />
-                    <img src="../Photos/shopee_food.png" alt="ShopeeFood" class="h-8 w-auto max-w-[60px] bg-white rounded p-1 object-contain shadow" />
-                    <img src="../Photos/baemin.png" alt="Baemin" class="h-8 w-auto max-w-[60px] bg-white rounded p-1 object-contain shadow" />
-                </div>
-            </div>
-            <!-- Newsletter + bản đồ nhỏ -->
-            <div>
-                <div class="font-semibold text-lg mb-2 text-pink-300">Nhận ưu đãi & tin mới</div>
-                <form class="flex mb-3">
-                    <input type="email" placeholder="Nhập email của bạn" class="rounded-l px-3 py-2 w-full text-gray-800 focus:outline-none" required />
-                    <button type="submit" class="btn-orange hover:bg-orange-600 text-white px-4 rounded-r">Gửi</button>
-                </form>
-                <div class="font-semibold text-sm mb-1 text-pink-200">Địa chỉ quán</div>
-                <iframe src="https://www.google.com/maps?q=10.762622,106.660172&z=15&output=embed" width="120%" height="200" style="border:0; border-radius:8px;" allowfullscreen="" loading="lazy"></iframe>
-            </div>
-        </div>
-        <div class="text-center text-xs text-gray-400 mt-8">
-            &copy; 2025 Old Favour Coffee. All rights reserved.
-        </div>
-    </footer>
+    <?php include_once __DIR__ . "/../includes/footer.php"; ?>
 </body>
+
 </html>

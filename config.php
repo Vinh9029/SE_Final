@@ -5,7 +5,7 @@ $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off'
 
 $host = $_SERVER['HTTP_HOST'];
 #link direct
-$addLink = "/xampp/htdocs/Experiment";
+$addLink = "/xampp/htdocs";
 // Lấy thư mục gốc của project (trong trường hợp project không nằm ở thư mục gốc của web server)
 $project_folder = basename(dirname(__FILE__));
 $base_url = $protocol . $host . $addLink . "/" . $project_folder;

@@ -17,10 +17,10 @@
         <div>
             <div class="font-semibold text-lg mb-2 text-pink-300">Liên kết nhanh</div>
             <ul class="space-y-1 text-sm">
-                <li><a href="user.php" class="hover:text-pink-400 transition">Trang chủ</a></li>
-                <li><a href="#" class="hover:text-pink-400 transition">Thực đơn</a></li>
-                <li><a href="#" class="hover:text-pink-400 transition">Khuyến mãi</a></li>
-                <li><a href="#" class="hover:text-pink-400 transition">Liên hệ</a></li>
+                <li><a href="<?php echo $base_url; ?>/index.php" class="hover:text-pink-400 transition">Trang chủ</a></li>
+                <li><a href="<?php echo $base_url; ?>/menus/menu.php" class="hover:text-pink-400 transition">Thực đơn</a></li>
+                <li><a href="<?php echo $base_url; ?>/index.php" class="hover:text-pink-400 transition">Khuyến mãi</a></li>
+                <li><a href="<?php echo $base_url; ?>/pages/contactUS.php" class="hover:text-pink-400 transition">Liên hệ</a></li>
                 <li><a href="<?php echo $base_url; ?>/login/registerAccount.php" class="hover:text-pink-400 transition">Đăng ký</a></li>
             </ul>
         </div>
