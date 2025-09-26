@@ -1,3 +1,7 @@
+<?php
+session_start();
+include_once __DIR__ . '/../database/db_connection.php';
+?>
 <div class="flex flex-col md:flex-row gap-8 items-center md:items-start">
   <!-- Info & Edit Form -->
   <div class="bg-pink-50 rounded-3xl shadow-xl p-8 flex-1 w-full">

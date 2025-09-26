@@ -1,3 +1,8 @@
+<?php
+session_start();
+include_once __DIR__ . '/../database/db_connection.php';
+include_once __DIR__ . '/../config.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -119,7 +124,7 @@
 <body>
     <div style="display: flex; align-items: center; justify-content: center; min-height: 100vh;">
         <div class="reset-container">
-            <div class="profile-icon" style="cursor:pointer;" onclick="window.location.href='user.php'">
+            <div class="profile-icon" style="cursor:pointer;" onclick="window.location.href='<?php echo $base_url; ?>/login/index.php'">
                 <img src="../Photos/logo.png" alt="Logo" style="width:210px; height:100px; object-fit:cover;" />
             </div>
             <div class="reset-header">Reset Password</div>
@@ -143,7 +148,7 @@
             </div>
             <div class="back-link">
                 <span>Remembered your password?</span>
-                <a href="user.php">Login</a>
+                <a href="<?php echo $base_url; ?>/login/index.php">Login</a>
             </div>
         </div>
     </div>

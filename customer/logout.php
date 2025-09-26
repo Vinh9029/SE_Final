@@ -1,3 +1,7 @@
+<?php
+session_start();
+include_once __DIR__ . '/../database/db_connection.php';
+?>
 <div class="flex flex-col items-center justify-center h-full py-20">
   <div class="bg-white rounded-3xl shadow-xl p-8 flex flex-col items-center">
     <i class="fa fa-sign-out-alt text-red-500 text-5xl mb-4 animate-bounce"></i>

@@ -1,4 +1,8 @@
-<?php include_once __DIR__ . "/../config.php"; ?>
+<?php
+session_start();
+include_once __DIR__ . '/database/db_connection.php';
+include_once __DIR__ . "/../config.php"; 
+?>
 <section id="promotion" class="max-w-6xl mx-auto mt-12 px-2 py-12 rounded-3xl" style="background: linear-gradient(135deg, #fff5f8 0%, #f9f9f9 100%);">
     <!-- Banner lớn đầu trang -->
     <section class="w-full bg-gradient-to-r from-pink-500 to-yellow-300 py-10 mb-8 rounded-b-3xl shadow-xl">

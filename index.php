@@ -1,4 +1,9 @@
-
+<?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+// session_start();
+// include_once __DIR__ . '/database/db_connection.php';
+?>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -42,7 +47,7 @@
                     <div class="text-gray-500 text-sm">Đậm đà, truyền thống</div>
                 </div>
                 <div class="bg-white rounded-xl shadow p-4 flex flex-col items-center">
-                    <img src="Photos/test2.jpg" class="w-24 h-24 object-cover rounded-full mb-2" />
+                    <img src="Photos/background.jpg" class="w-24 h-24 object-cover rounded-full mb-2" />
                     <div class="font-semibold text-pink-600">Bánh ngọt Pháp</div>
                     <div class="text-gray-500 text-sm">Ngọt ngào, mềm mịn</div>
                 </div>

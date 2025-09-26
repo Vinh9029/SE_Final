@@ -1,12 +1,15 @@
 <?php
-// Tự động tính base URL dựa vào vị trí project
 $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' 
              || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
 
 $host = $_SERVER['HTTP_HOST'];
-#link direct
+$port = $_SERVER['SERVER_PORT'];
 $addLink = "/xampp/htdocs";
-// Lấy thư mục gốc của project (trong trường hợp project không nằm ở thư mục gốc của web server)
+$addLink="";
 $project_folder = basename(dirname(__FILE__));
-$base_url = $protocol . $host . $addLink . "/" . $project_folder;
+
+// Add port to base_url if not default (80 for http, 443 for https)
+$port_part = ($port != 80 && $port != 443) ? ":$port" : "";
+
+$base_url = $protocol . $host . $port_part . $addLink . "/" . $project_folder;
 ?>

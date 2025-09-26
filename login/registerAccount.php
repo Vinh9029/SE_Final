@@ -1,3 +1,8 @@
+<?php
+session_start();
+include_once __DIR__ . '/../database/db_connection.php';
+include_once __DIR__ . '/../config.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -171,7 +176,7 @@
 <body>
 
     <div class="register-container">
-        <div class="profile-icon" style="cursor:pointer;" onclick="window.location.href='user.php'">
+        <div class="profile-icon" style="cursor:pointer;" onclick="window.location.href='<?php echo $base_url; ?>/login/index.php'">
             <img src="../Photos/logo.png" alt="Logo" style="width:210px; height:100px; object-fit:cover;" />
         </div>
         <div class="register-header">Register Account</div>
@@ -204,7 +209,7 @@
         </form>
         <div class="back-link">
             <span>Already have an account?</span>
-            <a href="user.php">Login</a>
+            <a href="<?php echo $base_url; ?>/login/index.php">Login</a>
         </div>
     </div>
     <script>

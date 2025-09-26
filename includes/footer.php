@@ -1,3 +1,7 @@
+<!-- <?php
+session_start();
+include_once __DIR__ . '/database/db_connection.php';
+?> -->
 <footer class="bg-gray-900 text-gray-200 pt-10 pb-4 mt-10">
     <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
         <!-- Cột 1: Logo + slogan + liên hệ -->
