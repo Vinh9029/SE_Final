@@ -3,6 +3,41 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 session_start();
 include_once __DIR__ . '/../database/db_connection.php';
+include_once __DIR__ . '/../config.php';
+
+$login_error = '';
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $username = trim($_POST['username'] ?? '');
+    $password = $_POST['password'] ?? '';
+    $stmt = $conn->prepare("SELECT user_id, password FROM users WHERE username=?");
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $stmt->store_result();
+    if ($stmt->num_rows === 1) {
+        $stmt->bind_result($user_id, $hash);
+        $stmt->fetch();
+        if (password_verify($password, $hash)) {
+            $_SESSION['user_id'] = $user_id;
+            $_SESSION['username'] = $username;
+            echo '<div id="successModal" style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;z-index:9999;">
+                    <div style="background:#fff;border-radius:16px;padding:32px 24px;box-shadow:0 8px 32px 0 rgba(31,38,135,0.18);display:flex;flex-direction:column;align-items:center;">
+                        <i class="fa-solid fa-circle-check" style="font-size:3rem;color:#4ade80;margin-bottom:12px;"></i>
+                        <div style="font-size:1.2rem;font-weight:600;color:#16a34a;margin-bottom:8px;">Đăng nhập thành công!</div>
+                        <div style="color:#555;margin-bottom:18px;">Đang chuyển hướng về trang chủ...</div>
+                        <div class="loader" style="width:40px;height:40px;border:4px solid #f3f3f3;border-top:4px solid #fc466b;border-radius:50%;animation:spin 1s linear infinite;"></div>
+                    </div>
+                </div>
+                <style>@keyframes spin{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}</style>';
+            echo '<script>setTimeout(function(){window.location.href="' . $base_url . '/index.php";}, 1800);</script>';
+            exit;
+        } else {
+            $login_error = "Invalid username or password.";
+        }
+    } else {
+        $login_error = "Invalid username or password.";
+    }
+    $stmt->close();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -229,12 +264,21 @@ include_once __DIR__ . '/../database/db_connection.php';
             width: 100%;
             margin-top: 12px;
         }
+        .error-message {
+            color: #fc466b;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            display: none;
+        }
+        .error-message.show {
+            display: block;
+        }
     </style>
 </head>
 <body>
     <div style="display: flex; align-items: center; justify-content: center; min-height: 100vh;">
         <div class="side-image-box">
-            <img id = "login_banner"src="../Photos/login_banner.jpg" alt="Login Illustration" style="width:100%; height:100%; object-fit:cover; border-radius:20px 0 0 20px;" />
+            <img id="login_banner" src="../Photos/login_banner.jpg" alt="Login Illustration" style="width:100%; height:100%; object-fit:cover; border-radius:20px 0 0 20px;" />
         </div>
         <div class="login-container">
             <div class="profile-icon">
@@ -244,14 +288,14 @@ include_once __DIR__ . '/../database/db_connection.php';
                 <button class="switch-btn active" id="userBtn" onclick="switchRole('user')">User</button>
                 <button class="switch-btn" id="adminBtn" onclick="switchRole('admin')">Admin</button>
             </div>
-            <form>
+            <form method="post" autocomplete="off">
                 <div class="input-group">
                     <i class="fa-solid fa-user"></i>
-                    <input type="text" placeholder="Username" required>
+                    <input type="text" name="username" placeholder="Username" required>
                 </div>
                 <div class="input-group">
                     <i class="fa-solid fa-lock"></i>
-                    <input type="password" placeholder="Password" required id="password">
+                    <input type="password" name="password" placeholder="Password" required id="password">
                     <span class="toggle-password" onclick="togglePassword()">
                         <i class="fa-regular fa-eye" id="eyeIcon"></i>
                     </span>
@@ -259,6 +303,9 @@ include_once __DIR__ . '/../database/db_connection.php';
                 <div class="options">
                     <label class="remember"><input type="checkbox"><strong>Remember me</strong></label>
                     <span class="forgot"><a href="resetPassword.php"><strong>Forgot your password?</strong></a></span>
+                </div>
+                <div id="errorMessage" class="error-message <?php if ($login_error) echo 'show'; ?>">
+                    <?php if ($login_error) echo '<i class="fa-solid fa-triangle-exclamation"></i> ' . htmlspecialchars($login_error); ?>
                 </div>
                 <button type="submit" class="login-btn">LOGIN</button>
                 <div class="register-link">

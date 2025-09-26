@@ -1,4 +1,10 @@
 <?php
+session_start();
+include_once __DIR__ . '/../../database/db_connection.php';
+if (!isset($_SESSION['user_id'])) {
+    header('Location: ../../login/index.php');
+    exit;
+}
 // cart1.php - Giao diện giỏ hàng mới đồng bộ màu sắc toàn site
 // Chỉ xử lý front-end, chưa kết nối backend
 // Copy logic lấy dữ liệu từ cart.php nếu cần tích hợp backend
@@ -89,12 +95,6 @@
                                     class="voucher-btn bg-pink-100 hover:bg-pink-200 text-pink-600 px-3 py-1 rounded-full font-semibold"
                                     data-voucher="GIAM10">GIAM10</button>
                                 <button
-                                    class="voucher-btn bg-pink-100 hover:bg-pink-200 text-pink-600 px-3 py-1 rounded-full font-semibold"
-                                    data-voucher="FREESHIP">FREESHIP</button>
-                            </div>
-                        </div>
-                        <!-- Tóm tắt đơn hàng -->
-                        <div class="w-full md:w-1/2 bg-gray-50 rounded-xl shadow p-4 mb-8">
                             <div class="flex justify-between mb-2">
                                 <span class="text-gray-700">Tổng số lượng món:</span>
                                 <span id="order-total-qty" class="font-bold">0</span>

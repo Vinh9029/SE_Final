@@ -1,7 +1,49 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 session_start();
 include_once __DIR__ . '/../database/db_connection.php';
 include_once __DIR__ . '/../config.php';
+
+$reset_error = '';
+$reset_success = '';
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email'])) {
+    $email = trim($_POST['email']);
+    // Kiểm tra email có tồn tại không
+    $stmt = $conn->prepare("SELECT user_id FROM users WHERE email=?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $stmt->store_result();
+    if ($stmt->num_rows === 1) {
+        // Tạo mã OTP (demo: lưu vào session, thực tế nên gửi email)
+        $otp = rand(100000, 999999);
+        $_SESSION['reset_email'] = $email;
+        $_SESSION['reset_otp'] = $otp;
+        $reset_success = "Mã OTP đã được gửi đến email của bạn (Demo: $otp)";
+    } else {
+        $reset_error = "Email không tồn tại trong hệ thống.";
+    }
+    $stmt->close();
+}
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['otp'])) {
+    $otp = trim($_POST['otp']);
+    if (isset($_SESSION['reset_otp']) && $otp == $_SESSION['reset_otp']) {
+        $_SESSION['otp_verified'] = true;
+        echo '<div id="successModal" style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;z-index:9999;">
+                <div style="background:#fff;border-radius:16px;padding:32px 24px;box-shadow:0 8px 32px 0 rgba(31,38,135,0.18);display:flex;flex-direction:column;align-items:center;">
+                    <i class="fa-solid fa-circle-check" style="font-size:3rem;color:#4ade80;margin-bottom:12px;"></i>
+                    <div style="font-size:1.2rem;font-weight:600;color:#16a34a;margin-bottom:8px;">Xác thực OTP thành công!</div>
+                    <div style="color:#555;margin-bottom:18px;">Đang chuyển hướng đến đổi mật khẩu...</div>
+                    <div class="loader" style="width:40px;height:40px;border:4px solid #f3f3f3;border-top:4px solid #fc466b;border-radius:50%;animation:spin 1s linear infinite;"></div>
+                </div>
+            </div>
+            <style>@keyframes spin{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}</style>';
+        echo '<script>setTimeout(function(){window.location.href="updatePassword.php";}, 1800);</script>';
+        exit;
+    } else {
+        $reset_error = "Mã OTP không đúng hoặc đã hết hạn.";
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -128,70 +170,30 @@ include_once __DIR__ . '/../config.php';
                 <img src="../Photos/logo.png" alt="Logo" style="width:210px; height:100px; object-fit:cover;" />
             </div>
             <div class="reset-header">Reset Password</div>
-            <form id="resetForm" onsubmit="handleReset(event)">
+            <form method="post" autocomplete="off">
                 <div class="input-group">
                     <i class="fa-solid fa-envelope"></i>
-                    <input type="email" placeholder="Email" required id="resetEmail">
+                    <input type="email" name="email" placeholder="Email" required>
                 </div>
-                <div style="margin-bottom: 18px; width: 100%; display: flex; justify-content: center;">
-                    <div class="g-recaptcha" data-sitekey="6LeZargrAAAAAFqX96DUyUOSDVAtmZSOGPeHN3GZ"></div>
-                </div>
-                <button type="submit" class="reset-btn">Send OTP</button>
+                <button type="submit" class="reset-btn">Gửi mã OTP</button>
+                <?php if ($reset_error): ?>
+                    <div class="error-message show"><i class="fa-solid fa-triangle-exclamation"></i> <?php echo htmlspecialchars($reset_error); ?></div>
+                <?php endif; ?>
+                <?php if ($reset_success): ?>
+                    <div class="success-message show"><i class="fa-solid fa-circle-check"></i> <?php echo htmlspecialchars($reset_success); ?></div>
+                    <div class="input-group" style="margin-top:18px;">
+                        <i class="fa-solid fa-key"></i>
+                        <input type="text" name="otp" placeholder="Nhập mã OTP" maxlength="6" required>
+                    </div>
+                    <button type="submit" class="reset-btn">Xác thực OTP</button>
+                <?php endif; ?>
             </form>
-            <div id="otpSection" style="display:none; margin-top:20px; width:100%;">
-                <div class="input-group">
-                    <i class="fa-solid fa-key"></i>
-                    <input type="text" placeholder="Enter OTP code" maxlength="6" id="otpInput" required>
-                </div>
-                <button class="reset-btn" onclick="verifyOTP()">Verify OTP</button>
-                <div id="otpMessage" style="color:#fc466b; margin-top:8px;"></div>
-            </div>
             <div class="back-link">
                 <span>Remembered your password?</span>
                 <a href="<?php echo $base_url; ?>/login/index.php">Login</a>
             </div>
         </div>
     </div>
-    <script>
-        // Simulate sending OTP and verifying
-        let generatedOTP = '';
-        let otpAttempts = 0;
-        const maxAttempts = 3;
-
-        function handleReset(e) {
-            e.preventDefault();
-            var recaptchaResponse = grecaptcha.getResponse();
-            if (!recaptchaResponse) {
-                document.getElementById('otpMessage').innerText = "Please verify that you are not a robot.";
-                return;
-            }
-            const recapValue = document.getElementById('recapInput').value.trim().toLowerCase();
-            if (recapValue !== 'i am not a robot') {
-                document.getElementById('otpMessage').innerText = "Please confirm you are not a robot by typing 'I am not a robot'.";
-                return;
-            }
-            // Simulate sending email and OTP
-            generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
-            otpAttempts = 0;
-            document.getElementById('otpSection').style.display = 'block';
-            document.getElementById('resetForm').style.display = 'none';
-            document.getElementById('otpMessage').innerText = 'An OTP code has been sent to your email. (Demo: ' + generatedOTP + ')';
-            // In real system, send email with link to updatePassword.php and OTP code
-        }
-
-        function verifyOTP() {
-            const otpInput = document.getElementById('otpInput').value;
-            otpAttempts++;
-            if (otpInput === generatedOTP) {
-                window.location.href = 'updatePassword.php';
-            } else if (otpAttempts < maxAttempts) {
-                document.getElementById('otpMessage').innerText = 'Invalid OTP code. Attempts left: ' + (maxAttempts - otpAttempts);
-            } else {
-                document.getElementById('otpMessage').innerText = 'You have exceeded the maximum number of attempts. Please try again.';
-                document.getElementById('otpInput').disabled = true;
-            }
-        }
-    </script>
 </body>
 
 </html>

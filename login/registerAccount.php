@@ -1,7 +1,56 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 session_start();
 include_once __DIR__ . '/../database/db_connection.php';
 include_once __DIR__ . '/../config.php';
+
+$register_error = '';
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $username = trim($_POST['username'] ?? '');
+    $email = trim($_POST['email'] ?? '');
+    $password = $_POST['password'] ?? '';
+    $confirm_password = $_POST['confirm_password'] ?? '';
+    if ($password !== $confirm_password) {
+        $register_error = "Passwords do not match.";
+    } elseif (strlen($password) < 8) {
+        $register_error = "Password must be at least 8 characters.";
+    } elseif (!preg_match('/[A-Z]/', $password)) {
+        $register_error = "Password must contain at least one uppercase letter.";
+    } elseif (!preg_match('/[!@#$%^&*(),.?":{}|<>]/', $password)) {
+        $register_error = "Password must contain at least one special symbol.";
+    } else {
+        $stmt = $conn->prepare("SELECT user_id FROM users WHERE username=? OR email=?");
+        $stmt->bind_param("ss", $username, $email);
+        $stmt->execute();
+        $stmt->store_result();
+        if ($stmt->num_rows > 0) {
+            $register_error = "Username or email already exists.";
+        } else {
+            $hash = password_hash($password, PASSWORD_DEFAULT);
+            $stmt = $conn->prepare("INSERT INTO users (username, password, email, role) VALUES (?, ?, ?, 'customer')");
+            $stmt->bind_param("sss", $username, $hash, $email);
+            if ($stmt->execute()) {
+                $_SESSION['user_id'] = $stmt->insert_id;
+                $_SESSION['username'] = $username;
+                echo '<div id="successModal" style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;z-index:9999;">
+                        <div style="background:#fff;border-radius:16px;padding:32px 24px;box-shadow:0 8px 32px 0 rgba(31,38,135,0.18);display:flex;flex-direction:column;align-items:center;">
+                            <i class="fa-solid fa-circle-check" style="font-size:3rem;color:#4ade80;margin-bottom:12px;"></i>
+                            <div style="font-size:1.2rem;font-weight:600;color:#16a34a;margin-bottom:8px;">Đăng ký thành công!</div>
+                            <div style="color:#555;margin-bottom:18px;">Đang chuyển hướng về trang chủ...</div>
+                            <div class="loader" style="width:40px;height:40px;border:4px solid #f3f3f3;border-top:4px solid #fc466b;border-radius:50%;animation:spin 1s linear infinite;"></div>
+                        </div>
+                    </div>
+                    <style>@keyframes spin{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}</style>';
+                echo '<script>setTimeout(function(){window.location.href="' . $base_url . '/index.php";}, 1800);</script>';
+                exit;
+            } else {
+                $register_error = "Registration failed. Please try again.";
+            }
+        }
+        $stmt->close();
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -115,7 +164,6 @@ include_once __DIR__ . '/../config.php';
 
         .error-message {
             color: #fff;
-            /* background: linear-gradient(90deg, #bfa76a 0%, #7c5c2e 100%); */
             background: linear-gradient(90deg, rgb(220, 65, 96) 0%, rgb(151, 102, 28) 100%);
             border-radius: 8px;
             margin-bottom: 10px;
@@ -180,18 +228,18 @@ include_once __DIR__ . '/../config.php';
             <img src="../Photos/logo.png" alt="Logo" style="width:210px; height:100px; object-fit:cover;" />
         </div>
         <div class="register-header">Register Account</div>
-        <form>
+        <form method="post" autocomplete="off">
             <div class="input-group">
                 <i class="fa-solid fa-user"></i>
-                <input type="text" placeholder="Username" required>
+                <input type="text" name="username" placeholder="Username" required>
             </div>
             <div class="input-group">
                 <i class="fa-solid fa-envelope"></i>
-                <input type="email" placeholder="Email" required>
+                <input type="email" name="email" placeholder="Email" required>
             </div>
             <div class="input-group">
                 <i class="fa-solid fa-lock"></i>
-                <input type="password" placeholder="New Password" required id="password" oninput="checkStrength()">
+                <input type="password" name="password" placeholder="New Password" required id="password" oninput="checkStrength()">
             </div>
             <div class="w-full flex items-center gap-2 mb-2">
                 <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
@@ -202,9 +250,11 @@ include_once __DIR__ . '/../config.php';
             <div id="strengthText" class="text-xs mb-1 font-semibold"></div>
             <div class="input-group">
                 <i class="fa-solid fa-lock"></i>
-                <input type="password" placeholder="Confirm New Password" required id="confirm_password">
+                <input type="password" name="confirm_password" placeholder="Confirm New Password" required id="confirm_password">
             </div>
-            <div id="errorMessage" class="error-message"></div>
+            <div id="errorMessage" class="error-message <?php if ($register_error) echo 'show'; ?>">
+                <?php if ($register_error) echo '<i class="fa-solid fa-triangle-exclamation"></i> ' . htmlspecialchars($register_error); ?>
+            </div>
             <button type="submit" class="register-btn">Create Account</button>
         </form>
         <div class="back-link">

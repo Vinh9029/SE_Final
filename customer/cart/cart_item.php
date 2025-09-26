@@ -1,3 +1,12 @@
+<?php
+session_start();
+include_once __DIR__ . '/../../database/db_connection.php';
+if (!isset($_SESSION['user_id'])) {
+    header('Location: ../../login/index.php');
+    exit;
+}
+?>
+
 <!-- cart-item.php - Demo danh sách sản phẩm giỏ hàng, dùng cho cả cart và checkout -->
 
 <!-- Sản phẩm 1 -->

@@ -50,7 +50,7 @@ session_start();
                         <span>Tài khoản</span>
                     </a>
                     <div class="absolute right-0 mt-2 w-48 bg-white border rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-50">
-                        <a href="<?php echo $base_url; ?>/customer/profile.php" class="block px-4 py-2 text-gray-700 hover:bg-pink-50">Thông tin tài khoản</a>
+                        <a href="<?php echo $base_url; ?>/customer/profile.php"data-page="<?php echo $base_url; ?>/customer/profile.php" class="block px-4 py-2 text-gray-700 hover:bg-pink-50">Thông tin tài khoản</a>
                         <a href="<?php echo $base_url; ?>/customer/orders.php" class="block px-4 py-2 text-gray-700 hover:bg-pink-50">Đơn hàng</a>
                         <a href="<?php echo $base_url; ?>/customer/settings.php" class="block px-4 py-2 text-gray-700 hover:bg-pink-50">Cài đặt tài khoản</a>
                         <a href="<?php echo $base_url; ?>/customer/logout.php" class="block px-4 py-2 text-gray-700 hover:bg-pink-50">Đăng xuất</a>

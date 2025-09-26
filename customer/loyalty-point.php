@@ -1,3 +1,11 @@
+<?php
+session_start();
+include_once __DIR__ . '/../database/db_connection.php';
+if (!isset($_SESSION['user_id'])) {
+    header('Location: ../login/index.php');
+    exit;
+}
+?>
 <div class="w-full mb-2">
   <div class="flex justify-between items-center text-sm font-bold mb-1">
     <span>Điểm tích lũy</span>

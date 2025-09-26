@@ -1,6 +1,10 @@
 <?php
 session_start();
 include_once __DIR__ . '/../database/db_connection.php';
+if (!isset($_SESSION['user_id'])) {
+    header('Location: ../login/index.php');
+    exit;
+}
 ?>
 <div class="flex flex-col md:flex-row gap-8 items-center md:items-start">
   <!-- Info & Edit Form -->

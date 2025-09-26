@@ -1,6 +1,10 @@
 <?php
 session_start();
 include_once __DIR__ . '/../database/db_connection.php';
+if (!isset($_SESSION['user_id'])) {
+    header('Location: ../login/index.php');
+    exit;
+}
 ?>
 <div class="bg-yellow-50 rounded-3xl shadow-xl p-8 max-w-2xl mx-auto">
   <div class="font-bold text-2xl text-yellow-600 mb-4 flex items-center gap-2"><i class="fa fa-cog text-yellow-500"></i> Cài đặt tài khoản</div>

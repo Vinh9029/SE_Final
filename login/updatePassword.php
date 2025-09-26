@@ -1,6 +1,53 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 session_start();
 include_once __DIR__ . '/../database/db_connection.php';
+include_once __DIR__ . '/../config.php';
+
+$update_error = '';
+$update_success = '';
+if (!isset($_SESSION['otp_verified']) || !isset($_SESSION['reset_email'])) {
+    header('Location: resetPassword.php');
+    exit;
+}
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $new_password = $_POST['new_password'] ?? '';
+    $confirm_password = $_POST['confirm_password'] ?? '';
+    if ($new_password !== $confirm_password) {
+        $update_error = "Mật khẩu xác nhận không khớp.";
+    } elseif (strlen($new_password) < 8) {
+        $update_error = "Mật khẩu phải từ 8 ký tự trở lên.";
+    } elseif (!preg_match('/[A-Z]/', $new_password)) {
+        $update_error = "Mật khẩu phải có ít nhất 1 chữ hoa.";
+    } elseif (!preg_match('/[!@#$%^&*(),.?":{}|<>]/', $new_password)) {
+        $update_error = "Mật khẩu phải có ít nhất 1 ký tự đặc biệt.";
+    } else {
+        $hash = password_hash($new_password, PASSWORD_DEFAULT);
+        $email = $_SESSION['reset_email'];
+        $stmt = $conn->prepare("UPDATE users SET password=? WHERE email=?");
+        $stmt->bind_param("ss", $hash, $email);
+        if ($stmt->execute()) {
+            unset($_SESSION['otp_verified']);
+            unset($_SESSION['reset_email']);
+            unset($_SESSION['reset_otp']);
+            echo '<div id="successModal" style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;z-index:9999;">
+                    <div style="background:#fff;border-radius:16px;padding:32px 24px;box-shadow:0 8px 32px 0 rgba(31,38,135,0.18);display:flex;flex-direction:column;align-items:center;">
+                        <i class="fa-solid fa-circle-check" style="font-size:3rem;color:#4ade80;margin-bottom:12px;"></i>
+                        <div style="font-size:1.2rem;font-weight:600;color:#16a34a;margin-bottom:8px;">Đổi mật khẩu thành công!</div>
+                        <div style="color:#555;margin-bottom:18px;">Đang chuyển hướng về trang đăng nhập...</div>
+                        <div class="loader" style="width:40px;height:40px;border:4px solid #f3f3f3;border-top:4px solid #fc466b;border-radius:50%;animation:spin 1s linear infinite;"></div>
+                    </div>
+                </div>
+                <style>@keyframes spin{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}</style>';
+            echo '<script>setTimeout(function(){window.location.href="index.php";}, 1800);</script>';
+            exit;
+        } else {
+            $update_error = "Đổi mật khẩu thất bại. Vui lòng thử lại.";
+        }
+        $stmt->close();
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -185,24 +232,19 @@ include_once __DIR__ . '/../database/db_connection.php';
                 <img src="../Photos/logo.png" alt="Logo" style="width:220px; height:100px; object-fit:cover;" />
             </div>
             <div class="update-header">Update Password</div>
-            <form id="updateForm" onsubmit="handleUpdate(event)">
+            <form method="post" autocomplete="off">
                 <div class="input-group">
                     <i class="fa-solid fa-lock"></i>
-                    <input type="password" placeholder="New Password" required id="newPassword" oninput="checkStrength()">
+                    <input type="password" name="new_password" placeholder="Mật khẩu mới" required id="new_password">
                 </div>
-                <div class="w-full flex items-center gap-2 mb-2">
-                    <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
-                        <div id="progressBar" class="h-2 rounded-full transition-all duration-300 bg-red-500" style="width:0%"></div>
-                    </div>
-                    <span id="progressLabel" class="text-xs font-semibold text-gray-700 min-w-[60px] text-right"></span>
-                </div>
-                <div id="strengthText" class="text-xs mb-1 font-semibold"></div>
                 <div class="input-group">
                     <i class="fa-solid fa-lock"></i>
-                    <input type="password" placeholder="Confirm New Password" required id="confirmNewPassword">
+                    <input type="password" name="confirm_password" placeholder="Xác nhận mật khẩu mới" required id="confirm_password">
                 </div>
-                <div id="errorMessage" class="error-message"></div>
-                <button type="submit" class="update-btn">Update Password</button>
+                <?php if ($update_error): ?>
+                    <div class="error-message show"><i class="fa-solid fa-triangle-exclamation"></i> <?php echo htmlspecialchars($update_error); ?></div>
+                <?php endif; ?>
+                <button type="submit" class="reset-btn">Đổi mật khẩu</button>
             </form>
             <div class="back-link">
                 <span>Back to</span>
@@ -211,38 +253,6 @@ include_once __DIR__ . '/../database/db_connection.php';
         </div>
     </div>
     <script>
-        function handleUpdate(e) {
-            e.preventDefault();
-            var newPassword = document.getElementById('newPassword').value;
-            var confirmNewPassword = document.getElementById('confirmNewPassword').value;
-            var errorMessage = document.getElementById('errorMessage');
-            var hasSymbol = /[!@#$%^&*(),.?":{}|<>]/.test(newPassword);
-            var hasUppercase = /[A-Z]/.test(newPassword);
-            let msg = '';
-            if (newPassword !== confirmNewPassword) {
-                msg = '<i class="fa-solid fa-triangle-exclamation"></i> Passwords do not match.';
-            } else if (newPassword.length < 8) {
-                msg = '<i class="fa-solid fa-triangle-exclamation"></i> Password must be at least 8 characters.';
-            } else if (!hasSymbol) {
-                msg = '<i class="fa-solid fa-triangle-exclamation"></i> Password must contain at least one special symbol.';
-            } else if (!hasUppercase) {
-                msg = '<i class="fa-solid fa-triangle-exclamation"></i> Password must contain at least one uppercase letter.';
-            }
-            if (msg) {
-                errorMessage.innerHTML = msg;
-                errorMessage.classList.add('show');
-                setTimeout(function() {
-                    errorMessage.classList.remove('show');
-                    errorMessage.innerText = '';
-                }, 2500);
-                return;
-            }
-            errorMessage.innerText = "";
-            errorMessage.classList.remove('show');
-            alert("Password updated successfully! (Demo only)");
-            window.location.href = "index.php";
-        }
-
         function checkStrength() {
             var pwd = document.getElementById('newPassword').value;
             var bar = document.getElementById('progressBar');

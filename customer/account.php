@@ -1,6 +1,10 @@
 <?php
 session_start();
 include_once __DIR__ . '/../database/db_connection.php';
+if (!isset($_SESSION['user_id'])) {
+    header('Location: ../login/index.php');
+    exit;
+}
 ?>
 <head>
   <meta charset="UTF-8">
