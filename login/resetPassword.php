@@ -14,15 +14,39 @@ function sendOtpMail($to, $otp) {
         $mail->isSMTP();
         $mail->Host       = 'smtp.gmail.com';
         $mail->SMTPAuth   = true;
-        $mail->Username   = 'your_gmail@gmail.com'; // Thay bằng Gmail của bạn
-        $mail->Password   = 'your_app_password';    // Thay bằng App password Gmail
+        $mail->Username   = 'bearastrikingresemblance@gmail.com'; // Thay bằng Gmail của bạn
+        $mail->Password   = 'umqa zhvh tqzk kduq';    // Thay bằng App password Gmail
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port       = 587;
-        $mail->setFrom('your_gmail@gmail.com', 'Coffee Shop');
+        $mail->setFrom('bearastrikingresemblance@gmail.com', 'The Old Favour ');
         $mail->addAddress($to);
+        #Fix Vietnamese characters issue
+        $mail->CharSet = 'UTF-8';
+        $mail->Encoding = 'base64';
+        #content 
         $mail->isHTML(true);
-        $mail->Subject = 'Mã OTP xác thực';
-        $mail->Body    = "Mã OTP của bạn là: <b>$otp</b>";
+        $mail->Subject = "🔐 MÃ OTP XÁC THỰC - Old Favour Coffee";
+        $mail->Body = "
+<div style='font-family:Segoe UI,Arial,sans-serif;padding:24px;background:#f9fafb;border-radius:12px;max-width:600px;margin:auto;border:1px solid #eee;'>
+  <div style='text-align:center;margin-bottom:20px;'>
+    <img src='/Photos/banner.jpg' alt='The Old Favour Coffee' style='width:80px;margin-bottom:10px;'>
+    <h2 style='color:#fc466b;margin:0;'>Xác thực đăng nhập</h2>
+    <p style='color:#555;margin:6px 0;'>Vui lòng sử dụng mã OTP bên dưới để tiếp tục</p>
+  </div>
+  <div style='margin:20px auto;padding:20px;background:#fff0f5;border:2px dashed #fc466b;border-radius:10px;text-align:center;max-width:300px;'>
+    <span style='font-size:1.5rem;color:#fc466b;font-weight:bold;letter-spacing:3px;'>$otp</span>
+  </div>
+  <p style='color:#333;text-align:center;margin-top:20px;font-size:0.95rem;'>
+    Mã OTP chỉ có hiệu lực trong <b>5 phút</b>.<br>
+    Tuyệt đối không chia sẻ mã này cho bất kỳ ai.
+  </p>
+  <hr style='margin:24px 0;border:none;border-top:1px solid #eee;'>
+  <small style='color:#888;display:block;text-align:center;line-height:1.6;'>
+    Đây là email tự động từ hệ thống <b>The Old Favour Coffee</b>. <br>
+    Nếu bạn không yêu cầu OTP, vui lòng bỏ qua email này.
+  </small>
+</div>
+";
         $mail->send();
         return true;
     } catch (Exception $e) {
@@ -46,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email'])) {
             $reset_success = "<div style='display:flex;flex-direction:column;align-items:center;gap:10px;'>"
                 . "<i class='fa-solid fa-circle-check' style='font-size:2.2rem;color:#4ade80;'></i>"
                 . "<span style='font-weight:600;color:#16a34a;'>Mã OTP đã được gửi đến email của bạn!</span>"
-                . "<span style='color:#555;'>Vui lòng kiểm tra hộp thư và nhập mã OTP để tiếp tục.</span>"
+                . "<span style='color:#555;'>Vui lòng kiểm tra hộp thư và nhập mã OTP tại <a href='verifyOtp.php' style='color:#fc466b;text-decoration:underline;'>trang xác thực OTP</a>.</span>"
                 . "</div>";
         } else {
             $reset_error = "<div style='display:flex;flex-direction:column;align-items:center;gap:10px;'>"
@@ -59,25 +83,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email'])) {
         $reset_error = "Email không tồn tại trong hệ thống.";
     }
     $stmt->close();
-}
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['otp'])) {
-    $otp = trim($_POST['otp']);
-    if (isset($_SESSION['reset_otp']) && $otp == $_SESSION['reset_otp']) {
-        $_SESSION['otp_verified'] = true;
-        echo '<div id="successModal" style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;z-index:9999;">
-                <div style="background:#fff;border-radius:16px;padding:32px 24px;box-shadow:0 8px 32px 0 rgba(31,38,135,0.18);display:flex;flex-direction:column;align-items:center;">
-                    <i class="fa-solid fa-circle-check" style="font-size:3rem;color:#4ade80;margin-bottom:12px;"></i>
-                    <div style="font-size:1.2rem;font-weight:600;color:#16a34a;margin-bottom:8px;">Xác thực OTP thành công!</div>
-                    <div style="color:#555;margin-bottom:18px;">Đang chuyển hướng đến đổi mật khẩu...</div>
-                    <div class="loader" style="width:40px;height:40px;border:4px solid #f3f3f3;border-top:4px solid #fc466b;border-radius:50%;animation:spin 1s linear infinite;"></div>
-                </div>
-            </div>
-            <style>@keyframes spin{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}</style>';
-        echo '<script>setTimeout(function(){window.location.href="updatePassword.php";}, 1800);</script>';
-        exit;
-    } else {
-        $reset_error = "Mã OTP không đúng hoặc đã hết hạn.";
-    }
 }
 ?>
 <!DOCTYPE html>
@@ -215,12 +220,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['otp'])) {
                     <div class="error-message show"><i class="fa-solid fa-triangle-exclamation"></i> <?php echo htmlspecialchars($reset_error); ?></div>
                 <?php endif; ?>
                 <?php if ($reset_success): ?>
-                    <div class="success-message show"><i class="fa-solid fa-circle-check"></i> <?php echo htmlspecialchars($reset_success); ?></div>
-                    <div class="input-group" style="margin-top:18px;">
-                        <i class="fa-solid fa-key"></i>
-                        <input type="text" name="otp" placeholder="Nhập mã OTP" maxlength="6" required>
-                    </div>
-                    <button type="submit" class="reset-btn">Xác thực OTP</button>
+                    <div class="success-message show"><i class="fa-solid fa-circle-check"></i> <?php echo $reset_success; ?></div>
+                    <div style="margin-top:12px;text-align:center;color:#555;font-size:0.98rem;">Đã gửi mã OTP, vui lòng kiểm tra email và nhập mã tại <a href='verifyOtp.php' style='color:#fc466b;text-decoration:underline;'>trang xác thực OTP</a>.</div>
                 <?php endif; ?>
             </form>
             <div class="back-link">

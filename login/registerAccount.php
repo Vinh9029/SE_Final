@@ -4,6 +4,7 @@ ini_set('display_errors', 1);
 session_start();
 include_once __DIR__ . '/../database/db_connection.php';
 include_once __DIR__ . '/../config.php';
+include_once __DIR__ . '/sendGiftVoucher.php';
 
 $register_error = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -43,6 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                     <style>@keyframes spin{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}</style>';
                 echo '<script>setTimeout(function(){window.location.href="' . $base_url . '/index.php";}, 1800);</script>';
+                sendGiftVoucher($email, $username);
                 exit;
             } else {
                 $register_error = "Registration failed. Please try again.";
