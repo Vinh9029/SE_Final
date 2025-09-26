@@ -23,7 +23,7 @@ function sendGiftVoucher($email, $username) {
         $mail->CharSet = 'UTF-8';
         $mail->Encoding = 'base64';
         $mail->isHTML(true);
-        $mail->Subject = '🎁 Chào mừng bạn đến với Old Favour Coffee!';
+        $mail->Subject = '🎁 Chào mừng bạn đến với The Old Favour Coffee!';
         $mail->Body = "<div style='font-family:Segoe UI,Arial,sans-serif;padding:24px;background:#f9fafb;border-radius:12px;max-width:600px;margin:auto;border:1px solid #eee;'>"
             . "<div style='text-align:center;margin-bottom:20px;'>"
             . "<img src='/photos/banner.jpg' alt='Old Favour Coffee' style='width:80px;margin-bottom:10px;'>"
@@ -36,7 +36,7 @@ function sendGiftVoucher($email, $username) {
             . "</div>"
             . "<p style='color:#333;text-align:center;margin-top:20px;font-size:0.95rem;'>Hãy sử dụng mã này khi thanh toán để nhận ưu đãi.</p>"
             . "<hr style='margin:24px 0;border:none;border-top:1px solid #eee;'>"
-            . "<small style='color:#888;display:block;text-align:center;line-height:1.6;'>Đây là email tự động từ hệ thống <b>Old Favour Coffee</b>. Nếu bạn không đăng ký tài khoản, vui lòng bỏ qua email này.</small>"
+            . "<small style='color:#888;display:block;text-align:center;line-height:1.6;'>Đây là email tự động từ hệ thống <b>The Old Favour Coffee</b>. Nếu bạn không đăng ký tài khoản, vui lòng bỏ qua email này.</small>"
             . "</div>";
         $mail->send();
         return true;
