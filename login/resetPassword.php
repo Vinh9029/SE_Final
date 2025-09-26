@@ -4,22 +4,57 @@ ini_set('display_errors', 1);
 session_start();
 include_once __DIR__ . '/../database/db_connection.php';
 include_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/../vendor/autoload.php'; 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+function sendOtpMail($to, $otp) {
+    $mail = new PHPMailer(true);
+    try {
+        $mail->isSMTP();
+        $mail->Host       = 'smtp.gmail.com';
+        $mail->SMTPAuth   = true;
+        $mail->Username   = 'your_gmail@gmail.com'; // Thay bằng Gmail của bạn
+        $mail->Password   = 'your_app_password';    // Thay bằng App password Gmail
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port       = 587;
+        $mail->setFrom('your_gmail@gmail.com', 'Coffee Shop');
+        $mail->addAddress($to);
+        $mail->isHTML(true);
+        $mail->Subject = 'Mã OTP xác thực';
+        $mail->Body    = "Mã OTP của bạn là: <b>$otp</b>";
+        $mail->send();
+        return true;
+    } catch (Exception $e) {
+        return false;
+    }
+}
 
 $reset_error = '';
 $reset_success = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email'])) {
     $email = trim($_POST['email']);
-    // Kiểm tra email có tồn tại không
     $stmt = $conn->prepare("SELECT user_id FROM users WHERE email=?");
     $stmt->bind_param("s", $email);
     $stmt->execute();
     $stmt->store_result();
     if ($stmt->num_rows === 1) {
-        // Tạo mã OTP (demo: lưu vào session, thực tế nên gửi email)
         $otp = rand(100000, 999999);
         $_SESSION['reset_email'] = $email;
         $_SESSION['reset_otp'] = $otp;
-        $reset_success = "Mã OTP đã được gửi đến email của bạn (Demo: $otp)";
+        if (sendOtpMail($email, $otp)) {
+            $reset_success = "<div style='display:flex;flex-direction:column;align-items:center;gap:10px;'>"
+                . "<i class='fa-solid fa-circle-check' style='font-size:2.2rem;color:#4ade80;'></i>"
+                . "<span style='font-weight:600;color:#16a34a;'>Mã OTP đã được gửi đến email của bạn!</span>"
+                . "<span style='color:#555;'>Vui lòng kiểm tra hộp thư và nhập mã OTP để tiếp tục.</span>"
+                . "</div>";
+        } else {
+            $reset_error = "<div style='display:flex;flex-direction:column;align-items:center;gap:10px;'>"
+                . "<i class='fa-solid fa-triangle-exclamation' style='font-size:2.2rem;color:#fc466b;'></i>"
+                . "<span style='font-weight:600;color:#fc466b;'>Gửi email thất bại!</span>"
+                . "<span style='color:#555;'>Vui lòng thử lại hoặc kiểm tra kết nối.</span>"
+                . "</div>";
+        }
     } else {
         $reset_error = "Email không tồn tại trong hệ thống.";
     }
