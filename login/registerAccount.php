@@ -34,6 +34,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($stmt->execute()) {
                 $_SESSION['user_id'] = $stmt->insert_id;
                 $_SESSION['username'] = $username;
+                // Tạo mã voucher ngẫu nhiên
+                $voucher_code = strtoupper(substr(md5(uniqid($username, true)), 0, 10));
+                $user_id = $stmt->insert_id;
+                $voucher_stmt = $conn->prepare("INSERT INTO vouchers (user_id, code, discount_percent, is_used) VALUES (?, ?, 10, 0)");
+                $voucher_stmt->bind_param("is", $user_id, $voucher_code);
+                $voucher_stmt->execute();
+                $voucher_stmt->close();
                 echo '<div id="successModal" style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;z-index:9999;">
                         <div style="background:#fff;border-radius:16px;padding:32px 24px;box-shadow:0 8px 32px 0 rgba(31,38,135,0.18);display:flex;flex-direction:column;align-items:center;">
                             <i class="fa-solid fa-circle-check" style="font-size:3rem;color:#4ade80;margin-bottom:12px;"></i>

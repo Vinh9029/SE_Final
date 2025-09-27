@@ -90,3 +90,15 @@ CREATE TABLE product_sizes (
     FOREIGN KEY (product_id) REFERENCES products(product_id)
 );
 
+--admin account (username: admin, password: 123)
+
+CREATE TABLE vouchers (
+    voucher_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    code VARCHAR(50) NOT NULL UNIQUE,
+    discount_percent INT DEFAULT 10, -- mức giảm giá
+    is_used BOOLEAN DEFAULT FALSE,   -- đã dùng chưa
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    expires_at TIMESTAMP NULL,       -- hạn sử dụng
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
