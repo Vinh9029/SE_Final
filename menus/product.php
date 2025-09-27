@@ -16,6 +16,12 @@ foreach ($products as $p) {
     }
 }
 if (!$product) { die('Sản phẩm không tồn tại!'); }
+
+// Lấy danh sách size từ DB
+$sizeQuery = $conn->prepare("SELECT * FROM product_sizes WHERE product_id = ?");
+$sizeQuery->bind_param("i", $product['product_id']);
+$sizeQuery->execute();
+$sizeResult = $sizeQuery->get_result();
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -48,7 +54,26 @@ if (!$product) { die('Sản phẩm không tồn tại!'); }
             </div>
             <div class="flex-1 flex flex-col justify-center">
                 <h1 class="font-extrabold text-pink-600 text-3xl mb-2"><?php echo $product['name']; ?></h1>
-                <div class="text-orange-600 font-bold text-2xl mb-4"><?php echo number_format($product['price'], 0, ',', '.'); ?> đ</div>
+                <div class="mb-6">
+                    <h4 class="font-bold text-lg mb-2 text-pink-600">Chọn Size</h4>
+                    <div class="flex flex-wrap gap-4">
+                        <?php if ($sizeResult->num_rows > 0): ?>
+                            <?php while ($size = $sizeResult->fetch_assoc()): ?>
+                                <label class="size-option flex items-center gap-2 px-4 py-2 rounded-xl border border-pink-200 bg-pink-50 cursor-pointer hover:bg-pink-100 transition">
+                                    <input type="radio" name="product_size" value="<?php echo $size['size_id']; ?>" data-extra="<?php echo $size['extra_price']; ?>" class="accent-pink-500" required>
+                                    <span class="font-semibold text-pink-700"><?php echo htmlspecialchars($size['size_name']); ?></span>
+                                    <span class="text-gray-500 text-sm"><?php echo htmlspecialchars($size['volume']); ?></span>
+                                    <?php if ($size['extra_price'] > 0): ?>
+                                        <span class="text-orange-600 font-bold text-sm">(+<?php echo number_format($size['extra_price'], 0, ',', '.'); ?> đ)</span>
+                                    <?php endif; ?>
+                                </label>
+                            <?php endwhile; ?>
+                        <?php else: ?>
+                            <p class="italic text-gray-400">Hiện chưa có size cho sản phẩm này.</p>
+                        <?php endif; ?>
+                    </div>
+                </div>
+                <div class="text-orange-600 font-bold text-2xl mb-4" id="product-price"><?php echo number_format($product['price'], 0, ',', '.'); ?> đ</div>
                 <div class="mb-4 text-gray-700 text-base leading-relaxed"><?php echo $product['description'] ?: '<span class="italic text-gray-400">Chưa có mô tả cho sản phẩm này.</span>'; ?></div>
                 <div class="flex gap-4 mt-6">
                     <button class="btn-orange hover:bg-orange-600 text-white px-8 py-3 rounded-xl font-bold text-lg shadow transition duration-200"><i class="fa fa-shopping-cart mr-2"></i>Đặt món ngay</button>
@@ -58,5 +83,18 @@ if (!$product) { die('Sản phẩm không tồn tại!'); }
         </div>
     </div>
     <?php include_once __DIR__ . '/../includes/footer.php'; ?>
+    <script>
+    // Cập nhật giá khi chọn size
+    setTimeout(function() {
+        document.querySelectorAll('input[name="product_size"]').forEach(radio => {
+            radio.addEventListener('change', function () {
+                const basePrice = <?php echo $product['price']; ?>;
+                const extra = parseFloat(this.dataset.extra) || 0;
+                const finalPrice = basePrice + extra;
+                document.getElementById("product-price").innerText = finalPrice.toLocaleString('vi-VN') + " đ";
+            });
+        });
+    }, 100);
+    </script>
 </body>
 </html>
