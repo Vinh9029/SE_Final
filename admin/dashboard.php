@@ -75,6 +75,18 @@
     </main>
   </div>
   <script>
+    // Global toast for messages
+    const toast = document.createElement('div');
+    toast.id = 'toast';
+    toast.className = 'fixed bottom-4 right-4 px-4 py-2 rounded shadow-lg text-white z-50 hidden';
+    document.body.appendChild(toast);
+    function showToast(message, type = 'success') {
+      toast.textContent = message;
+      toast.className = `fixed bottom-4 right-4 px-4 py-2 rounded shadow-lg text-white z-50 ${type === 'success' ? 'bg-green-500' : 'bg-red-500'}`;
+      toast.classList.remove('hidden');
+      setTimeout(() => toast.classList.add('hidden'), 3000);
+    }
+
     // Sidebar menu AJAX load
     const menuLinks = document.querySelectorAll('aside nav a[data-page]');
     const mainContent = document.getElementById('admin-main-content');
@@ -90,12 +102,70 @@
           fetch(this.getAttribute('data-page'))
             .then(res => res.text())
             .then(html => {
-              setTimeout(() => { mainContent.innerHTML = html; }, 400);
+              setTimeout(() => {
+                mainContent.innerHTML = html;
+                bindAjaxLinks(); // Gán lại sự kiện AJAX cho các link CRUD/pagination sau khi load
+              }, 400);
               window.scrollTo({ top: mainContent.offsetTop - 80, behavior: 'smooth' });
             });
         }
       });
     });
+    // Hàm này sẽ gán lại sự kiện AJAX cho các link CRUD/pagination và form submissions trong nội dung động
+    function bindAjaxLinks() {
+      const ajaxLinks = document.querySelectorAll('#admin-main-content a[data-page]');
+      ajaxLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          const page = this.getAttribute('data-page') || this.getAttribute('href');
+          if (page) {
+            mainContent.innerHTML = `<div class='flex flex-col items-center justify-center h-full'><div class='animate-pulse w-24 h-24 bg-pink-100 rounded-full mb-6'></div><div class='text-center text-gray-400 mt-10'><i class='fa fa-spinner fa-spin text-4xl mb-4'></i><div class='font-bold text-lg'>Đang tải...</div></div></div>`;
+            fetch(page)
+              .then(res => res.text())
+              .then(html => {
+                setTimeout(() => { mainContent.innerHTML = html; bindAjaxLinks(); }, 400);
+                window.scrollTo({ top: mainContent.offsetTop - 80, behavior: 'smooth' });
+              });
+          }
+        });
+      });
+
+      // Bind form submissions for AJAX
+      const forms = document.querySelectorAll('#admin-main-content form');
+      forms.forEach(form => {
+        form.addEventListener('submit', function(e) {
+          e.preventDefault();
+          const formData = new FormData(this);
+          fetch(this.action, {
+            method: 'POST',
+            body: formData,
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+          })
+          .then(res => res.json())
+          .then(data => {
+            if (data.success) {
+              showToast(data.message, 'success');
+              if (data.redirect) {
+                fetch(data.redirect)
+                  .then(res => res.text())
+                  .then(html => {
+                    mainContent.innerHTML = html;
+                    bindAjaxLinks();
+                  });
+              }
+            } else {
+              showToast(data.message, 'error');
+            }
+          })
+          .catch(err => {
+            console.error('AJAX error:', err);
+            showToast('Lỗi kết nối. Vui lòng thử lại.', 'error');
+          });
+        });
+      });
+    }
+    // Nếu load trực tiếp, cũng bind luôn cho các link CRUD và forms
+    document.addEventListener('DOMContentLoaded', bindAjaxLinks);
   </script>
 </body>
 </html>
