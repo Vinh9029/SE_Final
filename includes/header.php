@@ -15,7 +15,7 @@ session_start();
         <nav class="flex-1 flex justify-center">
             <ul class="flex items-center gap-6">
                 <li><a href="<?php echo $base_url; ?>/index.php" class="text-gray-700 hover:text-pink-600 font-medium transition">Trang chủ</a></li>
-                <li><a href="<?php echo $base_url; ?>/menus/menu.php" class="text-gray-700 hover:text-pink-600 font-bold transition flex items-center gap-2">Thực đơn</a></li>
+                <li><a href="<?php echo $base_url; ?>/menus/menus.php" class="text-gray-700 hover:text-pink-600 font-bold transition flex items-center gap-2">Thực đơn</a></li>
                 <li><a href="<?php echo $base_url; ?>/pages/promotion.php" class="relative text-gray-700 hover:text-pink-600 font-bold transition flex items-center gap-2"><i class="fa fa-gift text-pink-500"></i> Khuyến mãi</a></li>
                 <li><a href="<?php echo $base_url; ?>/pages/aboutUs.php" class="text-gray-700 hover:text-pink-600 font-medium transition">Về chúng tôi</a></li>
                 <li><a href="<?php echo $base_url; ?>/pages/contactUS.php" class="text-gray-700 hover:text-pink-600 font-medium transition">Liên hệ</a></li>
@@ -25,10 +25,54 @@ session_start();
         <!-- Search | Cart | Login/Account -->
         <div class="flex items-center gap-4">
             <!-- Search bar -->
-            <form action="#" method="get" class="relative hidden md:block">
-                <input type="text" name="search" placeholder="Tìm kiếm..." class="border rounded-full px-3 py-1 pl-8 focus:outline-none focus:ring-2 focus:ring-pink-200 text-sm bg-gray-50" />
+            <form action="#" method="get" class="relative hidden md:block" autocomplete="off" id="searchForm">
+                <input type="text" name="search" id="searchInput" placeholder="Tìm kiếm..." class="border rounded-full px-3 py-1 pl-8 focus:outline-none focus:ring-2 focus:ring-pink-200 text-sm bg-gray-50" />
                 <span class="absolute left-2 top-1.5 text-gray-400"><i class="fa fa-search"></i></span>
+                <div id="searchDropdown" class="absolute left-0 top-10 w-full bg-white rounded-xl shadow-lg z-50" style="display:none;"></div>
             </form>
+            <script>
+            const searchInput = document.getElementById('searchInput');
+            const searchDropdown = document.getElementById('searchDropdown');
+            let searchTimeout = null;
+            searchInput.addEventListener('input', function() {
+                const val = this.value.trim();
+                if (val.length === 0) {
+                    searchDropdown.style.display = 'none';
+                    searchDropdown.innerHTML = '';
+                    return;
+                }
+                searchDropdown.style.display = 'block';
+                searchDropdown.innerHTML = '<div class="py-3 px-4 text-center"><i class="fa fa-spinner fa-spin text-pink-500"></i> Đang tìm kiếm...</div>';
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    fetch(`/menus/searchProduct.php?q=" + encodeURIComponent(val) + "`)
+                        .then(res => res.json())
+                        .then(data => {
+                            if (!Array.isArray(data) || data.length === 0) {
+                                searchDropdown.innerHTML = '<div class="py-3 px-4 text-center text-gray-400">Không tìm thấy sản phẩm phù hợp.</div>';
+                                return;
+                            }
+                            let html = '<div class="py-2 px-4 font-bold text-pink-600 border-b">Sản phẩm</div>';
+                            data.forEach(item => {
+                                html += `<a href="/menus/product.php?slug=${item.slug}" class="flex items-center gap-3 px-4 py-2 hover:bg-pink-50 transition">
+                                    <img src="${item.image}" alt="${item.name}" class="w-12 h-12 object-cover rounded shadow border border-pink-100" />
+                                    <div class="flex-1">
+                                        <div class="font-bold text-pink-600">${item.name}</div>
+                                        <div class="text-orange-600 font-semibold text-sm">${item.price}</div>
+                                    </div>
+                                </a>`;
+                            });
+                            searchDropdown.innerHTML = html;
+                        });
+                }, 350);
+            });
+            // Ẩn dropdown khi click ra ngoài
+            window.addEventListener('click', function(e) {
+                if (!searchDropdown.contains(e.target) && e.target !== searchInput) {
+                    searchDropdown.style.display = 'none';
+                }
+            });
+            </script>
             <!-- Cart icon -->
             <a href="#" class="relative text-gray-700 hover:text-pink-600 text-xl transition">
                 <i class="fa fa-shopping-cart"></i>
