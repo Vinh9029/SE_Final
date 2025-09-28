@@ -17,55 +17,69 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $is_signature = isset($_POST['is_signature']) ? 1 : 0;
     $image_path = null;
 
-    if (empty($name) || $price <= 0 || $category_id <= 0) {
-        $error = "Vui lòng điền đầy đủ thông tin hợp lệ.";
-    } else {
+  if (empty($name) || $price <= 0 || $category_id <= 0) {
+    $error = "Vui lòng điền đầy đủ thông tin hợp lệ.";
+  } else {
+        $image_path = null;
         if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-            $upload_dir = '../../Photos/';
-            if (!file_exists($upload_dir)) {
-                mkdir($upload_dir, 0777, true);
-            }
-            $file_extension = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
-            $file_name = 'product_' . time() . '.' . $file_extension;
-            $target_file = $upload_dir . $file_name;
-            if (move_uploaded_file($_FILES['image']['tmp_name'], $target_file)) {
-                $image_path = 'Photos/' . $file_name;
+            $allowed_types = ['jpg', 'jpeg', 'png', 'gif'];
+            $max_size = 5 * 1024 * 1024; // 5MB
+            $file_extension = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
+            if (!in_array($file_extension, $allowed_types)) {
+                $error = "Chỉ chấp nhận file JPG, JPEG, PNG, GIF.";
+            } elseif ($_FILES['image']['size'] > $max_size) {
+                $error = "File quá lớn. Tối đa 5MB.";
             } else {
-                // Log upload error
-                $logMessage = date('Y-m-d H:i:s') . ' Image upload error: ' . $_FILES['image']['error'] . ' for product: ' . $name . PHP_EOL;
-                file_put_contents('../../logs/crud_errors.log', $logMessage, FILE_APPEND | LOCK_EX);
-                $error = "Lỗi tải lên hình ảnh.";
+                $upload_dir = '../../Photos/';
+                if (!file_exists($upload_dir)) {
+                    mkdir($upload_dir, 0777, true);
+                }
+                $file_name = 'product_' . time() . '.' . $file_extension;
+                $target_file = $upload_dir . $file_name;
+                if (move_uploaded_file($_FILES['image']['tmp_name'], $target_file)) {
+                    $image_path = 'Photos/' . $file_name;
+                } else {
+                    // Log upload error
+                    $logMessage = date('Y-m-d H:i:s') . ' Image upload error: ' . $_FILES['image']['error'] . ' for product: ' . $name . PHP_EOL;
+                    file_put_contents('../../logs/crud_errors.log', $logMessage, FILE_APPEND | LOCK_EX);
+                    $error = "Lỗi tải lên hình ảnh.";
+                }
             }
         }
 
         if (!isset($error)) {
-            $stmt = $conn->prepare("INSERT INTO products (name, description, category_id, price, is_signature, image) VALUES (?, ?, ?, ?, ?, ?)");
-            $stmt->bind_param("ssidis", $name, $description, $category_id, $price, $is_signature, $image_path);
-            if ($stmt->execute()) {
-                $isAjax = isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest';
-                if ($isAjax) {
-                    header('Content-Type: application/json');
-                    echo json_encode(['success' => true, 'message' => 'Thêm sản phẩm thành công!', 'redirect' => 'products/list.php']);
-                    exit;
-                } else {
-                    header('Location: list.php?success=added');
-                    exit;
-                }
-            } else {
-                // Log error
-                $logMessage = date('Y-m-d H:i:s') . ' Add product error: ' . $conn->error . ' | Name: ' . $name . PHP_EOL;
-                file_put_contents('../../logs/crud_errors.log', $logMessage, FILE_APPEND | LOCK_EX);
-                $error = "Lỗi thêm sản phẩm: " . $conn->error;
-            }
-            $stmt->close();
+      $stmt = $conn->prepare("INSERT INTO products (name, description, category_id, price, is_signature, image, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW())");
+      $stmt->bind_param("ssidis", $name, $description, $category_id, $price, $is_signature, $image_path);
+      if ($stmt->execute()) {
+        $isAjax = isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest';
+        if ($isAjax) {
+          header('Content-Type: application/json');
+          echo json_encode(['success' => true, 'message' => 'Thêm sản phẩm thành công!', 'redirect' => 'products/list.php']);
+          exit;
+        } else {
+          header('Location: list.php?success=added');
+          exit;
+        }
+      } else {
+        // Log error
+        $logMessage = date('Y-m-d H:i:s') . ' Add product error: ' . $conn->error . ' | Name: ' . $name . PHP_EOL;
+        file_put_contents('../../logs/crud_errors.log', $logMessage, FILE_APPEND | LOCK_EX);
+        $error = "Lỗi thêm sản phẩm: " . $conn->error;
+      }
+      $stmt->close();
         }
     }
 
     $isAjax = isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest';
     if ($isAjax && isset($error)) {
-        header('Content-Type: application/json');
-        echo json_encode(['success' => false, 'message' => $error]);
-        exit;
+    header('Content-Type: application/json');
+    echo json_encode(['success' => false, 'message' => $error]);
+    exit;
+  } elseif ($isAjax) {
+    // Nếu không có lỗi nhưng không phải submit (ví dụ: load lại form), trả về JSON rỗng
+    header('Content-Type: application/json');
+    echo json_encode(['success' => false, 'message' => 'Dữ liệu không hợp lệ hoặc thiếu thông tin.']);
+    exit;
     }
 }
 ?>
@@ -76,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <?= htmlspecialchars($error) ?>
     </div>
   <?php endif; ?>
-  <form method="post" enctype="multipart/form-data" class="bg-white rounded-2xl shadow p-8 flex flex-col gap-6">
+  <form method="post" action="products/add.php" enctype="multipart/form-data" class="bg-white rounded-2xl shadow p-8 flex flex-col gap-6">
     <div>
       <label class="block text-sm font-semibold text-gray-700 mb-1">Tên sản phẩm</label>
       <input type="text" name="name" class="border rounded px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-orange-200" placeholder="Nhập tên sản phẩm" value="<?= htmlspecialchars($_POST['name'] ?? '') ?>" required />
