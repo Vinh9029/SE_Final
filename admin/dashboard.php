@@ -1,3 +1,13 @@
+<?php
+include_once '../database/db_connection.php';
+
+// Fetch dynamic stats
+$productCount = $conn->query("SELECT COUNT(*) FROM products")->fetch_row()[0] ?? 0;
+$orderCount = $conn->query("SELECT COUNT(*) FROM orders")->fetch_row()[0] ?? 0;
+$customerCount = $conn->query("SELECT COUNT(*) FROM users")->fetch_row()[0] ?? 0;
+$monthlyRevenue = $conn->query("SELECT SUM(total) FROM orders WHERE MONTH(order_date) = MONTH(CURDATE()) AND YEAR(order_date) = YEAR(CURDATE())")->fetch_row()[0] ?? 0;
+$monthlyRevenue = number_format($monthlyRevenue, 0, ',', '.') . 'đ';
+?>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -40,22 +50,22 @@
           <div class="bg-pink-50 rounded-2xl shadow p-6 flex flex-col items-center">
             <i class="fa fa-coffee text-3xl text-pink-500 mb-2"></i>
             <div class="font-bold text-lg text-pink-600">Sản phẩm</div>
-            <div class="text-2xl font-extrabold text-gray-800">120</div>
+            <div class="text-2xl font-extrabold text-gray-800"><?php echo $productCount; ?></div>
           </div>
           <div class="bg-orange-50 rounded-2xl shadow p-6 flex flex-col items-center">
             <i class="fa fa-receipt text-3xl text-orange-500 mb-2"></i>
             <div class="font-bold text-lg text-orange-600">Đơn hàng</div>
-            <div class="text-2xl font-extrabold text-gray-800">350</div>
+            <div class="text-2xl font-extrabold text-gray-800"><?php echo $orderCount; ?></div>
           </div>
           <div class="bg-blue-50 rounded-2xl shadow p-6 flex flex-col items-center">
             <i class="fa fa-users text-3xl text-blue-500 mb-2"></i>
             <div class="font-bold text-lg text-blue-600">Khách hàng</div>
-            <div class="text-2xl font-extrabold text-gray-800">80</div>
+            <div class="text-2xl font-extrabold text-gray-800"><?php echo $customerCount; ?></div>
           </div>
           <div class="bg-green-50 rounded-2xl shadow p-6 flex flex-col items-center">
             <i class="fa fa-coins text-3xl text-green-500 mb-2"></i>
             <div class="font-bold text-lg text-green-600">Doanh thu tháng</div>
-            <div class="text-2xl font-extrabold text-gray-800">120,000,000đ</div>
+            <div class="text-2xl font-extrabold text-gray-800"><?php echo $monthlyRevenue; ?></div>
           </div>
         </div>
         <div class="bg-white rounded-2xl shadow p-8">

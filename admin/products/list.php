@@ -2,7 +2,7 @@
 include_once '../../database/db_connection.php';
 
 // Lấy danh mục cho filter
-$catResult = $conn->query("SELECT DISTINCT c.name FROM categories c INNER JOIN products p ON c.category_id = p.category_id");
+$catResult = $conn->query("SELECT name FROM categories");
 $catList = [];
 while ($row = $catResult->fetch_assoc()) {
     $catList[] = $row['name'];
@@ -139,45 +139,28 @@ $result = $conn->query($sql);
   // Search functionality with debounce for server-side
   const searchInput = document.getElementById('searchInput');
   const clearSearch = document.getElementById('clearSearch');
-  const tbody = document.querySelector('#productTable tbody');
   const currentCat = '<?= htmlspecialchars($cat) ?>';
   let searchTimeout;
   searchInput.addEventListener('input', function() {
     clearTimeout(searchTimeout);
     const term = this.value.trim();
     searchTimeout = setTimeout(() => {
-      if (term.length > 2) {
+      if (term.length > 0) {
         const params = new URLSearchParams();
         params.append('search', term);
         if (currentCat) params.append('cat', currentCat);
         params.append('page', '1');
         window.location.href = '?' + params.toString();
-      } else {
-        filterTable();
       }
     }, 500);
   });
-  clearSearch.addEventListener('click', () => { 
-    searchInput.value = ''; 
+  clearSearch.addEventListener('click', () => {
+    searchInput.value = '';
     const params = new URLSearchParams();
     if (currentCat) params.append('cat', currentCat);
     params.append('page', '1');
     window.location.href = '?' + params.toString();
   });
-  function filterTable() {
-    const term = searchInput.value.toLowerCase();
-    const rows = tbody.querySelectorAll('tr');
-    rows.forEach(row => {
-      const name = row.children[1].textContent.toLowerCase();
-      const category = row.children[2].textContent.toLowerCase();
-      const price = row.children[3].textContent.toLowerCase();
-      if (name.includes(term) || category.includes(term) || price.includes(term)) {
-        row.style.display = '';
-      } else {
-        row.style.display = 'none';
-      }
-    });
-  }
 
   // Category filter form submit (already handled by form, but for consistency)
   const catSelect = document.querySelector('select[name="cat"]');
@@ -194,6 +177,40 @@ $result = $conn->query($sql);
       link.addEventListener('click', function(e) {
         e.preventDefault();
         const page = this.getAttribute('data-page') || this.getAttribute('href');
+        const isDelete = page && page.includes('delete.php');
+        
+        if (isDelete) {
+          if (confirm('Bạn có chắc chắn muốn xóa sản phẩm này? Hành động này không thể hoàn tác.')) {
+            // Proceed with AJAX delete
+            if (page && window.parent && window.parent.document.getElementById('admin-main-content')) {
+              const mainContent = window.parent.document.getElementById('admin-main-content');
+              mainContent.innerHTML = `<div class='flex flex-col items-center justify-center h-full'><div class='animate-pulse w-24 h-24 bg-pink-100 rounded-full mb-6'></div><div class='text-center text-gray-400 mt-10'><i class='fa fa-spinner fa-spin text-4xl mb-4'></i><div class='font-bold text-lg'>Đang xóa...</div></div></div>`;
+              
+              fetch(page, { method: 'POST' })  // Use POST for delete to trigger deletion
+                .then(res => res.json())
+                .then(data => {
+                  if (data.success) {
+                    // Reload the list page to show updated data
+                    window.parent.loadPage('products/list.php');
+                    // Or show success message
+                    alert(data.message);
+                  } else {
+                    alert('Lỗi: ' + data.message);
+                    // Reload to reset
+                    window.parent.loadPage('products/list.php');
+                  }
+                })
+                .catch(err => {
+                  console.error('Delete error:', err);
+                  alert('Lỗi khi xóa sản phẩm. Vui lòng thử lại.');
+                  window.parent.loadPage('products/list.php');
+                });
+            }
+          }
+          return; // Don't load the page
+        }
+        
+        // For non-delete pages
         if (page && window.parent && window.parent.document.getElementById('admin-main-content')) {
           const mainContent = window.parent.document.getElementById('admin-main-content');
           mainContent.innerHTML = `<div class='flex flex-col items-center justify-center h-full'><div class='animate-pulse w-24 h-24 bg-pink-100 rounded-full mb-6'></div><div class='text-center text-gray-400 mt-10'><i class='fa fa-spinner fa-spin text-4xl mb-4'></i><div class='font-bold text-lg'>Đang tải...</div></div></div>`;
