@@ -180,23 +180,41 @@ $result = $conn->query($sql);
         const isDelete = page && page.includes('delete.php');
         
         if (isDelete) {
+          // Extract product_id from the data-page URL
+          const url = new URL(page, window.location.origin);
+          const productId = url.searchParams.get('id');
+          
           if (confirm('Bạn có chắc chắn muốn xóa sản phẩm này? Hành động này không thể hoàn tác.')) {
             // Proceed with AJAX delete
-            if (page && window.parent && window.parent.document.getElementById('admin-main-content')) {
+            if (page && productId && window.parent && window.parent.document.getElementById('admin-main-content')) {
               const mainContent = window.parent.document.getElementById('admin-main-content');
               mainContent.innerHTML = `<div class='flex flex-col items-center justify-center h-full'><div class='animate-pulse w-24 h-24 bg-pink-100 rounded-full mb-6'></div><div class='text-center text-gray-400 mt-10'><i class='fa fa-spinner fa-spin text-4xl mb-4'></i><div class='font-bold text-lg'>Đang xóa...</div></div></div>`;
               
-              fetch(page, { method: 'POST' })  // Use POST for delete to trigger deletion
-                .then(res => res.json())
+              const formData = new URLSearchParams();
+              formData.append('product_id', productId);
+              
+              fetch(page, { 
+                method: 'POST', 
+                headers: { 
+                  'X-Requested-With': 'XMLHttpRequest',
+                  'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: formData
+              })
+                .then(res => {
+                  if (res.ok) {
+                    return res.json();
+                  } else {
+                    throw new Error('Network response was not ok');
+                  }
+                })
                 .then(data => {
                   if (data.success) {
                     // Reload the list page to show updated data
                     window.parent.loadPage('products/list.php');
-                    // Or show success message
                     alert(data.message);
                   } else {
                     alert('Lỗi: ' + data.message);
-                    // Reload to reset
                     window.parent.loadPage('products/list.php');
                   }
                 })

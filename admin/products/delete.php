@@ -7,55 +7,65 @@ if (!file_exists($logDir)) {
     mkdir($logDir, 0777, true);
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['product_id'])) {
-    $product_id = (int)$_POST['product_id'];
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $product_id = isset($_POST['product_id']) ? (int)$_POST['product_id'] : (isset($_GET['id']) ? (int)$_GET['id'] : 0);
     
-    // Get product info to delete image
-    $stmt = $conn->prepare("SELECT image FROM products WHERE product_id = ?");
-    $stmt->bind_param("i", $product_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $product = $result->fetch_assoc();
-    $stmt->close();
-    
-    if ($product) {
-        // Delete image if exists
-        if ($product['image'] && file_exists('../../' . $product['image'])) {
-            if (!unlink('../../' . $product['image'])) {
-                $logMessage = date('Y-m-d H:i:s') . ' Old image unlink error for product_id: ' . $product_id . ' | Image: ' . $product['image'] . PHP_EOL;
-                file_put_contents('../../logs/crud_errors.log', $logMessage, FILE_APPEND | LOCK_EX);
+    if ($product_id > 0) {
+        // Get product info to delete image
+        $stmt = $conn->prepare("SELECT image FROM products WHERE product_id = ?");
+        $stmt->bind_param("i", $product_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $product = $result->fetch_assoc();
+        $stmt->close();
+        
+        if ($product) {
+            // Delete image if exists
+            if ($product['image'] && file_exists('../../' . $product['image'])) {
+                if (!unlink('../../' . $product['image'])) {
+                    $logMessage = date('Y-m-d H:i:s') . ' Old image unlink error for product_id: ' . $product_id . ' | Image: ' . $product['image'] . PHP_EOL;
+                    file_put_contents('../../logs/crud_errors.log', $logMessage, FILE_APPEND | LOCK_EX);
+                }
             }
+            
+            // Delete product
+            $stmt = $conn->prepare("DELETE FROM products WHERE product_id = ?");
+            $stmt->bind_param("i", $product_id);
+            if ($stmt->execute()) {
+                $isAjax = isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest';
+                if ($isAjax) {
+                    header('Content-Type: application/json');
+                    echo json_encode(['success' => true, 'message' => 'Xóa sản phẩm thành công!', 'redirect' => 'products/list.php']);
+                    exit;
+                } else {
+                    header('Location: list.php?success=deleted');
+                    exit;
+                }
+            } else {
+                // Log error
+                $logMessage = date('Y-m-d H:i:s') . ' Delete product error: ' . $conn->error . ' | product_id: ' . $product_id . PHP_EOL;
+                file_put_contents('../../logs/crud_errors.log', $logMessage, FILE_APPEND | LOCK_EX);
+                $error = "Lỗi xóa sản phẩm: " . $conn->error;
+            }
+            $stmt->close();
+        } else {
+            $error = "Sản phẩm không tồn tại.";
         }
         
-        // Delete product
-        $stmt = $conn->prepare("DELETE FROM products WHERE product_id = ?");
-        $stmt->bind_param("i", $product_id);
-        if ($stmt->execute()) {
-            $isAjax = isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest';
-            if ($isAjax) {
-                header('Content-Type: application/json');
-                echo json_encode(['success' => true, 'message' => 'Xóa sản phẩm thành công!', 'redirect' => 'products/list.php']);
-                exit;
-            } else {
-                header('Location: list.php?success=deleted');
-                exit;
-            }
-        } else {
-            // Log error
-            $logMessage = date('Y-m-d H:i:s') . ' Delete product error: ' . $conn->error . ' | product_id: ' . $product_id . PHP_EOL;
-            file_put_contents('../../logs/crud_errors.log', $logMessage, FILE_APPEND | LOCK_EX);
-            $error = "Lỗi xóa sản phẩm: " . $conn->error;
+        $isAjax = isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest';
+        if ($isAjax && isset($error)) {
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => $error]);
+            exit;
         }
-        $stmt->close();
     } else {
-        $error = "Sản phẩm không tồn tại.";
-    }
-    
-    $isAjax = isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest';
-    if ($isAjax && isset($error)) {
-        header('Content-Type: application/json');
-        echo json_encode(['success' => false, 'message' => $error]);
-        exit;
+        $error = "ID sản phẩm không hợp lệ.";
+        $isAjax = isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest';
+        if ($isAjax) {
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => $error]);
+            exit;
+        }
     }
 } else {
     // For GET, show confirmation (but since AJAX loads, perhaps redirect or error)

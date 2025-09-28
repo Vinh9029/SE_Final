@@ -36,7 +36,7 @@ $monthlyRevenue = number_format($monthlyRevenue, 0, ',', '.') . 'đ';
         </ul>
       </nav>
       <div class="mt-auto">
-        <a href="../index.php" class="block px-4 py-2 rounded-lg font-semibold text-gray-700 hover:bg-red-100 hover:text-red-600 transition flex items-center"><i class="fa fa-sign-out-alt mr-2 text-red-500"></i> Đăng xuất</a>
+  <a href="logout.php" class="block px-4 py-2 rounded-lg font-semibold text-gray-700 hover:bg-red-100 hover:text-red-600 transition flex items-center"><i class="fa fa-sign-out-alt mr-2 text-red-500"></i> Đăng xuất</a>
       </div>
     </aside>
     <!-- Main Content -->
@@ -106,7 +106,23 @@ $monthlyRevenue = number_format($monthlyRevenue, 0, ',', '.') . 'đ';
         menuLinks.forEach(l => l.classList.remove('bg-pink-200', 'text-pink-600'));
         this.classList.add('bg-pink-200', 'text-pink-600');
         if (this.getAttribute('data-page') === 'dashboard-home') {
-          mainContent.innerHTML = document.getElementById('dashboard-home').outerHTML;
+          // Luôn fetch lại chính file dashboard.php để lấy lại phần main content động
+          mainContent.innerHTML = `<div class='flex flex-col items-center justify-center h-full'><div class='animate-pulse w-24 h-24 bg-pink-100 rounded-full mb-6'></div><div class='text-center text-gray-400 mt-10'><i class='fa fa-spinner fa-spin text-4xl mb-4'></i><div class='font-bold text-lg'>Đang tải...</div></div></div>`;
+          fetch('dashboard.php')
+            .then(res => res.text())
+            .then(html => {
+              // Lấy phần #dashboard-home từ response
+              const tempDiv = document.createElement('div');
+              tempDiv.innerHTML = html;
+              const newHome = tempDiv.querySelector('#dashboard-home');
+              if (newHome) {
+                mainContent.innerHTML = newHome.outerHTML;
+              } else {
+                mainContent.innerHTML = '<div class="text-red-500">Không thể tải dashboard.</div>';
+              }
+              bindAjaxLinks();
+              window.scrollTo({ top: mainContent.offsetTop - 80, behavior: 'smooth' });
+            });
         } else {
           mainContent.innerHTML = `<div class='flex flex-col items-center justify-center h-full'><div class='animate-pulse w-24 h-24 bg-pink-100 rounded-full mb-6'></div><div class='text-center text-gray-400 mt-10'><i class='fa fa-spinner fa-spin text-4xl mb-4'></i><div class='font-bold text-lg'>Đang tải...</div></div></div>`;
           fetch(this.getAttribute('data-page'))
@@ -114,7 +130,7 @@ $monthlyRevenue = number_format($monthlyRevenue, 0, ',', '.') . 'đ';
             .then(html => {
               setTimeout(() => {
                 mainContent.innerHTML = html;
-                bindAjaxLinks(); // Gán lại sự kiện AJAX cho các link CRUD/pagination sau khi load
+                bindAjaxLinks();
               }, 400);
               window.scrollTo({ top: mainContent.offsetTop - 80, behavior: 'smooth' });
             });

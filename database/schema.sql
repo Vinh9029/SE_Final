@@ -1,3 +1,4 @@
+-- Active: 1759060862769@@127.0.0.1@3307@phpmyadmin
 -- Database schema for SE_Final-Cart-Checkout
 
 DROP DATABASE IF EXISTS theoldfavour;
