@@ -103,3 +103,6 @@ CREATE TABLE vouchers (
     expires_at TIMESTAMP NULL,       -- hạn sử dụng
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
+
+ALTER TABLE users ADD COLUMN date_of_birth DATE NULL;
+ALTER TABLE users ADD COLUMN gender VARCHAR(10) DEFAULT NULL;

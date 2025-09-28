@@ -5,6 +5,15 @@ if (!isset($_SESSION['user_id'])) {
     header('Location: ./login/index.php');
     exit;
 }
+
+// Fetch user data
+$user_id = $_SESSION['user_id'];
+$stmt = $conn->prepare("SELECT full_name, email FROM users WHERE user_id = ?");
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$stmt->bind_result($full_name, $email);
+$stmt->fetch();
+$stmt->close();
 ?>
 <head>
   <meta charset="UTF-8">
@@ -22,8 +31,8 @@ if (!isset($_SESSION['user_id'])) {
       <div class="relative mb-4">
         <img src="./Photos/logo.png" alt="Avatar" class="w-32 h-32 rounded-full object-cover shadow-lg border-4 border-yellow-400 ring-4 ring-pink-200 transition duration-300 hover:ring-yellow-400" />
       </div>
-      <div class="font-extrabold text-xl text-gray-800 mb-1">Nguyễn Văn A</div>
-      <div class="text-gray-500 text-sm mb-2">nguyenvana@gmail.com</div>
+      <div class="font-extrabold text-xl text-gray-800 mb-1"><?php echo htmlspecialchars($full_name); ?></div>
+      <div class="text-gray-500 text-sm mb-2"><?php echo htmlspecialchars($email); ?></div>
 
       <?php include 'loyalty-point.php'; ?>
 
