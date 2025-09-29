@@ -1,20 +1,70 @@
+<?php
+session_start();
+include_once __DIR__ . '/../../database/db_connection.php';
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
+    header('Location: ../../login/index.php');
+    exit;
+}
+
+// Fetch monthly revenue data for last 6 months
+$stmt = $conn->prepare("SELECT YEAR(order_date) as year, MONTH(order_date) as month, SUM(total) as revenue, COUNT(*) as orders FROM orders WHERE status = 'completed' GROUP BY year, month ORDER BY year DESC, month DESC LIMIT 6");
+$stmt->execute();
+$revenue_data = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+$stmt->close();
+
+// Fetch new customers per month
+$stmt = $conn->prepare("SELECT YEAR(created_at) as year, MONTH(created_at) as month, COUNT(*) as new_customers FROM users GROUP BY year, month ORDER BY year DESC, month DESC LIMIT 6");
+$stmt->execute();
+$customer_data = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+$stmt->close();
+
+// Combine data
+$months = [];
+$revenues = [];
+$orders = [];
+$new_customers = [];
+$growths = [];
+
+foreach ($revenue_data as $rev) {
+    $key = $rev['month'] . '/' . $rev['year'];
+    $months[] = $key;
+    $revenues[] = $rev['revenue'];
+    $orders[] = $rev['orders'];
+    $new_customers[$key] = 0; // default
+}
+
+foreach ($customer_data as $cust) {
+    $key = $cust['month'] . '/' . $cust['year'];
+    if (isset($new_customers[$key])) {
+        $new_customers[$key] = $cust['new_customers'];
+    }
+}
+
+// Calculate growth
+$prev_revenue = null;
+for ($i = count($revenues) - 1; $i >= 0; $i--) {
+    if ($prev_revenue !== null && $prev_revenue > 0) {
+        $growth = (($revenues[$i] - $prev_revenue) / $prev_revenue) * 100;
+        $growths[$i] = round($growth, 1);
+    } else {
+        $growths[$i] = 0;
+    }
+    $prev_revenue = $revenues[$i];
+}
+$growths = array_reverse($growths);
+$months = array_reverse($months);
+$revenues = array_reverse($revenues);
+$orders = array_reverse($orders);
+$new_customers = array_reverse(array_values($new_customers));
+?>
 <div class="max-w-5xl mx-auto py-8">
   <div class="flex justify-between items-center mb-8">
     <h1 class="text-2xl font-bold text-gray-800 flex items-center gap-2"><i class="fa fa-coins text-purple-500"></i> Báo cáo doanh thu</h1>
   </div>
   <div class="bg-white rounded-2xl shadow-xl p-8">
-    <div class="mb-6">
-      <label class="block text-sm font-semibold text-gray-700 mb-1">Chọn tháng/năm</label>
-      <select class="border rounded px-4 py-2 w-40 focus:outline-none focus:ring-2 focus:ring-purple-200 mr-2">
-        <option>Tháng 9/2025</option>
-        <option>Tháng 8/2025</option>
-        <option>Tháng 7/2025</option>
-      </select>
-      <button class="bg-purple-500 hover:bg-purple-600 text-white px-6 py-2 rounded-xl font-bold shadow transition ml-4">Xem báo cáo</button>
-    </div>
     <div class="mb-8">
-      <h2 class="text-lg font-bold text-gray-800 mb-2 flex items-center gap-2"><i class="fa fa-chart-pie text-purple-500"></i> Biểu đồ doanh thu</h2>
-      <div class="h-48 bg-gradient-to-r from-purple-100 to-yellow-100 rounded-xl flex items-center justify-center text-gray-400">[Biểu đồ doanh thu - demo]</div>
+      <h2 class="text-lg font-bold text-gray-800 mb-2 flex items-center gap-2"><i class="fa fa-chart-line text-purple-500"></i> Biểu đồ doanh thu</h2>
+      <canvas id="revenueChart" width="400" height="200"></canvas>
     </div>
     <table class="w-full text-left border-collapse">
       <thead>
@@ -27,21 +77,55 @@
         </tr>
       </thead>
       <tbody>
-        <tr class="hover:bg-purple-50 transition">
-          <td class="px-4 py-2 font-bold">9/2025</td>
-          <td class="px-4 py-2 text-purple-600 font-bold">120,000,000đ</td>
-          <td class="px-4 py-2">350</td>
-          <td class="px-4 py-2">15</td>
-          <td class="px-4 py-2"><span class="bg-green-100 text-green-700 px-2 py-1 rounded-full font-bold">+8%</span></td>
-        </tr>
-        <tr class="hover:bg-purple-50 transition">
-          <td class="px-4 py-2 font-bold">8/2025</td>
-          <td class="px-4 py-2 text-purple-600 font-bold">110,000,000đ</td>
-          <td class="px-4 py-2">320</td>
-          <td class="px-4 py-2">10</td>
-          <td class="px-4 py-2"><span class="bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full font-bold">-3%</span></td>
-        </tr>
+        <?php for ($i = 0; $i < count($months); $i++): ?>
+          <tr class="hover:bg-purple-50 transition">
+            <td class="px-4 py-2 font-bold"><?php echo htmlspecialchars($months[$i]); ?></td>
+            <td class="px-4 py-2 text-purple-600 font-bold"><?php echo number_format($revenues[$i], 0, ',', '.'); ?>đ</td>
+            <td class="px-4 py-2"><?php echo htmlspecialchars($orders[$i]); ?></td>
+            <td class="px-4 py-2"><?php echo htmlspecialchars($new_customers[$i]); ?></td>
+            <td class="px-4 py-2">
+              <?php if ($growths[$i] > 0): ?>
+                <span class="bg-green-100 text-green-700 px-2 py-1 rounded-full font-bold">+<?php echo $growths[$i]; ?>%</span>
+              <?php elseif ($growths[$i] < 0): ?>
+                <span class="bg-red-100 text-red-700 px-2 py-1 rounded-full font-bold"><?php echo $growths[$i]; ?>%</span>
+              <?php else: ?>
+                <span class="bg-gray-100 text-gray-700 px-2 py-1 rounded-full font-bold">0%</span>
+              <?php endif; ?>
+            </td>
+          </tr>
+        <?php endfor; ?>
       </tbody>
     </table>
   </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const ctx = document.getElementById('revenueChart').getContext('2d');
+const revenueChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: <?php echo json_encode($months); ?>,
+        datasets: [{
+            label: 'Doanh thu (VNĐ)',
+            data: <?php echo json_encode($revenues); ?>,
+            borderColor: 'rgba(147, 51, 234, 1)',
+            backgroundColor: 'rgba(147, 51, 234, 0.2)',
+            tension: 0.1
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    callback: function(value) {
+                        return value.toLocaleString('vi-VN') + 'đ';
+                    }
+                }
+            }
+        }
+    }
+});
+</script>
