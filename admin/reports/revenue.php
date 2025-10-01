@@ -100,32 +100,13 @@ $new_customers = array_reverse(array_values($new_customers));
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="<?php echo $base_url; ?>/assets/js/chart.js"></script>
 <script>
-const ctx = document.getElementById('revenueChart').getContext('2d');
-const revenueChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-        labels: <?php echo json_encode($months); ?>,
-        datasets: [{
-            label: 'Doanh thu (VNĐ)',
-            data: <?php echo json_encode($revenues); ?>,
-            borderColor: 'rgba(147, 51, 234, 1)',
-            backgroundColor: 'rgba(147, 51, 234, 0.2)',
-            tension: 0.1
-        }]
-    },
-    options: {
-        responsive: true,
-        scales: {
-            y: {
-                beginAtZero: true,
-                ticks: {
-                    callback: function(value) {
-                        return value.toLocaleString('vi-VN') + 'đ';
-                    }
-                }
-            }
-        }
-    }
-});
-</script>
+      renderBarChart(
+        'revenueChart',
+        <?php echo json_encode($months); ?>,
+        <?php echo json_encode($revenues); ?>,
+        'Tổng doanh thu (VNĐ)',
+        {bg: 'rgba(255, 99, 132, 0.6)', border: 'rgba(255, 99, 132, 1)'}
+      );
+    </script>

@@ -1,6 +1,6 @@
 <?php
-session_start();
-include_once __DIR__ . '/database/db_connection.php';
+// session_start();
+// include_once __DIR__ . '/database/db_connection.php';
 include_once __DIR__ . "/../config.php"; 
 ?>
 <section id="promotion" class="max-w-6xl mx-auto mt-12 px-2 py-12 rounded-3xl" style="background: linear-gradient(135deg, #fff5f8 0%, #f9f9f9 100%);">

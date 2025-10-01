@@ -22,7 +22,7 @@ $stmt->close();
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
-<?php include './header.php'; ?>
+<?php include '../includes/header.php'; ?>
 
 <main class="bg-gradient-to-br from-pink-50 via-yellow-50 to-white min-h-screen py-10">
   <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-8">
@@ -59,7 +59,7 @@ $stmt->close();
   </div>
 </main>
 
-<?php include './footer.php'; ?>
+<?php include '../includes/footer.php'; ?>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 // Khi load account.php có tham số ?page=...

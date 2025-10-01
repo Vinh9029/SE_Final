@@ -16,6 +16,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $register_error = "Passwords do not match.";
     } elseif (strlen($password) < 8) {
         $register_error = "Password must be at least 8 characters.";
+    } elseif (!preg_match('/[a-z]/', $password)) {
+        $register_error = "Password must contain at least one lowercase letter.";
     } elseif (!preg_match('/[A-Z]/', $password)) {
         $register_error = "Password must contain at least one uppercase letter.";
     } elseif (!preg_match('/[!@#$%^&*(),.?":{}|<>]/', $password)) {

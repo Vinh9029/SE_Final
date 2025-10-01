@@ -87,32 +87,13 @@ for ($i = 0; $i < count($sales); $i++) {
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="<?php echo $base_url; ?>/assets/js/chart.js"></script>
 <script>
-const ctx = document.getElementById('salesChart').getContext('2d');
-const salesChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-        labels: <?php echo json_encode($dates); ?>,
-        datasets: [{
-            label: 'Doanh số (VNĐ)',
-            data: <?php echo json_encode($sales); ?>,
-            backgroundColor: 'rgba(34, 197, 94, 0.6)',
-            borderColor: 'rgba(34, 197, 94, 1)',
-            borderWidth: 1
-        }]
-    },
-    options: {
-        responsive: true,
-        scales: {
-            y: {
-                beginAtZero: true,
-                ticks: {
-                    callback: function(value) {
-                        return value.toLocaleString('vi-VN') + 'đ';
-                    }
-                }
-            }
-        }
-    }
-});
-</script>
+      renderLineChart(
+        'salesChart',
+        <?php echo json_encode($dates); ?>,
+        <?php echo json_encode($sales); ?>,
+        'Tổng doanh số (VNĐ)',
+        {bg: 'rgba(54, 162, 235, 0.2)', border: 'rgba(54, 162, 235, 1)'}
+      );
+    </script>

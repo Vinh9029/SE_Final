@@ -67,6 +67,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } elseif (strlen($new_password) < 8) {
                 $message = 'Mật khẩu mới phải ít nhất 8 ký tự.';
                 $message_type = 'error';
+            } elseif (!preg_match('/[a-z]/', $new_password)) {
+                $message = 'Mật khẩu mới phải chứa ít nhất một chữ thường.';
+                $message_type = 'error';
             } elseif (!preg_match('/[A-Z]/', $new_password)) {
                 $message = 'Mật khẩu mới phải chứa ít nhất một chữ hoa.';
                 $message_type = 'error';
@@ -80,9 +83,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if ($stmt->execute()) {
                     if ($updated) {
                         $message .= ' Và cập nhật mật khẩu thành công!';
-                    } else {
-                        $message = 'Cập nhật mật khẩu thành công!';
                         $message_type = 'success';
+                    } else {
+                        echo '<style>@keyframes spin{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}</style>';
+                        echo '<div id="successModal" style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;z-index:9999;">
+                                <div style="background:#fff;border-radius:16px;padding:32px 24px;box-shadow:0 8px 32px 0 rgba(31,38,135,0.18);display:flex;flex-direction:column;align-items:center;">
+                                    <i class="fa-solid fa-circle-check" style="font-size:3rem;color:#4ade80;margin-bottom:12px;"></i>
+                                    <div style="font-size:1.2rem;font-weight:600;color:#16a34a;margin-bottom:8px;">Đổi mật khẩu thành công!</div>
+                                    <div style="color:#555;margin-bottom:18px;">Đang chuyển hướng về trang tài khoản...</div>
+                                    <div class="loader" style="width:40px;height:40px;border:4px solid #f3f3f3;border-top:4px solid #fc466b;border-radius:50%;animation:spin 1s linear infinite;"></div>
+                                </div>
+                            </div>
+                            <script>setTimeout(function(){window.location.href="account.php";}, 1800);</script>';
+                        exit;
                     }
                 } else {
                     $message = 'Có lỗi khi cập nhật mật khẩu.';
@@ -116,12 +129,60 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
     <div>
       <label class="block text-sm font-semibold text-gray-700 mb-1">Mật khẩu mới (để trống nếu không đổi)</label>
-      <input type="password" name="new_password" class="border rounded px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-yellow-200" placeholder="Nhập mật khẩu mới" />
+      <input type="password" name="new_password" id="new_password" oninput="checkStrength()" class="border rounded px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-yellow-200" placeholder="Nhập mật khẩu mới" />
     </div>
     <div>
       <label class="block text-sm font-semibold text-gray-700 mb-1">Xác nhận mật khẩu mới</label>
       <input type="password" name="confirm_password" class="border rounded px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-yellow-200" placeholder="Xác nhận mật khẩu mới" />
     </div>
+    <div class="w-full flex items-center gap-2 mb-2">
+      <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+        <div id="progressBar" class="h-2 rounded-full transition-all duration-300 bg-red-500" style="width:0%"></div>
+      </div>
+      <span id="progressLabel" class="text-xs font-semibold text-gray-700 min-w-[60px] text-right"></span>
+    </div>
+    <div id="strengthText" class="text-xs mb-1 font-semibold"></div>
     <button type="submit" class="btn-orange hover:bg-orange-600 text-white px-8 py-3 rounded-xl font-bold shadow transition w-fit">Lưu thay đổi</button>
   </form>
 </div>
+<script>
+  function checkStrength() {
+    var pwd = document.getElementById('new_password').value;
+    var bar = document.getElementById('progressBar');
+    var label = document.getElementById('progressLabel');
+    var text = document.getElementById('strengthText');
+    // Criteria
+    var hasLength = pwd.length >= 8;
+    var hasNumber = /[0-9]/.test(pwd);
+    var hasLower = /[a-z]/.test(pwd);
+    var hasUpper = /[A-Z]/.test(pwd);
+    var hasSpecial = /[^A-Za-z0-9]/.test(pwd);
+    var met = [hasLength, hasNumber, hasLower, hasUpper, hasSpecial].filter(Boolean).length;
+    // Progress bar
+    var percent = met * 20;
+    var colors = [
+      "bg-red-500",
+      "bg-orange-400",
+      "bg-yellow-400",
+      "bg-blue-400",
+      "bg-green-500"
+    ];
+    var labels = [
+      "Very Weak",
+      "Weak",
+      "Fair",
+      "Strong",
+      "Very Strong"
+    ];
+    bar.style.width = percent + "%";
+    bar.className = "h-2 rounded-full transition-all duration-300 " + colors[met === 0 ? 0 : met - 1];
+    label.innerText = labels[met === 0 ? 0 : met - 1];
+    if (!pwd) {
+      label.innerText = '';
+      bar.style.width = '0%';
+      text.innerHTML = '<span class="text-gray-400">Start typing to check password strength...</span>';
+    } else {
+      text.innerText = '';
+    }
+  }
+</script>

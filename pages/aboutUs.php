@@ -41,10 +41,10 @@
                     </div>
                     <div class="flex-1 text-left">
                         <h3 class="text-xl font-bold text-pink-600 mb-1">Kiều Hữu Thịnh</h3>
-                        <div class="text-gray-700 mb-1">MSSV: <span class="font-semibold">523H0117</span></div>
+                        <div class="text-gray-700 mb-1">MSSV: <span class="font-semibold">523H0180</span></div>
                         <div class="text-gray-600 mb-1">Vai trò: <span class="font-semibold">Backend Developer, Database Designer</span></div>
                         <div class="text-gray-500 mb-2 text-sm">Thiết kế cơ sở dữ liệu, xây dựng API, xử lý logic nghiệp vụ, tối ưu hiệu năng và bảo mật hệ thống.</div>
-                        <div class="text-gray-700 text-sm"><i class="fa fa-envelope text-pink-400 mr-2"></i>523h0117@student.tdtu.edu.vn</div>
+                        <div class="text-gray-700 text-sm"><i class="fa fa-envelope text-pink-400 mr-2"></i>523h0180@student.tdtu.edu.vn</div>
                     </div>
                 </div>
                 <!-- Member 3 -->
