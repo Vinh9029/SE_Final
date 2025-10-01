@@ -28,9 +28,7 @@ $stmt->close();
   <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-8">
     <!-- Sidebar -->
     <aside class="md:col-span-3 col-span-12 bg-white rounded-3xl shadow-2xl p-6 flex flex-col items-center sticky top-24 h-fit">
-      <div class="relative mb-4">
-        <img src="./Photos/logo.png" alt="Avatar" class="w-32 h-32 rounded-full object-cover shadow-lg border-4 border-yellow-400 ring-4 ring-pink-200 transition duration-300 hover:ring-yellow-400" />
-      </div>
+      <?php include 'avatar.php'; ?>
       <div class="font-extrabold text-xl text-gray-800 mb-1"><?php echo htmlspecialchars($full_name); ?></div>
       <div class="text-gray-500 text-sm mb-2"><?php echo htmlspecialchars($email); ?></div>
 
