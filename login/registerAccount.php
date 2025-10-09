@@ -46,8 +46,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 // Tạo mã voucher ngẫu nhiên
                 $voucher_code = strtoupper(substr(md5(uniqid($username, true)), 0, 10));
-                $voucher_stmt = $conn->prepare("INSERT INTO vouchers (user_id, code, discount_percent, is_used) VALUES (?, ?, 10, 0)");
-                $voucher_stmt->bind_param("is", $user_id, $voucher_code);
+                $program_name = 'Chào mừng thành viên mới';
+                $min_order_value = 0;
+                $status = 'active';
+                $expires_at = date('Y-m-d', strtotime('+30 days'));
+                $voucher_stmt = $conn->prepare("INSERT INTO vouchers (user_id, code, discount_percent, program_name, min_order_value, status, expires_at) VALUES (?, ?, 10, ?, ?, ?, ?)");
+                $voucher_stmt->bind_param("issdss", $user_id, $voucher_code, $program_name, $min_order_value, $status, $expires_at);
                 $voucher_stmt->execute();
                 $voucher_stmt->close();
                 echo '<div id="successModal" style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;z-index:9999;">
@@ -60,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                     <style>@keyframes spin{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}</style>';
                 echo '<script>setTimeout(function(){window.location.href="' . $base_url . '/index.php";}, 1800);</script>';
-                sendGiftVoucher($email, $username);
+                sendGiftVoucher($email, $username, $voucher_code);
                 exit;
             } else {
                 $register_error = "Registration failed. Please try again.";
