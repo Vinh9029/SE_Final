@@ -1,7 +1,9 @@
 <?php
-include_once __DIR__ . "/../config.php";
+// Sử dụng kết nối chuẩn
+include_once __DIR__ . '/../database/db_connection.php';
 
 $user_id = $_SESSION['user_id'];
+
 
 // Lấy avatar từ trường avatar_image hoặc random/avatar upload
 $stmt = $conn->prepare("SELECT avatar_image FROM users WHERE user_id = ?");
@@ -54,22 +56,24 @@ if ($total_points >= 1000) {
     $border_color = 'border-yellow-800';
 }
 
-// Chọn frame theo level
-switch ($level) {
-    case 'Diamond':
-        $frame_src = '../customer/Photos/frame/diamond.png';
-        break;
-    case 'Platinum':
-        $frame_src = '../customer/Photos/frame/platinum.png';
-        break;
-    case 'Gold':
-        $frame_src = '../customer/Photos/frame/gold.png';
-        break;
-    case 'Silver':
-        $frame_src = '../customer/Photos/frame/silver.png';
-        break;
-    default:
-        $frame_src = '../customer/Photos/frame/bronze.png';
+// Chọn border style theo level
+$border_style = '';
+if ($level === 'Diamond') {
+    $border_style = 'border-4 border-blue-400 ring-4 ring-blue-200 shadow-lg';
+} elseif ($level === 'Platinum') {
+    $border_style = 'border-4 border-gray-300 ring-4 ring-gray-200 shadow-lg';
+} elseif ($level === 'Gold') {
+    $border_style = 'border-4 border-yellow-400 ring-4 ring-yellow-200 shadow-lg';
+} elseif ($level === 'Silver') {
+    $border_style = 'border-4 border-gray-400 ring-2 ring-gray-200 shadow-md';
+} else {
+    $border_style = 'border-4 border-yellow-800 ring-2 ring-yellow-100 shadow';
+}
+
+// Kiểm tra lại frame_src
+if (!file_exists($frame_src)) {
+    // Nếu frame không tồn tại, dùng frame mặc định
+    $frame_src = '../customer/Photos/frame/bronze.png';
 }
 
 // Calculate points needed for next level and next level name
@@ -94,53 +98,45 @@ if ($total_points < 100) {
 $level_points = [0, 100, 300, 600, 1000, 5000];
 $level_index = 0;
 for ($i = 0; $i < count($level_points) - 1; $i++) {
-    if ($total_points >= $level_points[$i] && $total_points < $level_points[$i+1]) {
+    if ($total_points >= $level_points[$i] && $total_points < $level_points[$i + 1]) {
         $level_index = $i;
         break;
     }
     if ($total_points >= 1000) $level_index = 4;
 }
 $min = $level_points[$level_index];
-$max = $level_points[$level_index+1];
+$max = $level_points[$level_index + 1];
 $progress = min(100, max(0, (($total_points - $min) / ($max - $min)) * 100));
 ?>
-<style>
-  @layer utilities {
-    .border-frame {
-      border: 10px solid transparent;
-      border-image: url('<?php echo $frame_src; ?>') 30 round;
-    }
-  }
-</style>
 <div class="mb-4 flex flex-col items-center">
-  <div class="relative w-36 h-36 rounded-full border-8 shadow-lg overflow-hidden group">
-    <img src="<?php echo $avatar_src; ?>" alt="Avatar" class="w-full h-full object-cover rounded-full border-frame" />
-    <div class="absolute top-1 right-1 text-2xl"><?php echo $level_icon; ?></div>
-    <form id="avatar-upload-form" enctype="multipart/form-data" method="post" class="absolute bottom-2 left-1/2 -translate-x-1/2 hidden group-hover:flex flex-col items-center z-10">
-      <label class="bg-pink-500 hover:bg-pink-600 text-white px-3 py-1 rounded-lg text-xs font-bold cursor-pointer flex items-center gap-1">
-        <i class="fa fa-upload"></i> Upload image
-        <input type="file" name="avatar_image" accept="image/*" class="hidden" onchange="this.form.submit()" />
-      </label>
-    </form>
-  </div>
-  <div class="mt-2 text-center">
-    <div class="font-bold text-lg"><?php echo htmlspecialchars($level); ?> Level <?php echo $level_icon; ?></div>
-    <div class="text-yellow-500 font-semibold"><?php echo $total_points; ?> ⭐ Điểm tích lũy</div>
-  </div>
-  <?php if ($next_level): ?>
-  <div class="w-full max-w-xs mt-3">
-    <div class="text-sm mb-1 font-semibold text-gray-700">
-      Còn <?php echo $points_to_next; ?> điểm để lên <?php echo $next_level; ?>!
+    <div class="relative w-36 h-36 rounded-full overflow-hidden group cursor-pointer <?php echo $border_style; ?>">
+        <form id="avatar-upload-form" enctype="multipart/form-data" method="post" class="absolute inset-0 w-full h-full flex items-center justify-center z-10" style="background:rgba(255,255,255,0.0);">
+            <input type="file" name="avatar_image" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" title=" " onchange="this.form.submit()" />
+            <img src="<?php echo $avatar_src; ?>" alt="Avatar" class="w-full h-full object-cover rounded-full pointer-events-none" />
+            <div class="absolute top-1 right-1 text-2xl pointer-events-none"><?php echo $level_icon; ?></div>
+        </form>
     </div>
-    <div class="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
-      <div class="h-3 bg-gradient-to-r from-pink-400 to-yellow-400 rounded-full transition-all" style="width: <?php echo $progress; ?>%"></div>
+    <div class="mt-2 text-center">
+        <div class="font-bold text-lg"><?php echo htmlspecialchars($level); ?> Level <?php echo $level_icon; ?></div>
+        <div class="text-yellow-500 font-semibold"><?php echo $total_points; ?> ⭐ Điểm tích lũy</div>
     </div>
-    <div class="flex justify-between text-xs text-gray-400 mt-1">
-      <span><?php echo $min; ?> ⭐</span>
-      <span><?php echo $max; ?> ⭐</span>
-    </div>
-  </div>
-  <?php endif; ?>
+    <?php if ($next_level): ?>
+        <div class="w-full max-w-xs mt-3">
+            <div class="text-sm mb-1 font-semibold text-pink-600 flex items-center gap-2">
+                <i class="fa fa-star text-yellow-400"></i>
+                Còn <span class="font-bold text-pink-500 mx-1"><?php echo $points_to_next; ?></span> điểm để lên <span class="font-bold text-yellow-500 mx-1"><?php echo $next_level; ?></span>!
+            </div>
+            <div class="w-full h-4 bg-gray-100 rounded-full overflow-hidden shadow-inner">
+                <div class="h-4 bg-gradient-to-r from-pink-400 to-yellow-400 rounded-full transition-all flex items-center" style="width: <?php echo $progress; ?>%">
+                    <span class="text-xs text-white ml-2 font-bold"><?php echo round($progress); ?>%</span>
+                </div>
+            </div>
+            <div class="flex justify-between text-xs text-gray-400 mt-1">
+                <span><?php echo $min; ?> ⭐</span>
+                <span><?php echo $max; ?> ⭐</span>
+            </div>
+        </div>
+    <?php endif; ?>
 </div>
 <?php
 // Handle avatar upload
@@ -158,7 +154,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['avatar_image'])) {
             $stmt->bind_param("si", $avatar_path, $user_id);
             $stmt->execute();
             $stmt->close();
-            echo '<script>window.location.reload();</script>';
+            // Chỉ reload 1 lần sau upload thành công
+            echo '<script>window.location.replace(window.location.href.split("?")[0]);</script>';
         } else {
             echo '<div class="text-red-500 text-sm mt-2">Lỗi upload ảnh đại diện.</div>';
         }

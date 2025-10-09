@@ -47,7 +47,7 @@ $stmt->close();
 
     <!-- Nội dung chính -->
     <section class="md:col-span-9 col-span-12 bg-white rounded-3xl shadow-2xl p-8 min-h-[500px]" id="account-content">
-      <div class="flex flex-col items-center justify-center h-full">
+      <div class="flex flex-col items-center justify-center h-full"> 
         <div class="animate-pulse w-24 h-24 bg-pink-100 rounded-full mb-6"></div>
         <div class="text-center text-gray-400 mt-10">
           <i class="fa fa-info-circle text-4xl mb-4"></i>
