@@ -1,5 +1,5 @@
 <?php
-session_start();
+// Removed session_start() to avoid "session already active" notice
 include_once __DIR__ . '/../database/db_connection.php';
 if (!isset($_SESSION['user_id'])) {
     header('Location: ../login/index.php');

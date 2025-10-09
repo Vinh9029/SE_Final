@@ -1,6 +1,8 @@
 <?php
 include_once __DIR__ . "/../config.php";
-session_start();
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
 ?>
 
 <header class="bg-white shadow-md sticky top-0 z-50">

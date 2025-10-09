@@ -36,9 +36,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($stmt->execute()) {
                 $_SESSION['user_id'] = $stmt->insert_id;
                 $_SESSION['username'] = $username;
+
+                // Insert default 0 points into loyalty_points for new user
+                $user_id = $stmt->insert_id;
+                $points_stmt = $conn->prepare("INSERT INTO loyalty_points (user_id, points) VALUES (?, 0)");
+                $points_stmt->bind_param("i", $user_id);
+                $points_stmt->execute();
+                $points_stmt->close();
+
                 // Tạo mã voucher ngẫu nhiên
                 $voucher_code = strtoupper(substr(md5(uniqid($username, true)), 0, 10));
-                $user_id = $stmt->insert_id;
                 $voucher_stmt = $conn->prepare("INSERT INTO vouchers (user_id, code, discount_percent, is_used) VALUES (?, ?, 10, 0)");
                 $voucher_stmt->bind_param("is", $user_id, $voucher_code);
                 $voucher_stmt->execute();

@@ -32,7 +32,7 @@ $stmt->close();
       <div class="font-extrabold text-xl text-gray-800 mb-1"><?php echo htmlspecialchars($full_name); ?></div>
       <div class="text-gray-500 text-sm mb-2"><?php echo htmlspecialchars($email); ?></div>
 
-      <?php include 'loyalty-point.php'; ?>
+      <!-- <?php include 'loyalty-point.php'; ?> -->
 
       <nav class="w-full mt-4">
         <ul class="flex flex-col gap-2">

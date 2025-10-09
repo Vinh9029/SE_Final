@@ -9,7 +9,7 @@ ini_set('display_errors', 1);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Old Favour Coffee</title>
+    <title>Old Flavour Coffee</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -34,7 +34,7 @@ ini_set('display_errors', 1);
         </div>
         <!-- Giới thiệu ngắn -->
         <section class="max-w-4xl mx-auto mt-10 text-center">
-            <h2 class="text-2xl font-bold text-pink-600 mb-2">Chào mừng đến với Old Favour Coffee</h2>
+            <h2 class="text-2xl font-bold text-pink-600 mb-2">Chào mừng đến với Old Flavour Coffee</h2>
             <p class="text-gray-700 text-lg">Nơi bạn tận hưởng hương vị cà phê nguyên bản, không gian ấm cúng và dịch vụ tận tâm.</p>
         </section>
         <!-- Menu nổi bật (Best sellers) -->
