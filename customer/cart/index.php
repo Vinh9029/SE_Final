@@ -302,8 +302,7 @@ if (!isset($_SESSION['user_id'])) {
             if (result.success) {
                 showMessage(result.message, 'success');
                 if (onSuccess) onSuccess();
-                refreshCartUI();
-                if (result.count !== undefined) updateCartBadge(result.count);
+                setTimeout(() => { window.location.reload(); }, 700); // Tự động reload trang sau khi thao tác
             } else {
                 showMessage(result.message, 'error');
             }

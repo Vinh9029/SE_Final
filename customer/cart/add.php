@@ -84,5 +84,7 @@ $stmt->execute();
 $result = $stmt->get_result()->fetch_assoc();
 $count = $result['total'] ?? 0;
 
+// Sau khi xử lý xong, reload lại trang để cập nhật giao diện
+header('Content-Type: application/json');
 echo json_encode(['success' => true, 'message' => 'Đã thêm vào giỏ hàng', 'count' => (int)$count]);
 ?>

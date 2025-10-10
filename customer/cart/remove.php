@@ -42,5 +42,5 @@ $stmt->execute();
 $result = $stmt->get_result()->fetch_assoc();
 $count = $result['total'] ?? 0;
 
-echo json_encode(['success' => true, 'message' => 'Đã xóa sản phẩm khỏi giỏ hàng', 'count' => (int)$count]);
+echo json_encode(['success' => true, 'message' => 'Đã xóa sản phẩm khỏi giỏ hàng']);
 ?>

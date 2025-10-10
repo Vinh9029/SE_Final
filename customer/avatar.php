@@ -15,13 +15,23 @@ $stmt->close();
 
 $avatar_src = '';
 $frame_src = '';
+// Avatar logic: ưu tiên avatar_image trong DB, sau đó là file upload theo user_id, cuối cùng là random mặc định
 if ($avatar_image_db && file_exists(__DIR__ . '/../' . $avatar_image_db)) {
     $avatar_src = '../' . $avatar_image_db;
-} elseif (file_exists("./Photos/upload_avatar/{$user_id}.png")) {
-    $avatar_src = "./Photos/upload_avatar/{$user_id}.png";
+} elseif (glob(__DIR__ . '/Photos/upload_avatar/' . $user_id . '_*.*')) {
+    // Tìm file upload theo user_id, có thể là png/jpg/jpeg, đặt tên theo user_id_timestamp.ext
+    $files = glob(__DIR__ . '/Photos/upload_avatar/' . $user_id . '_*.*');
+    $avatar_src = $files ? '../customer/Photos/upload_avatar/' . basename($files[0]) : '';
 } else {
+    // Nếu chưa có avatar trong DB, gán avatar mặc định random vào DB cho user
     $random = rand(1, 12);
-    $avatar_src = "../customer/Photos/avatar/avatar{$random}.jpg";
+    $default_avatar = 'customer/Photos/avatar/avatar' . $random . '.jpg';
+    $avatar_src = '../' . $default_avatar;
+    // Chỉ gán nếu DB chưa có avatar
+    $stmt = $conn->prepare("UPDATE users SET avatar_image = ? WHERE user_id = ? AND (avatar_image IS NULL OR avatar_image = '')");
+    $stmt->bind_param("si", $default_avatar, $user_id);
+    $stmt->execute();
+    $stmt->close();
 }
 
 // Fetch loyalty points
@@ -146,10 +156,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['avatar_image'])) {
         $upload_dir = __DIR__ . '/Photos/upload_avatar/';
         if (!file_exists($upload_dir)) mkdir($upload_dir, 0777, true);
         $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
-        $target = $upload_dir . $user_id . '.png';
+        $target = $upload_dir . $user_id . '_' . time() . '.' . $ext;
         if (move_uploaded_file($file['tmp_name'], $target)) {
             // Lưu đường dẫn vào DB
-            $avatar_path = 'customer/Photos/upload_avatar/' . $user_id . '.png';
+            $avatar_path = 'customer/Photos/upload_avatar/' . basename($target);
             $stmt = $conn->prepare("UPDATE users SET avatar_image = ? WHERE user_id = ?");
             $stmt->bind_param("si", $avatar_path, $user_id);
             $stmt->execute();
