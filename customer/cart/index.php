@@ -292,19 +292,144 @@ if (!isset($_SESSION['user_id'])) {
     document.addEventListener('DOMContentLoaded', updateCartBadge);
     </script>
     <script>
-    // --- VOUCHER UI/UX ---
+    // --- VOUCHER UI/UX & AJAX LOADING ---
     let appliedVoucherCode = null;
+    let appliedVoucherDiscount = 0;
+    let appliedVoucherMinOrder = 0;
+    let appliedVoucherType = 'percent';
+
+    function showMessage(msg, type = 'success') {
+        let msgBox = document.getElementById('cart-message');
+        if (!msgBox) {
+            msgBox = document.createElement('div');
+            msgBox.id = 'cart-message';
+            msgBox.className = 'fixed top-6 left-1/2 transform -translate-x-1/2 z-50 px-6 py-3 rounded-xl shadow-lg text-lg font-bold transition-all duration-300';
+            document.body.appendChild(msgBox);
+        }
+        msgBox.textContent = msg;
+        msgBox.style.background = type === 'success' ? 'linear-gradient(90deg,#43e97b 0%,#38f9d7 100%)' : 'linear-gradient(90deg,#ff6a6a 0%,#ee5a24 100%)';
+        msgBox.style.color = '#fff';
+        msgBox.style.opacity = '1';
+        setTimeout(() => { msgBox.style.opacity = '0'; }, 1800);
+    }
+
+    function showLoading(show = true) {
+        let loader = document.getElementById('cart-loader');
+        if (!loader) {
+            loader = document.createElement('div');
+            loader.id = 'cart-loader';
+            loader.innerHTML = '<div class="flex items-center justify-center fixed inset-0 bg-black bg-opacity-20 z-50"><div class="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-pink-500"></div></div>';
+            document.body.appendChild(loader);
+        }
+        loader.style.display = show ? 'block' : 'none';
+    }
+
+    // Voucher click
     document.querySelectorAll('.voucher-btn').forEach(btn => {
         btn.onclick = function () {
             document.querySelectorAll('.voucher-btn').forEach(b => b.classList.remove('ring-2', 'ring-pink-400'));
             btn.classList.add('ring-2', 'ring-pink-400');
             appliedVoucherCode = btn.dataset.voucher;
-            document.getElementById('voucher-success').classList.remove('hidden');
-            setTimeout(() => document.getElementById('voucher-success').classList.add('hidden'), 1500);
-            // TODO: Gọi hàm updateCartTotal() để áp dụng giảm giá theo mã
-            // Bạn có thể truyền appliedVoucherCode vào backend nếu cần xác thực
+            appliedVoucherDiscount = parseInt(btn.querySelector('span:nth-child(3)').textContent.replace(/\D/g, '')) || 0;
+            appliedVoucherMinOrder = parseInt(btn.querySelector('span:nth-child(4)').textContent.replace(/\D/g, '')) || 0;
+            appliedVoucherType = btn.querySelector('span:nth-child(3)').textContent.includes('%') ? 'percent' : 'cash';
+            showMessage('Đã áp dụng mã giảm giá!', 'success');
+            updateCartTotal();
         };
     });
+
+    // --- AJAX LOADING & MESSAGE FOR CART ACTIONS ---
+    function ajaxCartAction(url, data, onSuccess) {
+        showLoading(true);
+        fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        })
+        .then(res => res.json())
+        .then(result => {
+            showLoading(false);
+            if (result.success) {
+                showMessage(result.message, 'success');
+                if (onSuccess) onSuccess();
+                setTimeout(() => { window.location.reload(); }, 700); // Tự động reload trang sau khi thao tác
+            } else {
+                showMessage(result.message, 'error');
+            }
+        })
+        .catch(() => {
+            showLoading(false);
+            showMessage('Có lỗi xảy ra, vui lòng thử lại!', 'error');
+        });
+    }
+
+    // Sửa lại các hàm gọi ajaxCartAction
+    document.querySelectorAll('.remove-btn').forEach(btn => {
+        btn.onclick = function () {
+            const cartItem = btn.closest('.cart-item');
+            const productId = cartItem.dataset.productId;
+            const sizeId = cartItem.dataset.sizeId || null;
+            if (confirm('Bạn có chắc muốn xóa sản phẩm này khỏi giỏ hàng?')) {
+                ajaxCartAction('remove.php', { product_id: productId, size_id: sizeId }, () => {
+                    cartItem.remove();
+                    refreshCartUI();
+                });
+            }
+        };
+    });
+    document.querySelectorAll('.quantity-btn').forEach(btn => {
+        btn.onclick = function () {
+            const cartItem = btn.closest('.cart-item');
+            const productId = cartItem.dataset.productId;
+            const sizeId = cartItem.dataset.sizeId || null;
+            const input = btn.parentElement.querySelector('.quantity-input');
+            let val = parseInt(input.value);
+            if (btn.innerHTML.includes('minus')) val = Math.max(1, val - 1);
+            else val = val + 1;
+            ajaxCartAction('update_ItemCart.php', { product_id: productId, size_id: sizeId, quantity: val }, () => {
+                input.value = val;
+                refreshCartUI();
+            });
+        };
+    });
+    document.querySelector('.bg-gray-200 .fa-trash').parentElement.onclick = function () {
+        if (confirm('Bạn có chắc muốn xóa tất cả sản phẩm khỏi giỏ hàng?')) {
+            ajaxCartAction('clear.php', {}, () => {
+                document.getElementById('cart-items').innerHTML = '';
+                refreshCartUI();
+            });
+        }
+    };
+
+    // --- CẬP NHẬT GIẢM GIÁ THEO VOUCHER ---
+    function updateCartTotal() {
+        const subtotals = document.querySelectorAll('.subtotal');
+        let total = 0;
+        let totalQty = 0;
+        subtotals.forEach(subtotal => {
+            const price = parseFloat(subtotal.dataset.price);
+            const quantity = parseInt(subtotal.closest('.cart-item').querySelector('.quantity-input').value);
+            total += price * quantity;
+            totalQty += quantity;
+        });
+        // Tính giảm giá
+        let discount = 0;
+        let shipping = SHIPPING_FEE;
+        if (appliedVoucherCode && total >= appliedVoucherMinOrder) {
+            if (appliedVoucherType === 'percent') {
+                discount = Math.round(total * appliedVoucherDiscount / 100);
+            } else if (appliedVoucherType === 'cash') {
+                discount = appliedVoucherDiscount;
+            }
+        }
+        const totalAfter = total - discount + shipping;
+        document.getElementById('cart-total').textContent = new Intl.NumberFormat('vi-VN').format(totalAfter) + 'đ';
+        document.getElementById('order-total-qty').textContent = totalQty;
+        document.getElementById('order-total-before').textContent = new Intl.NumberFormat('vi-VN').format(total) + 'đ';
+        document.getElementById('order-discount').textContent = '-' + new Intl.NumberFormat('vi-VN').format(discount) + 'đ';
+        document.getElementById('order-shipping').textContent = shipping === 0 ? 'Miễn phí' : new Intl.NumberFormat('vi-VN').format(shipping) + 'đ';
+        document.getElementById('order-total-after').textContent = new Intl.NumberFormat('vi-VN').format(totalAfter) + 'đ';
+    }
     </script>
 </body>
 

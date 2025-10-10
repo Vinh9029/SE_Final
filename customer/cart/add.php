@@ -11,9 +11,19 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 include_once '../../database/db_connection.php';
 $user_id = $_SESSION['user_id'];
-$product_id = isset($_POST['product_id']) ? (int)$_POST['product_id'] : 0;
-$quantity = isset($_POST['quantity']) ? (int)$_POST['quantity'] : 1;
-$size_id = isset($_POST['size_id']) ? (int)$_POST['size_id'] : null;
+
+// Nhận dữ liệu từ cả JSON và POST
+if ($_SERVER['CONTENT_TYPE'] === 'application/json' || strpos($_SERVER['CONTENT_TYPE'], 'application/json') !== false) {
+    $data = json_decode(file_get_contents('php://input'), true);
+    $product_id = isset($data['product_id']) ? (int)$data['product_id'] : 0;
+    $quantity = isset($data['quantity']) ? (int)$data['quantity'] : 1;
+    $size_id = isset($data['size_id']) ? (int)$data['size_id'] : null;
+} else {
+    $product_id = isset($_POST['product_id']) ? (int)$_POST['product_id'] : 0;
+    $quantity = isset($_POST['quantity']) ? (int)$_POST['quantity'] : 1;
+    $size_id = isset($_POST['size_id']) ? (int)$_POST['size_id'] : null;
+}
+
 if ($product_id <= 0 || $quantity <= 0) {
     echo json_encode(['success' => false, 'message' => 'Dữ liệu không hợp lệ']);
     exit();
@@ -66,7 +76,6 @@ if ($existing) {
     $stmt->bind_param('iiii', $user_id, $product_id, $quantity, $size_id);
     $stmt->execute();
 }
-
 // Sau khi thêm/cập nhật sản phẩm, lấy lại tổng số lượng sản phẩm trong giỏ hàng
 $sql = "SELECT SUM(quantity) AS total FROM cart_items WHERE user_id = ?";
 $stmt = $conn->prepare($sql);
