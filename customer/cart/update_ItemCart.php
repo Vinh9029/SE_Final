@@ -36,7 +36,14 @@ if ($quantity == 0) {
         $stmt->bind_param('ii', $user_id, $product_id);
     }
     $stmt->execute();
-    echo json_encode(['success' => true, 'message' => 'Đã xóa sản phẩm khỏi giỏ hàng']);
+    // Sau khi xóa, lấy lại tổng số lượng sản phẩm trong giỏ hàng
+    $sql = "SELECT SUM(quantity) AS total FROM cart_items WHERE user_id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param('i', $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result()->fetch_assoc();
+    $count = $result['total'] ?? 0;
+    echo json_encode(['success' => true, 'message' => 'Đã xóa sản phẩm khỏi giỏ hàng', 'count' => (int)$count]);
     exit();
 } else {
     // Kiểm tra tồn kho nếu cần
@@ -60,7 +67,14 @@ if ($quantity == 0) {
         $stmt->bind_param('iii', $quantity, $user_id, $product_id);
     }
     $stmt->execute();
-    echo json_encode(['success' => true, 'message' => 'Đã cập nhật số lượng']);
+    // Sau khi cập nhật, lấy lại tổng số lượng sản phẩm trong giỏ hàng
+    $sql = "SELECT SUM(quantity) AS total FROM cart_items WHERE user_id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param('i', $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result()->fetch_assoc();
+    $count = $result['total'] ?? 0;
+    echo json_encode(['success' => true, 'message' => 'Đã cập nhật số lượng', 'count' => (int)$count]);
     exit();
 }
 ?>

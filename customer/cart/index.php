@@ -221,76 +221,7 @@ if (!isset($_SESSION['user_id'])) {
         });
         
     </script>
-    <script>
-    // Sửa lại các hàm gọi refreshCartUI thay vì chỉ updateCartTotal
-    document.querySelectorAll('.remove-btn').forEach(btn => {
-        btn.onclick = function () {
-            const cartItem = btn.closest('.cart-item');
-            const productId = cartItem.dataset.productId;
-            const sizeId = cartItem.dataset.sizeId || null;
-            if (confirm('Bạn có chắc muốn xóa sản phẩm này khỏi giỏ hàng?')) {
-                fetch('remove.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ product_id: productId, size_id: sizeId })
-                })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success) {
-                        cartItem.remove();
-                        refreshCartUI();
-                    } else {
-                        alert(data.message);
-                    }
-                });
-            }
-        };
-    });
-    document.querySelectorAll('.quantity-btn').forEach(btn => {
-        btn.onclick = function () {
-            const cartItem = btn.closest('.cart-item');
-            const productId = cartItem.dataset.productId;
-            const sizeId = cartItem.dataset.sizeId || null;
-            const input = btn.parentElement.querySelector('.quantity-input');
-            let val = parseInt(input.value);
-            if (btn.innerHTML.includes('minus')) val = Math.max(1, val - 1);
-            else val = val + 1;
-            fetch('update_ItemCart.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ product_id: productId, size_id: sizeId, quantity: val })
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    input.value = val;
-                    refreshCartUI();
-                } else {
-                    alert(data.message);
-                }
-            });
-        };
-    });
-    document.querySelector('.bg-gray-200 .fa-trash').parentElement.onclick = function () {
-        if (confirm('Bạn có chắc muốn xóa tất cả sản phẩm khỏi giỏ hàng?')) {
-            fetch('clear.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' }
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    document.getElementById('cart-items').innerHTML = '';
-                    refreshCartUI();
-                } else {
-                    alert(data.message);
-                }
-            });
-        }
-    };
-    // Khi thêm sản phẩm ở trang khác, sau khi thêm xong cũng gọi updateCartBadge()
-    document.addEventListener('DOMContentLoaded', updateCartBadge);
-    </script>
+
     <script>
     // --- VOUCHER UI/UX & AJAX LOADING ---
     let appliedVoucherCode = null;
@@ -339,6 +270,25 @@ if (!isset($_SESSION['user_id'])) {
     });
 
     // --- AJAX LOADING & MESSAGE FOR CART ACTIONS ---
+    function refreshCartUI() {
+        fetch('get_cart_items.php')
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('cart-items').innerHTML = data.html;
+                updateCartTotal();
+            }
+        });
+    }
+
+    function updateCartBadge(count) {
+        // Giả sử có element với id 'cart-badge' trong header
+        const badge = document.getElementById('cart-badge');
+        if (badge) {
+            badge.textContent = count;
+        }
+    }
+
     function ajaxCartAction(url, data, onSuccess) {
         showLoading(true);
         fetch(url, {
@@ -352,7 +302,8 @@ if (!isset($_SESSION['user_id'])) {
             if (result.success) {
                 showMessage(result.message, 'success');
                 if (onSuccess) onSuccess();
-                setTimeout(() => { window.location.reload(); }, 700); // Tự động reload trang sau khi thao tác
+                refreshCartUI();
+                if (result.count !== undefined) updateCartBadge(result.count);
             } else {
                 showMessage(result.message, 'error');
             }
@@ -400,6 +351,9 @@ if (!isset($_SESSION['user_id'])) {
             });
         }
     };
+
+    // Khi thêm sản phẩm ở trang khác, sau khi thêm xong cũng gọi updateCartBadge()
+    document.addEventListener('DOMContentLoaded', updateCartBadge);
 
     // --- CẬP NHẬT GIẢM GIÁ THEO VOUCHER ---
     function updateCartTotal() {

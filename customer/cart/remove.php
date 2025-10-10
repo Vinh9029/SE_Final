@@ -34,5 +34,13 @@ if ($size_id) {
 }
 $stmt->execute();
 
-echo json_encode(['success' => true, 'message' => 'Đã xóa sản phẩm khỏi giỏ hàng']);
+// Sau khi xóa, lấy lại tổng số lượng sản phẩm tr giỏ hàng
+$sql = "SELECT SUM(quantity) AS total FROM cart_items WHERE user_id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param('i', $user_id);
+$stmt->execute();
+$result = $stmt->get_result()->fetch_assoc();
+$count = $result['total'] ?? 0;
+
+echo json_encode(['success' => true, 'message' => 'Đã xóa sản phẩm khỏi giỏ hàng', 'count' => (int)$count]);
 ?>

@@ -262,6 +262,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="input-group">
                 <i class="fa-solid fa-lock"></i>
                 <input type="password" name="password" placeholder="New Password" required id="password" oninput="checkStrength()">
+                
             </div>
             <div class="w-full flex items-center gap-2 mb-2">
                 <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">

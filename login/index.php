@@ -305,7 +305,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <button class="switch-btn" id="adminBtn" onclick="switchRole('admin')">Admin</button>
             </div>
             <form method="post" autocomplete="off">
-                <input type="hidden" name="role" id="roleInput" value="user">
+                <input type="hidden" name="role" id="roleInput" value="customer">
                 <div class="input-group">
                     <i class="fa-solid fa-user"></i>
                     <input type="text" name="username" placeholder="Username" required>
@@ -357,7 +357,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         function switchRole(role) {
             const userBtn = document.getElementById('userBtn');
             const adminBtn = document.getElementById('adminBtn');
-            document.getElementById('roleInput').value = role;
+            document.getElementById('roleInput').value = (role === 'user') ? 'customer' : 'admin';
             if (role === 'user') {
                 userBtn.classList.add('active');
                 adminBtn.classList.remove('active');
