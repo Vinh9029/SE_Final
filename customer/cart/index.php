@@ -44,7 +44,7 @@ if (!isset($_SESSION['user_id'])) {
 </head>
 
 <body class="bg-gray-50 min-h-screen flex flex-col">
-    <?php include '../../header.php'; ?>
+    <?php include '../../includes/header.php'; ?>
     <main class="flex-1 cart-gradient py-12">
         <div class="container mx-auto px-4">
             <div class="bg-white rounded-3xl shadow-2xl overflow-hidden">
@@ -80,21 +80,29 @@ if (!isset($_SESSION['user_id'])) {
                     <!-- Voucher Section -->
                     <div class="mb-6 flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
                         <div class="flex flex-col gap-2 w-full md:w-1/2">
-                            <label for="voucher-input" class="font-semibold text-gray-700">Nhập mã giảm giá</label>
-                            <div class="flex gap-2">
-                                <input id="voucher-input" type="text"
-                                    class="border border-gray-300 rounded-lg px-3 py-2 flex-1" placeholder="Nhập mã...">
-                                <button id="apply-voucher-btn"
-                                    class="btn-primary text-white px-4 py-2 rounded-lg font-bold">Áp dụng</button>
+                            <label for="voucher-input" class="font-semibold text-gray-700">Mã giảm giá của bạn</label>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mt-2">
+                                <?php
+                                $user_id = $_SESSION['user_id'];
+                                $voucher_query = "SELECT voucher_id, code, discount_percent, program_name, min_order_value, expires_at, status FROM vouchers WHERE user_id = ? AND status = 'active' AND (expires_at IS NULL OR expires_at >= NOW()) ORDER BY expires_at ASC;";
+                                $voucher_stmt = $conn->prepare($voucher_query);
+                                $voucher_stmt->bind_param('i', $user_id);
+                                $voucher_stmt->execute();
+                                $voucher_result = $voucher_stmt->get_result();
+                                while ($voucher = $voucher_result->fetch_assoc()):
+                                ?>
+                                <button class="voucher-btn bg-gradient-to-r from-pink-100 to-pink-200 hover:from-pink-200 hover:to-pink-300 text-pink-700 px-4 py-2 rounded-xl font-semibold shadow transition flex flex-col items-start border border-pink-200" data-voucher="<?= htmlspecialchars($voucher['code']) ?>">
+                                    <span class="text-base font-bold">Mã: <?= htmlspecialchars($voucher['code']) ?></span>
+                                    <span class="text-xs text-gray-600">Chương trình: <?= htmlspecialchars($voucher['program_name']) ?></span>
+                                    <span class="text-xs text-gray-600">Giảm: <?= $voucher['discount_percent'] > 0 ? $voucher['discount_percent'].'%' : 'Voucher tiền mặt' ?></span>
+                                    <span class="text-xs text-gray-600">Đơn tối thiểu: <?= number_format($voucher['min_order_value'], 0, ',', '.') ?>đ</span>
+                                    <span class="text-xs text-gray-600">HSD: <?= $voucher['expires_at'] ? date('d/m/Y', strtotime($voucher['expires_at'])) : 'Không giới hạn' ?></span>
+                                </button>
+                                <?php endwhile; ?>
                             </div>
-                            <div id="voucher-success" class="hidden text-green-600 font-semibold mt-2 animate-bounce">🎉
-                                Giảm giá đã được áp dụng!</div>
-                            <div class="text-gray-500 text-sm mt-1">Hoặc chọn mã có sẵn:</div>
-                            <div class="flex gap-2 mt-1">
-                                <button
-                                    class="voucher-btn bg-pink-100 hover:bg-pink-200 text-pink-600 px-3 py-1 rounded-full font-semibold"
-                                    data-voucher="GIAM10">GIAM10</button>
-                                <button
+                            <div id="voucher-success" class="hidden text-green-600 font-semibold mt-2 animate-bounce">🎉 Mã giảm giá đã được áp dụng!</div>
+                        </div>
+                        <div class="flex flex-col gap-2 w-full md:w-1/2">
                             <div class="flex justify-between mb-2">
                                 <span class="text-gray-700">Tổng số lượng món:</span>
                                 <span id="order-total-qty" class="font-bold">0</span>
@@ -116,7 +124,8 @@ if (!isset($_SESSION['user_id'])) {
                                 <span id="order-total-after" class="font-bold text-pink-600">0đ</span>
                             </div>
                         </div>
-                    </div <!-- Cart Actions -->
+                    </div>
+                    <!-- Cart Actions -->
                     <div class="mt-8 flex flex-col lg:flex-row gap-4 justify-between items-center">
                         <a href="../products.php"
                             class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-3 rounded-full font-bold transition-colors"><i
@@ -135,7 +144,7 @@ if (!isset($_SESSION['user_id'])) {
         </div>
         <br>
         <br>
-        <?php include '../../footer.php'; ?>
+        <?php include_once __DIR__ . '/../../includes/footer.php'; ?>
     </main>
     <script>
         // --- VOUCHER & ĐƠN HÀNG ---
@@ -281,6 +290,21 @@ if (!isset($_SESSION['user_id'])) {
     };
     // Khi thêm sản phẩm ở trang khác, sau khi thêm xong cũng gọi updateCartBadge()
     document.addEventListener('DOMContentLoaded', updateCartBadge);
+    </script>
+    <script>
+    // --- VOUCHER UI/UX ---
+    let appliedVoucherCode = null;
+    document.querySelectorAll('.voucher-btn').forEach(btn => {
+        btn.onclick = function () {
+            document.querySelectorAll('.voucher-btn').forEach(b => b.classList.remove('ring-2', 'ring-pink-400'));
+            btn.classList.add('ring-2', 'ring-pink-400');
+            appliedVoucherCode = btn.dataset.voucher;
+            document.getElementById('voucher-success').classList.remove('hidden');
+            setTimeout(() => document.getElementById('voucher-success').classList.add('hidden'), 1500);
+            // TODO: Gọi hàm updateCartTotal() để áp dụng giảm giá theo mã
+            // Bạn có thể truyền appliedVoucherCode vào backend nếu cần xác thực
+        };
+    });
     </script>
 </body>
 
