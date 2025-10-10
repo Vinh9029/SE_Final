@@ -12,37 +12,14 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit();
 }
 
-try {
-    // Kết nối database
-    require_once '../../includes/config/database.php';
+include_once '../../database/db_connection.php';
 
-    $user_id = $_SESSION['user_id'];
+$user_id = $_SESSION['user_id'];
 
-    // Xóa tất cả sản phẩm trong giỏ hàng
-    $stmt = $conn->prepare("DELETE FROM cart WHERE user_id = ?");
-    $stmt->bind_param("i", $user_id);
-    $stmt->execute();
+$sql = "DELETE FROM cart_items WHERE user_id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param('i', $user_id);
+$stmt->execute();
 
-    if ($stmt->affected_rows > 0) {
-        echo json_encode([
-            'success' => true,
-            'message' => 'Đã xóa tất cả sản phẩm khỏi giỏ hàng'
-        ]);
-    } else {
-        echo json_encode([
-            'success' => true,
-            'message' => 'Giỏ hàng đã trống'
-        ]);
-    }
-
-} catch (Exception $e) {
-    // Fallback to session if database not available
-    $_SESSION['cart'] = [];
-    $_SESSION['cart_total'] = 0;
-
-    echo json_encode([
-        'success' => true,
-        'message' => 'Đã xóa tất cả sản phẩm khỏi giỏ hàng'
-    ]);
-}
+echo json_encode(['success' => true, 'message' => 'Đã xóa tất cả sản phẩm khỏi giỏ hàng']);
 ?>

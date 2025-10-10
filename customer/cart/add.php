@@ -1,104 +1,70 @@
 <?php
 session_start();
 header('Content-Type: application/json');
-
 if (!isset($_SESSION['user_id'])) {
     echo json_encode(['success' => false, 'message' => 'Vui lòng đăng nhập']);
     exit();
 }
-
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode(['success' => false, 'message' => 'Phương thức không hợp lệ']);
     exit();
 }
-
+include_once '../../database/db_connection.php';
+$user_id = $_SESSION['user_id'];
 $product_id = isset($_POST['product_id']) ? (int)$_POST['product_id'] : 0;
 $quantity = isset($_POST['quantity']) ? (int)$_POST['quantity'] : 1;
-
+$size_id = isset($_POST['size_id']) ? (int)$_POST['size_id'] : null;
 if ($product_id <= 0 || $quantity <= 0) {
     echo json_encode(['success' => false, 'message' => 'Dữ liệu không hợp lệ']);
     exit();
 }
-
-try {
-    // Kết nối database
-    require_once '../../includes/config/database.php';
-
-    // Kiểm tra sản phẩm có tồn tại không
-    $stmt = $conn->prepare("SELECT id, name, price, stock FROM products WHERE id = ?");
-    $stmt->bind_param("i", $product_id);
-    $stmt->execute();
-    $product = $stmt->get_result()->fetch_assoc();
-
-    if (!$product) {
-        echo json_encode(['success' => false, 'message' => 'Sản phẩm không tồn tại']);
-        exit();
-    }
-
-    if ($product['stock'] < $quantity) {
-        echo json_encode(['success' => false, 'message' => 'Sản phẩm không đủ số lượng trong kho']);
-        exit();
-    }
-
-    $user_id = $_SESSION['user_id'];
-
-    // Kiểm tra sản phẩm đã có trong giỏ hàng chưa
-    $stmt = $conn->prepare("SELECT id, quantity FROM cart WHERE user_id = ? AND product_id = ?");
-    $stmt->bind_param("ii", $user_id, $product_id);
-    $stmt->execute();
-    $existing = $stmt->get_result()->fetch_assoc();
-
-    if ($existing) {
-        // Cập nhật số lượng
-        $new_quantity = $existing['quantity'] + $quantity;
-        if ($new_quantity > $product['stock']) {
-            echo json_encode(['success' => false, 'message' => 'Tổng số lượng vượt quá số lượng trong kho']);
-            exit();
-        }
-
-        $stmt = $conn->prepare("UPDATE cart SET quantity = ? WHERE id = ?");
-        $stmt->bind_param("ii", $new_quantity, $existing['id']);
-        $stmt->execute();
-    } else {
-        // Thêm mới vào giỏ hàng
-        $stmt = $conn->prepare("INSERT INTO cart (user_id, product_id, quantity) VALUES (?, ?, ?)");
-        $stmt->bind_param("iii", $user_id, $product_id, $quantity);
-        $stmt->execute();
-    }
-
-    // Lấy tổng số lượng sản phẩm trong giỏ hàng
-    $stmt = $conn->prepare("SELECT SUM(quantity) as total FROM cart WHERE user_id = ?");
-    $stmt->bind_param("i", $user_id);
-    $stmt->execute();
-    $cart_total = $stmt->get_result()->fetch_assoc()['total'] ?? 0;
-
-    echo json_encode([
-        'success' => true,
-        'message' => 'Đã thêm sản phẩm vào giỏ hàng',
-        'cart_total' => $cart_total
-    ]);
-
-} catch (Exception $e) {
-    // Fallback to session if database not available
-    if (!isset($_SESSION['cart'])) {
-        $_SESSION['cart'] = [];
-    }
-
-    $cart_key = $product_id;
-
-    if (isset($_SESSION['cart'][$cart_key])) {
-        $_SESSION['cart'][$cart_key] += $quantity;
-    } else {
-        $_SESSION['cart'][$cart_key] = $quantity;
-    }
-
-    // Calculate total
-    $_SESSION['cart_total'] = array_sum($_SESSION['cart']);
-
-    echo json_encode([
-        'success' => true,
-        'message' => 'Đã thêm sản phẩm vào giỏ hàng',
-        'cart_total' => array_sum($_SESSION['cart'])
-    ]);
+// Kiểm tra sản phẩm
+$sql = "SELECT product_id, name, price FROM products WHERE product_id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param('i', $product_id);
+$stmt->execute();
+$product = $stmt->get_result()->fetch_assoc();
+if (!$product) {
+    echo json_encode(['success' => false, 'message' => 'Sản phẩm không tồn tại']);
+    exit();
 }
+// Kiểm tra size nếu có
+$extra_price = 0;
+if ($size_id) {
+    $sql = "SELECT size_name, extra_price FROM product_sizes WHERE size_id = ? AND product_id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param('ii', $size_id, $product_id);
+    $stmt->execute();
+    $size = $stmt->get_result()->fetch_assoc();
+    if (!$size) {
+        echo json_encode(['success' => false, 'message' => 'Size không hợp lệ']);
+        exit();
+    }
+    $extra_price = (float)$size['extra_price'];
+}
+// Kiểm tra sản phẩm đã có trong giỏ hàng chưa
+$sql = "SELECT cart_item_id, quantity FROM cart_items WHERE user_id = ? AND product_id = ?" . ($size_id ? " AND size_id = ?" : "");
+$stmt = $conn->prepare($sql);
+if ($size_id) {
+    $stmt->bind_param('iii', $user_id, $product_id, $size_id);
+} else {
+    $stmt->bind_param('ii', $user_id, $product_id);
+}
+$stmt->execute();
+$existing = $stmt->get_result()->fetch_assoc();
+if ($existing) {
+    // Nếu đã có thì cập nhật số lượng
+    $new_qty = $existing['quantity'] + $quantity;
+    $sql = "UPDATE cart_items SET quantity = ? WHERE cart_item_id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param('ii', $new_qty, $existing['cart_item_id']);
+    $stmt->execute();
+} else {
+    // Nếu chưa có thì thêm mới
+    $sql = "INSERT INTO cart_items (user_id, product_id, quantity, size_id) VALUES (?, ?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param('iiii', $user_id, $product_id, $quantity, $size_id);
+    $stmt->execute();
+}
+echo json_encode(['success' => true, 'message' => 'Đã thêm vào giỏ hàng']);
 ?>

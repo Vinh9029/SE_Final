@@ -1,4 +1,4 @@
--- Active: 1759060862769@@127.0.0.1@3307@phpmyadmin
+-- Active: 1758856835071@@localhost@3306@theoldfavour
 -- Database schema for SE_Final-Cart-Checkout
 
 DROP DATABASE IF EXISTS theoldfavour;
@@ -12,6 +12,7 @@ CREATE TABLE users (
     email VARCHAR(100) NOT NULL UNIQUE,
     full_name VARCHAR(100),
     phone VARCHAR(20),
+    avatar_image VARCHAR(255), 
     address VARCHAR(255),
     role ENUM('customer', 'admin') DEFAULT 'customer',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -97,12 +98,35 @@ CREATE TABLE vouchers (
     voucher_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     code VARCHAR(50) NOT NULL UNIQUE,
-    discount_percent INT DEFAULT 10, -- mức giảm giá
-    is_used BOOLEAN DEFAULT FALSE,   -- đã dùng chưa
+    discount_percent INT DEFAULT 10,
+    program_name VARCHAR(100),
+    min_order_value DECIMAL(10,2) DEFAULT 0,
+    status ENUM('active', 'used', 'expired') DEFAULT 'active',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    expires_at TIMESTAMP NULL,       -- hạn sử dụng
+    expires_at TIMESTAMP NULL,
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
+
 ALTER TABLE users ADD COLUMN date_of_birth DATE NULL;
 ALTER TABLE users ADD COLUMN gender VARCHAR(10) DEFAULT NULL;
+
+CREATE TABLE spin_history (
+    spin_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    prize VARCHAR(100) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
+
+ALTER TABLE vouchers
+ADD COLUMN spin_id INT NULL,
+ADD CONSTRAINT fk_voucher_spin
+    FOREIGN KEY (spin_id) REFERENCES spin_history(spin_id)
+    ON DELETE SET NULL
+    ON UPDATE CASCADE;
+
+-- Sửa lại bảng vouchers cho phép user_id NULL
+ALTER TABLE vouchers MODIFY COLUMN user_id INT NULL;
+-- Thêm cột size_id vào bảng cart_items
+ALTER TABLE cart_items ADD COLUMN size_id INT NULL AFTER product_id;

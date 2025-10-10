@@ -4,7 +4,9 @@ require_once __DIR__ . '/../database/db_connection.php';
 require_once __DIR__ . '/helper.php';
 
 $slug = isset($_GET['slug']) ? $_GET['slug'] : null;
-if (!$slug) { die('Không tìm thấy sản phẩm!'); }
+if (!$slug) {
+    die('Không tìm thấy sản phẩm!');
+}
 // Lấy sản phẩm theo slug
 $stmt = $conn->query("SELECT p.*, c.name as category_name, c.description as category_desc FROM products p JOIN categories c ON p.category_id = c.category_id");
 $products = $stmt->fetch_all(MYSQLI_ASSOC);
@@ -15,7 +17,9 @@ foreach ($products as $p) {
         break;
     }
 }
-if (!$product) { die('Sản phẩm không tồn tại!'); }
+if (!$product) {
+    die('Sản phẩm không tồn tại!');
+}
 
 // Lấy danh sách size từ DB
 $sizeQuery = $conn->prepare("SELECT * FROM product_sizes WHERE product_id = ?");
@@ -25,6 +29,7 @@ $sizeResult = $sizeQuery->get_result();
 ?>
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -32,11 +37,20 @@ $sizeResult = $sizeQuery->get_result();
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .btn-orange { background: #FF7A00; }
-        .btn-orange:hover { background: #ff9800; }
-        .footer-bg { background: #3d2c1a; }
+        .btn-orange {
+            background: #FF7A00;
+        }
+
+        .btn-orange:hover {
+            background: #ff9800;
+        }
+
+        .footer-bg {
+            background: #3d2c1a;
+        }
     </style>
 </head>
+
 <body class="bg-gray-50 font-sans">
     <?php include_once __DIR__ . '/../includes/header.php'; ?>
     <div class="max-w-4xl mx-auto px-4 py-8">
@@ -76,7 +90,7 @@ $sizeResult = $sizeQuery->get_result();
                 <div class="text-orange-600 font-bold text-2xl mb-4" id="product-price"><?php echo number_format($product['price'], 0, ',', '.'); ?> đ</div>
                 <div class="mb-4 text-gray-700 text-base leading-relaxed"><?php echo $product['description'] ?: '<span class="italic text-gray-400">Chưa có mô tả cho sản phẩm này.</span>'; ?></div>
                 <div class="flex gap-4 mt-6">
-                    <button class="btn-orange hover:bg-orange-600 text-white px-8 py-3 rounded-xl font-bold text-lg shadow transition duration-200"><i class="fa fa-shopping-cart mr-2"></i>Đặt món ngay</button>
+                    <button id="add-to-cart-btn" class="btn-orange hover:bg-orange-600 text-white px-8 py-3 rounded-xl font-bold text-lg shadow transition duration-200"><i class="fa fa-shopping-cart mr-2"></i>Đặt món ngay</button>
                     <a href="menus.php?cat=<?php echo generateSlug($product['category_name']); ?>" class="bg-gray-100 hover:bg-pink-100 text-pink-600 px-6 py-3 rounded-xl font-bold text-lg shadow transition duration-200"><i class="fa fa-arrow-left mr-2"></i>Quay lại menu</a>
                 </div>
             </div>
@@ -84,17 +98,51 @@ $sizeResult = $sizeQuery->get_result();
     </div>
     <?php include_once __DIR__ . '/../includes/footer.php'; ?>
     <script>
-    // Cập nhật giá khi chọn size
-    setTimeout(function() {
-        document.querySelectorAll('input[name="product_size"]').forEach(radio => {
-            radio.addEventListener('change', function () {
-                const basePrice = <?php echo $product['price']; ?>;
-                const extra = parseFloat(this.dataset.extra) || 0;
-                const finalPrice = basePrice + extra;
-                document.getElementById("product-price").innerText = finalPrice.toLocaleString('vi-VN') + " đ";
+        // Cập nhật giá khi chọn size
+        setTimeout(function() {
+            document.querySelectorAll('input[name="product_size"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    const basePrice = <?php echo $product['price']; ?>;
+                    const extra = parseFloat(this.dataset.extra) || 0;
+                    const finalPrice = basePrice + extra;
+                    document.getElementById("product-price").innerText = finalPrice.toLocaleString('vi-VN') + " đ";
+                });
             });
-        });
-    }, 100);
+        }, 100);
+
+        // Xử lý thêm vào giỏ hàng
+        document.getElementById('add-to-cart-btn').onclick = function() {
+            const productId = <?php echo $product['product_id']; ?>;
+            const sizeRadio = document.querySelector('input[name="product_size"]:checked');
+            const sizeId = sizeRadio ? sizeRadio.value : null;
+            const quantity = 1;
+            fetch('<?php echo $base_url; ?>/customer/cart/add.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `product_id=${productId}&size_id=${sizeId}&quantity=${quantity}`
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    // Gọi API lấy số lượng mới và cập nhật badge
+                    fetch('/customer/cart/get_cart_count.php')
+                        .then(res => res.json())
+                        .then(countData => {
+                            const badge = document.querySelector('.fa-shopping-cart + span');
+                            if (badge) {
+                                badge.textContent = countData.count;
+                                badge.style.display = countData.count > 0 ? 'inline-block' : 'none';
+                            }
+                        });
+                    alert('Đã thêm vào giỏ hàng!');
+                } else {
+                    alert(data.message);
+                }
+            });
+        };
     </script>
 </body>
+
 </html>

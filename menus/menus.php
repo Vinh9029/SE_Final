@@ -159,7 +159,7 @@ $pagedItems = array_slice($allItems, $offset, $itemsPerPage);
     </div>
     <br><br>
     <!-- Khuyến mãi & Ưu đãi dưới cùng menu -->
-    <?php include_once __DIR__ . '/../pages/promotion.php'; ?>
+ 
     <script>
         if (window.location.pathname.endsWith('menus.php')) {
             document.addEventListener('DOMContentLoaded', function() {
