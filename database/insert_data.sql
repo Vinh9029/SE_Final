@@ -208,3 +208,12 @@ INSERT INTO product_sizes (product_id, size_name, volume, extra_price) VALUES
 ((SELECT product_id FROM products WHERE name = 'Bánh apple pie mini' LIMIT 1),'Nhỏ','1 phần',0),
 ((SELECT product_id FROM products WHERE name = 'Bánh apple pie mini' LIMIT 1),'Vừa','2 phần',10000),
 ((SELECT product_id FROM products WHERE name = 'Bánh apple pie mini' LIMIT 1),'Lớn','4 phần',20000);
+
+-- Thêm các voucher mẫu cho các phần thưởng vòng quay
+INSERT INTO vouchers (user_id, code, discount_percent, program_name, min_order_value, status, created_at, expires_at)
+VALUES
+(1001, 'DISCOUNT20', 20, 'Vòng quay may mắn', 100000, 'active', NOW(), DATE_ADD(NOW(), INTERVAL 90 DAY)),
+(1002, 'FREESHIP', 0, 'Vòng quay may mắn', 150000, 'active', NOW(), DATE_ADD(NOW(), INTERVAL 90 DAY)),
+(1003, 'VOUCHER50K', 0, 'Vòng quay may mắn', 0, 'active', NOW(), DATE_ADD(NOW(), INTERVAL 90 DAY)),
+(1004, 'VOUCHER100K', 0, 'Vòng quay may mắn', 0, 'active', NOW(), DATE_ADD(NOW(), INTERVAL 90 DAY)),
+(1005, 'VOUCHER200K', 0, 'Vòng quay may mắn', 0, 'active', NOW(), DATE_ADD(NOW(), INTERVAL 90 DAY));
