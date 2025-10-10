@@ -3,6 +3,19 @@ include_once __DIR__ . "/../config.php";
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
+
+// Lấy số lượng sản phẩm trong giỏ hàng
+$cart_count = 0;
+if (isset($_SESSION['user_id'])) {
+    include_once __DIR__ . '/../database/db_connection.php';
+    $user_id = $_SESSION['user_id'];
+    $sql = "SELECT SUM(quantity) AS total FROM cart_items WHERE user_id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param('i', $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result()->fetch_assoc();
+    $cart_count = $result['total'] ?? 0;
+}
 ?>
 
 <header class="bg-white shadow-md sticky top-0 z-50">
@@ -76,10 +89,12 @@ if (session_status() == PHP_SESSION_NONE) {
             });
             </script>
             <!-- Cart icon -->
-            <a href="#" class="relative text-gray-700 hover:text-pink-600 text-xl transition">
+            <a href="<?php echo $base_url; ?>/customer/cart/index.php" class="relative text-gray-700 hover:text-pink-600 text-xl transition">
                 <i class="fa fa-shopping-cart"></i>
                 <!-- Badge số lượng (nếu có) -->
-                <!-- <span class="absolute -top-2 -right-2 bg-pink-500 text-white text-xs rounded-full px-1">2</span> -->
+                <?php if ($cart_count > 0): ?>
+                    <span class="absolute -top-2 -right-2 bg-pink-500 text-white text-xs rounded-full px-1"><?php echo $cart_count; ?></span>
+                <?php endif; ?>
             </a>
             <?php if (isset($_SESSION['user_id'])): ?>
                 <div class="relative group">
