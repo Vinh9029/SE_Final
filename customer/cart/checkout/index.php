@@ -1,56 +1,6 @@
-<?php
-session_start();
-require_once '../../includes/config/database.php';
-
-// Kiểm tra đăng nhập
-if (!isset($_SESSION['user_id'])) {
-    header('Location: ../account.php');
-    exit();
-}
-
-// Lấy thông tin user
-$user_id = $_SESSION['user_id'];
-
-// Lấy thông tin giỏ hàng
-$cart_items = [];
-$total = 0;
-
-try {
-    $stmt = $conn->prepare("SELECT c.*, p.name, p.price, p.image FROM cart c JOIN products p ON c.product_id = p.id WHERE c.user_id = ?");
-    $stmt->bind_param("i", $user_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    while ($row = $result->fetch_assoc()) {
-        $cart_items[] = $row;
-        $total += $row['price'] * $row['quantity'];
-    }
-} catch (Exception $e) {
-    // Fallback to session
-    $cart_items = isset($_SESSION['cart']) ? $_SESSION['cart'] : [];
-    $total = isset($_SESSION['cart_total']) ? $_SESSION['cart_total'] : 0;
-}
-
-// Nếu giỏ hàng trống, chuyển về trang chủ
-if (empty($cart_items)) {
-    header('Location: ../cart/');
-    exit();
-}
-
-// Lấy thông tin user để điền sẵn form
-$user_info = [];
-try {
-    $stmt = $conn->prepare("SELECT * FROM users WHERE id = ?");
-    $stmt->bind_param("i", $user_id);
-    $stmt->execute();
-    $user_info = $stmt->get_result()->fetch_assoc();
-} catch (Exception $e) {
-    // Use default values
-}
-?>
-
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -61,31 +11,39 @@ try {
         .checkout-container {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
+
         .btn-primary {
             background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
         }
+
         .btn-primary:hover {
             background: linear-gradient(135deg, #ee5a24 0%, #ff6b6b 100%);
         }
+
         .btn-success {
             background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
         }
+
         .btn-success:hover {
             background: linear-gradient(135deg, #45a049 0%, #4CAF50 100%);
         }
+
         .payment-method {
             transition: all 0.3s ease;
         }
+
         .payment-method:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
         }
+
         .payment-method.active {
             border: 3px solid #ff6b6b;
             background: #fff5f5;
         }
     </style>
 </head>
+
 <body class="bg-gray-50">
     <!-- Header -->
     <?php include '../includes/header.php'; ?>
@@ -117,67 +75,114 @@ try {
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-2">Họ và tên *</label>
                                         <input type="text" name="full_name" value="<?php echo $user_info['name'] ?? ''; ?>" required
-                                               class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent">
                                     </div>
 
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-2">Số điện thoại *</label>
                                         <input type="tel" name="phone" value="<?php echo $user_info['phone'] ?? ''; ?>" required
-                                               class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent">
                                     </div>
 
                                     <div class="md:col-span-2">
                                         <label class="block text-sm font-medium text-gray-700 mb-2">Email *</label>
                                         <input type="email" name="email" value="<?php echo $user_info['email'] ?? ''; ?>" required
-                                               class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent">
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Shipping Information -->
-                            <div class="mb-8">
-                                <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-                                    <i class="fas fa-truck text-orange-500"></i>
-                                    Địa chỉ giao hàng
+                            <div class="mb-6">
+                                <h2 class="text-xl font-bold text-pink-600 mb-4 flex items-center gap-2">
+                                    <i class="fas fa-store text-orange-500"></i>
+                                    Phương thức nhận hàng
                                 </h2>
-
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div class="md:col-span-2">
-                                        <label class="block text-sm font-medium text-gray-700 mb-2">Địa chỉ *</label>
-                                        <input type="text" name="address" required
-                                               class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                    <!-- Nhận tại quầy -->
+                                    <div class="delivery-method border-2 border-gray-200 rounded-2xl p-4 cursor-pointer transition hover:border-pink-400"
+                                        onclick="selectDelivery('pickup')">
+                                        <label class="flex items-center gap-3">
+                                            <input type="radio" name="delivery_method" value="pickup" class="accent-pink-600"
+                                                checked onclick="showAddress(false)">
+                                            <div class="w-12 h-12 bg-pink-100 rounded-full flex items-center justify-center">
+                                                <i class="fas fa-store text-gray-600 text-xl"></i>
+                                            </div>
+                                            <div>
+                                                <h3 class="font-bold text-gray-800">Nhận tại quầy</h3>
+                                                <p class="text-sm text-gray-600">Đến quán nhận trực tiếp</p>
+                                            </div>
+                                        </label>
                                     </div>
-
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-2">Tỉnh/Thành phố *</label>
-                                        <select name="city" required
-                                                class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent">
-                                            <option value="">Chọn tỉnh/thành phố</option>
-                                            <option value="Hà Nội">Hà Nội</option>
-                                            <option value="TP.HCM">TP.HCM</option>
-                                            <option value="Đà Nẵng">Đà Nẵng</option>
-                                            <option value="Cần Thơ">Cần Thơ</option>
-                                            <option value="Hải Phòng">Hải Phòng</option>
-                                        </select>
-                                    </div>
-
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-2">Quận/Huyện *</label>
-                                        <select name="district" required
-                                                class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent">
-                                            <option value="">Chọn quận/huyện</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="md:col-span-2">
-                                        <label class="block text-sm font-medium text-gray-700 mb-2">Ghi chú</label>
-                                        <textarea name="notes" rows="3"
-                                                  class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                                                  placeholder="Ghi chú về đơn hàng..."></textarea>
+                                    <!-- Giao tận nơi -->
+                                    <div class="delivery-method border-2 border-gray-200 rounded-2xl p-4 cursor-pointer transition hover:border-pink-400"
+                                        onclick="selectDelivery('delivery')">
+                                        <label class="flex items-center gap-3">
+                                            <input type="radio" name="delivery_method" value="delivery" class="accent-pink-600"
+                                                onclick="showAddress(true)">
+                                            <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
+                                                <i class="fas fa-truck text-orange-500 text-xl"></i>
+                                            </div>
+                                            <div>
+                                                <h3 class="font-bold text-gray-800">Giao tận nơi</h3>
+                                                <p class="text-sm text-gray-600">Giao hàng đến địa chỉ của bạn</p>
+                                            </div>
+                                        </label>
                                     </div>
                                 </div>
                             </div>
+                            <!-- Địa chỉ giao hàng -->
+                            <div id="address-card" class="mb-6">
+                                <!-- Shipping Information -->
+                                <div class="mb-8">
+                                    <h2 class="text-xl font-bold text-pink-600 mb-4 flex items-center gap-2">
+                                        <i class="fas fa-truck text-orange-500"></i>
+                                        Địa chỉ giao hàng
+                                    </h2>
 
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div class="md:col-span-2">
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">Địa chỉ *</label>
+                                            <input type="text" name="address" required
+                                                class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                                                placeholder="123 Đường ABC, Phường XYZ">
+                                        </div>
+
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">Tỉnh/Thành phố *</label>
+                                            <select name="city" required
+                                                class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                                <option value="">Chọn tỉnh/thành phố</option>
+                                                <option value="Hà Nội">Hà Nội</option>
+                                                <option value="TP.HCM" selected>TP.HCM</option>
+                                                <option value="Đà Nẵng">Đà Nẵng</option>
+                                                <option value="Cần Thơ">Cần Thơ</option>
+                                                <option value="Hải Phòng">Hải Phòng</option>
+                                            </select>
+                                        </div>
+
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">Quận/Huyện *</label>
+                                            <select name="district" required
+                                                class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                                <option value="">Chọn quận/huyện</option>
+                                                <option value="Quận 1" selected>Quận 1</option>
+                                                <option value="Quận 3">Quận 3</option>
+                                                <option value="Quận 7">Quận 7</option>
+                                                <option value="Thủ Đức">Thủ Đức</option>
+                                                <option value="Bình Thạnh">Bình Thạnh</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="md:col-span-2">
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">Ghi chú</label>
+                                            <textarea name="notes" rows="3"
+                                                class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                                                placeholder="Ghi chú về đơn hàng..."></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <!-- Payment Methods -->
                             <div class="mb-8">
                                 <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
@@ -278,6 +283,13 @@ try {
     <?php include '../includes/footer.php'; ?>
 
     <script>
+        // Ẩn/hiện địa chỉ giao hàng
+        function showAddress(show) {
+            document.getElementById('address-card').style.display = show ? 'block' : 'none';
+        }
+        // Mặc định hiển thị địa chỉ giao hàng
+        showAddress(false);
+
         // Select payment method
         function selectPayment(method) {
             // Remove active class from all payment methods
@@ -323,28 +335,28 @@ try {
             const formData = new FormData(this);
 
             fetch('process.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    if (paymentMethod === 'vnpay') {
-                        // Redirect to VNPay
-                        window.location.href = data.payment_url;
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        if (paymentMethod === 'vnpay') {
+                            // Redirect to VNPay
+                            window.location.href = data.payment_url;
+                        } else {
+                            // Show success message for cash payment
+                            alert('Đặt hàng thành công! Chúng tôi sẽ liên hệ với bạn để xác nhận đơn hàng.');
+                            window.location.href = '../orders/';
+                        }
                     } else {
-                        // Show success message for cash payment
-                        alert('Đặt hàng thành công! Chúng tôi sẽ liên hệ với bạn để xác nhận đơn hàng.');
-                        window.location.href = '../orders/';
+                        alert('Có lỗi xảy ra: ' + data.message);
                     }
-                } else {
-                    alert('Có lỗi xảy ra: ' + data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Có lỗi xảy ra khi xử lý đơn hàng');
-            });
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Có lỗi xảy ra khi xử lý đơn hàng');
+                });
         });
 
         // Auto-fill district based on city
@@ -367,4 +379,5 @@ try {
         });
     </script>
 </body>
+
 </html>

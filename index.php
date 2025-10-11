@@ -87,6 +87,9 @@ ini_set('display_errors', 1);
         </section>
         <!-- Khuyến mãi & Ưu đãi -->
         <?php include 'pages/promotion.php'; ?>
+        <!-- <?php include 'pages/spinner/spinner.php'; ?> -->
+        <br> 
+        <br>
         <!-- Combo gợi ý -->
         <section class="max-w-5xl mx-auto mt-12">
             <h3 class="text-xl font-bold text-gray-800 mb-4">Combo gợi ý</h3>
@@ -129,6 +132,11 @@ ini_set('display_errors', 1);
             </div>
         </section>
         <?php include 'includes/chat-zalo.php'; ?>
+        <section id="spinner-section" class="max-w-4xl mx-auto mt-16 mb-12">
+            <h2 class="text-2xl font-extrabold text-pink-600 mb-6 flex items-center gap-2 justify-center"><i class="fa fa-gamepad text-pink-500"></i> Vòng quay may mắn</h2>
+            <iframe id="spinner-frame" src="pages/spinner/spinner.php" style="width:100%;height:520px;border:none;border-radius:32px;box-shadow:0 8px 32px #f9a8d4;overflow:hidden;background:#fff5f8;" allowtransparency="true"></iframe>
+            <div id="spinner-message" class="mt-6 text-center text-lg font-bold text-green-600" style="display:none;"></div>
+        </section>
     </main>
     <?php include 'includes/footer.php'; ?>
     <script>
@@ -177,6 +185,15 @@ ini_set('display_errors', 1);
     });
     setInterval(nextSlide, 5000);
     showSlide(0);
+    window.addEventListener('message', function(event) {
+        // Chỉ nhận message từ spinner.php
+        if (event.data && event.data.type === 'spinner-result') {
+            var msgBox = document.getElementById('spinner-message');
+            msgBox.textContent = 'Chúc mừng! Bạn đã nhận được: ' + event.data.prize;
+            msgBox.style.display = 'block';
+            setTimeout(function() { msgBox.style.display = 'none'; }, 4000);
+        }
+    });
     </script>
 </body>
 </html>

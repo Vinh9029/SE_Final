@@ -1,7 +1,7 @@
 <?php
 // filepath: c:/xampp/htdocs/SE_Final-Cart-Checkout/pages/spinner/spinner.php
 // Vòng quay may mắn - front-end + back-end xử lý
-session_start();
+// session_start();
 include_once __DIR__ . '/../../config.php';
 include_once __DIR__ . '/../../database/db_connection.php';
 
@@ -33,17 +33,46 @@ function getRandomPrize($prizes) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $customer_id = $_SESSION['customer_id'] ?? null;
     $prize = getRandomPrize($prizes);
-    // Lưu lịch sử quay
+    $can_spin = true;
+    $extra_spin = false;
     if ($customer_id) {
-        $sql = "INSERT INTO spin_history (customer_id, prize, created_at) VALUES (?, ?, NOW())";
+        // Kiểm tra số lượt quay đã dùng
+        $sql_check = "SELECT COUNT(*) as cnt FROM spin_history WHERE customer_id = ? AND extra_spin_used = 0";
+        $stmt_check = $conn->prepare($sql_check);
+        $stmt_check->execute([$customer_id]);
+        $row = $stmt_check->fetch();
+        $spins = $row['cnt'] ?? 0;
+        // Nếu đã quay rồi và không phải lượt quay thêm thì không cho quay nữa
+        if ($spins >= 1) {
+            // Kiểm tra nếu có lượt quay thêm chưa dùng
+            $sql_extra = "SELECT COUNT(*) as cnt FROM spin_history WHERE customer_id = ? AND prize = '🔁 Lượt quay thêm 1 lần' AND extra_spin_used = 0";
+            $stmt_extra = $conn->prepare($sql_extra);
+            $stmt_extra->execute([$customer_id]);
+            $row_extra = $stmt_extra->fetch();
+            if (($row_extra['cnt'] ?? 0) > 0) {
+                $extra_spin = true;
+            } else {
+                $can_spin = false;
+            }
+        }
+    }
+    if (!$customer_id) {
+        // Demo: không giới hạn lượt quay, không ghi nhận phần thưởng
+        header('Content-Type: application/json');
+        echo json_encode($prize);
+        exit;
+    }
+    if ($can_spin || $extra_spin) {
+        // Lưu lịch sử quay
+        $sql = "INSERT INTO spin_history (customer_id, prize, created_at, extra_spin_used) VALUES (?, ?, NOW(), ?)";
         $stmt = $conn->prepare($sql);
-        $stmt->execute([$customer_id, $prize['label']]);
+        $stmt->execute([$customer_id, $prize['label'], $extra_spin ? 1 : 0]);
         // Nếu trúng voucher hoặc giảm giá, tạo voucher
         if ($prize['type'] === 'voucher' || $prize['type'] === 'discount' || $prize['type'] === 'shipping') {
             $code = strtoupper(substr(md5(uniqid()), 0, 8));
             $value = $prize['value'] ?? null;
             $desc = $prize['desc'];
-            $sql2 = "INSERT INTO vouchers (customer_id, code, type, value, description, created_at, expired_at) VALUES (?, ?, ?, ?, ?, NOW(), DATE_ADD(NOW(), INTERVAL 7 DAY))";
+            $sql2 = "INSERT INTO vouchers (customer_id, code, type, value, description, created_at, expired_at, spin_id) VALUES (?, ?, ?, ?, ?, NOW(), DATE_ADD(NOW(), INTERVAL 7 DAY), LAST_INSERT_ID())";
             $stmt2 = $conn->prepare($sql2);
             $stmt2->execute([$customer_id, $code, $prize['type'], $value, $desc]);
             $prize['voucher_code'] = $code;
@@ -54,10 +83,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt3 = $conn->prepare($sql3);
             $stmt3->execute([$prize['value'], $customer_id]);
         }
+        // Nếu quay xong lượt quay thêm thì đánh dấu lượt quay thêm đã dùng
+        if ($extra_spin) {
+            $sql4 = "UPDATE spin_history SET extra_spin_used = 1 WHERE customer_id = ? AND prize = '🔁 Lượt quay thêm 1 lần' AND extra_spin_used = 0 LIMIT 1";
+            $stmt4 = $conn->prepare($sql4);
+            $stmt4->execute([$customer_id]);
+        }
+        header('Content-Type: application/json');
+        echo json_encode($prize);
+        exit;
+    } else {
+        header('Content-Type: application/json');
+        echo json_encode(["label" => "", "desc" => "Bạn đã hết lượt quay!", "type" => "none"]);
+        exit;
     }
-    header('Content-Type: application/json');
-    echo json_encode($prize);
-    exit;
 }
 ?>
 <!DOCTYPE html>
@@ -68,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body { background: #fff5f8; font-family: 'Montserrat', sans-serif; }
-        .wheel-container { position: relative; width: 400px; height: 400px; margin: 0 auto; }
+        .wheel-container { position: relative; width: 450px; height: 450px; margin: 0 auto; }
         .wheel-canvas { width: 100%; height: 100%; border-radius: 50%; box-shadow: 0 8px 32px #f9a8d4; }
         .spin-btn { background: linear-gradient(90deg, #f472b6, #fbbf24); color: #fff; font-size: 1.5rem; font-weight: bold; border: none; border-radius: 50px; padding: 18px 48px; box-shadow: 0 4px 16px #f472b6; cursor: pointer; transition: 0.2s; margin-top: 32px; }
         .spin-btn:hover { background: linear-gradient(90deg, #fbbf24, #f472b6); box-shadow: 0 8px 32px #f472b6; }
@@ -77,10 +116,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </style>
 </head>
 <body>
-    <div class="wheel-container">
+    <div class="wheel-container" style="margin-top:60px; margin-bottom:60px;">
         <div class="arrow"><i class="fa fa-location-arrow"></i></div>
         <canvas id="wheel" class="wheel-canvas" width="400" height="400"></canvas>
-        <button id="spinBtn" class="spin-btn">Quay ngay</button>
+        <div style="width:100%;display:flex;justify-content:center;align-items:center;">
+            <button id="spinBtn" class="spin-btn">Quay ngay</button>
+        </div>
         <div id="result" class="result-message"></div>
     </div>
     <script>
@@ -142,6 +183,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             let msg = `<span>${data.label}</span><br><span style='font-size:1rem;color:#333;'>${data.desc}</span>`;
                             if (data.voucher_code) msg += `<br><span style='color:#34d399'>Mã voucher: <b>${data.voucher_code}</b></span>`;
                             document.getElementById('result').innerHTML = msg;
+                            // Gửi message ra ngoài cho parent
+                            window.parent.postMessage({ type: 'spinner-result', prize: data.label }, '*');
                             spinning = false;
                         });
                 }

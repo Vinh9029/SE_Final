@@ -48,15 +48,6 @@ include_once __DIR__ . "/../config.php";
             <a href="promotion.php" class="bg-gray-700 hover:bg-gray-900 text-white font-extrabold px-5 py-2 rounded-xl shadow border border-gray-700 transition">Xem chi tiết</a>
         </div>
     </div>
-    <!-- Mini game khuyến mãi -->
-    <section class="max-w-4xl mx-auto mt-16 mb-12">
-        <h2 class="text-2xl font-extrabold text-pink-600 mb-6 flex items-center gap-2 justify-center"><i class="fa fa-gamepad text-pink-500"></i> Vòng quay may mắn</h2>
-        <div class="bg-white rounded-3xl shadow-2xl p-10 flex flex-col items-center hover:shadow-pink-300 transition">
-            <div class="mb-6 text-lg font-semibold text-gray-700 text-center">Quay để nhận mã giảm giá <span class="text-pink-500 font-bold">10%–30%</span>!</div>
-            <button class="btn-orange hover:bg-orange-600 text-white px-8 py-4 rounded-full font-extrabold text-xl shadow-lg transition mb-4">Quay ngay</button>
-            <div class="text-sm text-gray-500">*Tính năng sẽ được cập nhật sớm!</div>
-        </div>
-    </section>
 </section>
 <style>
 @keyframes pulse-slow {

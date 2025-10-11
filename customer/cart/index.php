@@ -127,14 +127,14 @@ if (!isset($_SESSION['user_id'])) {
                     </div>
                     <!-- Cart Actions -->
                     <div class="mt-8 flex flex-col lg:flex-row gap-4 justify-between items-center">
-                        <a href="../products.php"
+                        <a href="../../menus/menus.php"
                             class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-3 rounded-full font-bold transition-colors"><i
                                 class="fas fa-arrow-left mr-2"></i>Tiếp tục mua sắm</a>
                         <div class="flex flex-col sm:flex-row gap-4">
                             <button
                                 class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-3 rounded-full font-bold transition-colors"><i
                                     class="fas fa-trash mr-2"></i>Xóa tất cả</button>
-                            <a href="../checkout/"
+                            <a href="checkout/index.php"
                                 class="btn-primary text-white px-8 py-3 rounded-full font-bold shadow-lg hover:shadow-xl transition-all duration-300"><i
                                     class="fas fa-credit-card mr-2"></i>Thanh toán</a>
                         </div>
