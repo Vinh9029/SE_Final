@@ -397,4 +397,17 @@ function createVNPayPaymentURL($order_id, $amount) {
 
     return $vnp_Url;
 }
+
+include_once __DIR__ . '/../../../../database/db_connection.php';
+$order_id = $_GET['order_id'] ?? null;
+if (!$order_id) {
+    echo 'Thiếu mã đơn hàng.';
+    exit;
+}
+// Giả lập tạo mã QR và xác nhận thanh toán
+$sql = 'UPDATE orders SET status = "completed" WHERE order_id = ?';
+$stmt = $conn->prepare($sql);
+$stmt->bind_param('i', $order_id);
+$stmt->execute();
+echo 'Thanh toán VNPay thành công! Đơn hàng đã hoàn tất.';
 ?>

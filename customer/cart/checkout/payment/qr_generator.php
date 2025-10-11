@@ -264,4 +264,13 @@ function getOrderQRBase64($order_id, $amount, $description = '') {
     $qr_generator = new VNPayQRGenerator($order_id, $amount, $description);
     return $qr_generator->generateQR(256, 'base64');
 }
+
+$order_id = $_GET['order_id'] ?? null;
+if (!$order_id) {
+    echo 'Thiếu mã đơn hàng.';
+    exit;
+}
+// Giả lập trả về mã QR
+header('Content-Type: image/svg+xml');
+echo '<svg width="200" height="200"><rect width="200" height="200" fill="#fbbf24"/><text x="50" y="100" font-size="20">QR-' . htmlspecialchars($order_id) . '</text></svg>';
 ?>

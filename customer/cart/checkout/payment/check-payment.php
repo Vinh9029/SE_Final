@@ -29,23 +29,15 @@ try {
     }
 
     // Kiểm tra trạng thái thanh toán
-    if ($order['payment_status'] === 'completed' || $order['payment_status'] === 'paid') {
-        // Cập nhật trạng thái đơn hàng
-        $update_stmt = $conn->prepare("UPDATE orders SET order_status = 'confirmed', updated_at = NOW() WHERE id = ?");
-        $update_stmt->bind_param("i", $order_id);
-        $update_stmt->execute();
-
-        echo json_encode([
-            'success' => true,
-            'message' => 'Thanh toán thành công',
-            'order_status' => 'confirmed'
-        ]);
+    $sql = 'SELECT status FROM orders WHERE order_id = ?';
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param('i', $order_id);
+    $stmt->execute();
+    $res = $stmt->get_result();
+    if ($row = $res->fetch_assoc()) {
+        echo json_encode(['success' => true, 'status' => $row['status']]);
     } else {
-        echo json_encode([
-            'success' => false,
-            'message' => 'Thanh toán chưa hoàn thành',
-            'order_status' => $order['order_status']
-        ]);
+        echo json_encode(['success' => false, 'message' => 'Không tìm thấy đơn hàng']);
     }
 
 } catch (Exception $e) {

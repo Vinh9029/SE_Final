@@ -281,3 +281,17 @@ $customer_info = json_decode($order_info['customer_info'], true);
     </script>
 </body>
 </html>
+
+<?php
+session_start();
+include_once __DIR__ . '/../../../../database/db_connection.php';
+$order_id = $_GET['order_id'] ?? null;
+if (!$order_id) {
+    echo 'Thiếu mã đơn hàng.';
+    exit;
+}
+$sql = 'UPDATE orders SET status = "processing" WHERE order_id = ?';
+$stmt = $conn->prepare($sql);
+$stmt->bind_param('i', $order_id);
+$stmt->execute();
+echo 'Đơn hàng đã được xác nhận. Cảm ơn bạn!';

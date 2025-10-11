@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $message = 'Cập nhật thông tin thành công!';
             $message_type = 'success';
         } else {
-            $message = 'Có lỗi xảy ra. Vui lòng thử lại.';
+            $message = 'Có lỗi xảy ra. Vui lòng thử lại. Lỗi: ' . $stmt->error;
             $message_type = 'error';
         }
         $stmt->close();

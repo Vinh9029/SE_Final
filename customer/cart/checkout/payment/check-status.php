@@ -15,11 +15,11 @@ if ($order_id <= 0) {
 }
 
 try {
-    require_once '../../../includes/config/database.php';
+    include_once __DIR__ . '/../../../../database/db_connection.php';
 
     // Kiểm tra quyền truy cập đơn hàng
-    $stmt = $conn->prepare("SELECT order_status, payment_status FROM orders WHERE id = ? AND user_id = ?");
-    $stmt->bind_param("ii", $order_id, $_SESSION['user_id']);
+    $stmt = $conn->prepare("SELECT status FROM orders WHERE order_id = ?");
+    $stmt->bind_param("i", $order_id);
     $stmt->execute();
     $order = $stmt->get_result()->fetch_assoc();
 
@@ -29,8 +29,7 @@ try {
     }
 
     echo json_encode([
-        'status' => $order['order_status'],
-        'payment_status' => $order['payment_status']
+        'status' => $order['status']
     ]);
 
 } catch (Exception $e) {

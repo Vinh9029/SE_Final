@@ -132,3 +132,5 @@ ALTER TABLE vouchers MODIFY COLUMN user_id INT NULL;
 ALTER TABLE cart_items ADD COLUMN size_id INT NULL AFTER product_id;
 
 ALTER TABLE cart_items ADD COLUMN take_note VARCHAR(255)  AFTER size_id;
+
+ALTER TABLE orders ADD COLUMN voucher_code VARCHAR(50) DEFAULT NULL AFTER total;

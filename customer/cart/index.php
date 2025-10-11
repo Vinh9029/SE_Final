@@ -115,7 +115,7 @@ if (!isset($_SESSION['user_id'])) {
                                 <span class="text-gray-700">Giảm giá:</span>
                                 <span id="order-discount" class="font-bold text-green-600">0đ</span>
                             </div>
-                            <div class="flex justify-between mb-2">
+                            <div class="flex justify-between mb-2" id="shipping-row" style="display:none;">
                                 <span class="text-gray-700">Phí giao hàng:</span>
                                 <span id="order-shipping" class="font-bold">15,000đ</span>
                             </div>
@@ -176,7 +176,7 @@ if (!isset($_SESSION['user_id'])) {
             });
             // Tính giảm giá
             let discount = 0;
-            let shipping = SHIPPING_FEE;
+            let shipping = 0; // Không hiển thị phí giao hàng ở giỏ hàng
             if (appliedVoucher) {
                 if (appliedVoucher.type === 'percent') {
                     discount = Math.round(total * appliedVoucher.value / 100);
@@ -192,8 +192,9 @@ if (!isset($_SESSION['user_id'])) {
                 'đ';
             document.getElementById('order-discount').textContent = '-' + new Intl.NumberFormat('vi-VN').format(
                 discount) + 'đ';
-            document.getElementById('order-shipping').textContent = shipping === 0 ? 'Miễn phí' : new Intl.NumberFormat(
+            document.getElementById('order-shipping').textContent = shipping === 0 ? '' : new Intl.NumberFormat(
                 'vi-VN').format(shipping) + 'đ';
+            document.getElementById('shipping-row').style.display = 'none';
             document.getElementById('order-total-after').textContent = new Intl.NumberFormat('vi-VN').format(
                 totalAfter) + 'đ';
         }
@@ -367,7 +368,7 @@ if (!isset($_SESSION['user_id'])) {
         });
         // Tính giảm giá
         let discount = 0;
-        let shipping = SHIPPING_FEE;
+        let shipping = 0; // Không hiển thị phí giao hàng ở giỏ hàng
         if (appliedVoucherCode && total >= appliedVoucherMinOrder) {
             if (appliedVoucherType === 'percent') {
                 discount = Math.round(total * appliedVoucherDiscount / 100);
@@ -380,7 +381,8 @@ if (!isset($_SESSION['user_id'])) {
         document.getElementById('order-total-qty').textContent = totalQty;
         document.getElementById('order-total-before').textContent = new Intl.NumberFormat('vi-VN').format(total) + 'đ';
         document.getElementById('order-discount').textContent = '-' + new Intl.NumberFormat('vi-VN').format(discount) + 'đ';
-        document.getElementById('order-shipping').textContent = shipping === 0 ? 'Miễn phí' : new Intl.NumberFormat('vi-VN').format(shipping) + 'đ';
+        document.getElementById('order-shipping').textContent = shipping === 0 ? '' : new Intl.NumberFormat('vi-VN').format(shipping) + 'đ';
+        document.getElementById('shipping-row').style.display = 'none';
         document.getElementById('order-total-after').textContent = new Intl.NumberFormat('vi-VN').format(totalAfter) + 'đ';
     }
     </script>

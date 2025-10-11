@@ -2,12 +2,12 @@
 // Database connection settings
 $host = 'localhost'; //localhost
 $db   = 'theoldfavour';
-$user = 'shopuser'; //root
-$pass = '1234'; //No password
+$user = 'root'; //root
+$pass = ''; //No password
 //test
 
 // Create connection
-$conn = new mysqli($host, $user, $pass, $db, 3307); // Port 3307 for XAMPP, 3306 for WAMP
+$conn = new mysqli($host, $user, $pass, $db); // Port 3307 for XAMPP, 3306 for WAMP
 
 // Check connection
 if ($conn->connect_error) {
