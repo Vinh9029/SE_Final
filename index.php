@@ -12,17 +12,18 @@ ini_set('display_errors', 1);
     <title>Old Flavour Coffee</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Merriweather:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Merriweather', serif;
+            font-family: 'Poppins', sans-serif;
             scroll-behavior: smooth;
+            background-color: #E6D3B1;
         }
         h1, h2, h3 {
             font-family: 'Playfair Display', serif;
         }
         .hero-overlay {
-            background: linear-gradient(135deg, rgba(62, 39, 35, 0.6) 0%, rgba(210, 105, 30, 0.4) 100%);
+            background: linear-gradient(135deg, rgba(75, 46, 5, 0.6) 0%, rgba(196, 163, 90, 0.4) 100%);
         }
         .section-card {
             transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -31,21 +32,36 @@ ini_set('display_errors', 1);
             transform: translateY(-5px);
             box-shadow: 0 15px 35px rgba(0,0,0,0.15);
         }
+        .parallax {
+            background-attachment: fixed;
+            background-size: cover;
+            background-position: center;
+        }
+        .fade-in {
+            animation: fadeIn 1s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
         .cta-button {
-            background: linear-gradient(135deg, #8B4513 0%, #D2691E 100%);
+            background: linear-gradient(135deg, #4B2E05 0%, #C4A35A 100%);
             transition: all 0.3s ease;
         }
         .cta-button:hover {
-            background: linear-gradient(135deg, #A0522D 0%, #CD853F 100%);
+            background: linear-gradient(135deg, #C4A35A 0%, #4B2E05 100%);
             transform: scale(1.05);
         }
+        .text-brown { color: #4B2E05; }
+        .text-gold { color: #C4A35A; }
+        .bg-beige { background-color: #E6D3B1; }
     </style>
     
 </head>
-<body class="bg-gray-50">
+<body style="background-color: #E6D3B1;">
     <?php include 'includes/header.php'; ?>
     <!-- Body Content -->
-    <main class="bg-gray-50">
+    <main style="background-color: #E6D3B1;">
         <!-- Slider quảng cáo -->
         <div class="w-full max-w-5xl mx-auto mt-6 rounded-xl overflow-hidden shadow-lg relative">
             <div id="slider" class="relative h-64 md:h-80">
@@ -71,19 +87,19 @@ ini_set('display_errors', 1);
         </div>
         <!-- Giới thiệu ngắn -->
         <section class="max-w-4xl mx-auto mt-10 text-center">
-            <h2 class="text-2xl font-bold text-pink-600 mb-2">Chào mừng đến với Old Flavour Coffee</h2>
+            <h2 class="text-2xl font-bold text-brown mb-2">Chào mừng đến với Old Flavour Coffee</h2>
             <p class="text-gray-700 text-lg">Nơi bạn tận hưởng hương vị cà phê nguyên bản, không gian ấm cúng và dịch vụ tận tâm.</p>
         </section>
 
         <!-- ☕ Câu chuyện thương hiệu -->
-        <section class="max-w-6xl mx-auto mt-20 bg-gradient-to-r from-brown-100 to-orange-100 rounded-2xl p-8 shadow-lg section-card">
+        <section class="max-w-6xl mx-auto mt-20 bg-white rounded-2xl p-8 shadow-lg section-card">
             <div class="flex flex-col lg:flex-row items-center gap-8">
                 <div class="lg:w-1/2">
                     <img src="Photos/artisan.jpg" alt="Nghệ nhân rang xay" class="w-full h-80 object-cover rounded-xl shadow-md transition-transform duration-300 hover:scale-105">
                 </div>
                 <div class="lg:w-1/2 text-center lg:text-left">
                     <h2 class="text-4xl font-bold text-brown-800 mb-4">☕ Câu chuyện thương hiệu</h2>
-                    <h3 class="text-xl font-semibold text-brown-700 mb-4">Hành trình từ hạt cà phê đến tách hương thuần khiết</h3>
+                    <h3 class="text-xl font-semibold text-gold mb-4">Hành trình từ hạt cà phê đến tách hương thuần khiết</h3>
                     <p class="text-gray-700 leading-relaxed mb-4">Ở Old Flavour, mỗi hạt cà phê không chỉ là nông sản — mà là một hành trình. Hành trình bắt đầu từ sườn đồi ngập nắng, nơi người nông dân nâng niu từng chùm quả chín đỏ, rồi qua bàn tay người nghệ nhân – những người không chỉ rang cà phê, mà rang cả tâm hồn mình trong từng mẻ.</p>
                     <p class="text-gray-700 leading-relaxed mb-4">Hương thơm lan tỏa, âm vang tiếng hạt vỡ giòn tan, như nhịp thở của thời gian. Và rồi, khi tách cà phê đầu tiên chạm môi, ta thấy vị đắng dịu hòa cùng ngọt ngào – giản đơn, chân thật, và nguyên sơ như chính cái tên Old Flavour.</p>
                     <blockquote class="text-brown-600 italic border-l-4 border-brown-400 pl-4 mb-6">Từng hạt cà phê được lựa chọn tỉ mỉ, qua bàn tay nghệ nhân để tạo nên hương vị nguyên bản của Old Flavour.</blockquote>
@@ -93,7 +109,7 @@ ini_set('display_errors', 1);
         </section>
 
         <!-- 🪑 Không gian quán -->
-        <section class="max-w-6xl mx-auto mt-16 bg-gradient-to-r from-brown-100 to-orange-100 rounded-2xl p-8 shadow-lg section-card">
+        <section class="max-w-6xl mx-auto mt-16 bg-white rounded-2xl p-8 shadow-lg section-card">
             <div class="flex flex-col lg:flex-row-reverse items-center gap-8">
                 <div class="lg:w-1/2">
                     <img src="Photos/interior.jpg" alt="Nội thất quán" class="w-full h-80 object-cover rounded-xl shadow-md transition-transform duration-300 hover:scale-105">
@@ -109,7 +125,7 @@ ini_set('display_errors', 1);
         </section>
 
         <!-- 🕯️ Lời chào từ người sáng lập -->
-        <section class="max-w-4xl mx-auto mt-16 bg-gradient-to-r from-brown-100 to-orange-100 rounded-2xl p-8 shadow-lg text-center section-card">
+        <section class="max-w-4xl mx-auto mt-16 bg-white rounded-2xl p-8 shadow-lg text-center section-card">
             <h2 class="text-4xl font-bold text-brown-800 mb-6">🕯️ Lời chào từ người sáng lập</h2>
             <div class="text-gray-700 leading-relaxed mb-6">
                 <p class="mb-4">Chào bạn,</p>
@@ -120,82 +136,9 @@ ini_set('display_errors', 1);
                 <a href="pages/aboutUs.php" class="cta-button text-white px-6 py-3 rounded-full font-semibold inline-block">Gặp gỡ người sáng lập</a>
             </div>
         </section>
-        <!-- Menu nổi bật (Best sellers) -->
-        <section class="max-w-5xl mx-auto mt-12">
-            <h3 class="text-xl font-bold text-gray-800 mb-4">Menu nổi bật</h3>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                <div class="bg-white rounded-xl shadow p-4 flex flex-col items-center">
-                    <img src="Photos/test1.jpg" class="w-24 h-24 object-cover rounded-full mb-2" />
-                    <div class="font-semibold text-pink-600">Cà phê sữa đá</div>
-                    <div class="text-gray-500 text-sm">Đậm đà, truyền thống</div>
-                </div>
-                <div class="bg-white rounded-xl shadow p-4 flex flex-col items-center">
-                    <img src="Photos/background.jpg" class="w-24 h-24 object-cover rounded-full mb-2" />
-                    <div class="font-semibold text-pink-600">Bánh ngọt Pháp</div>
-                    <div class="text-gray-500 text-sm">Ngọt ngào, mềm mịn</div>
-                </div>
-                <div class="bg-white rounded-xl shadow p-4 flex flex-col items-center">
-                    <img src="Photos/banner.jpg" class="w-24 h-24 object-cover rounded-full mb-2" />
-                    <div class="font-semibold text-pink-600">Trà đào cam sả</div>
-                    <div class="text-gray-500 text-sm">Thanh mát, giải nhiệt</div>
-                </div>
-                <div class="bg-white rounded-xl shadow p-4 flex flex-col items-center">
-                    <img src="Photos/login_background.jpg" class="w-24 h-24 object-cover rounded-full mb-2" />
-                    <div class="font-semibold text-pink-600">Sandwich gà nướng</div>
-                    <div class="text-gray-500 text-sm">Bổ dưỡng, tiện lợi</div>
-                </div>
-            </div>
-        </section>
-        <!-- Danh mục menu -->
-        <section class="max-w-5xl mx-auto mt-12">
-            <h3 class="text-xl font-bold text-gray-800 mb-4">Danh mục menu</h3>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                <div class="bg-pink-50 rounded-xl shadow p-4 flex flex-col items-center hover:bg-pink-100 cursor-pointer transition-transform duration-300 hover:scale-105">
-                    <i class="fa fa-coffee text-3xl text-pink-600 mb-2"></i>
-                    <div class="font-semibold">Cà phê</div>
-                </div>
-                <div class="bg-pink-50 rounded-xl shadow p-4 flex flex-col items-center hover:bg-pink-100 cursor-pointer transition-transform duration-300 hover:scale-105">
-                    <i class="fa fa-mug-hot text-3xl text-pink-600 mb-2"></i>
-                    <div class="font-semibold">Trà & Sữa</div>
-                </div>
-                <div class="bg-pink-50 rounded-xl shadow p-4 flex flex-col items-center hover:bg-pink-100 cursor-pointer transition-transform duration-300 hover:scale-105">
-                    <i class="fa fa-wine-glass-alt text-3xl text-pink-600 mb-2"></i>
-                    <div class="font-semibold">Nước đặc biệt</div>
-                </div>
-                <div class="bg-pink-50 rounded-xl shadow p-4 flex flex-col items-center hover:bg-pink-100 cursor-pointer transition-transform duration-300 hover:scale-105">
-                    <i class="fa fa-birthday-cake text-3xl text-pink-600 mb-2"></i>
-                    <div class="font-semibold">Đồ ăn kèm</div>
-                </div>
-            </div>
-        </section>
-        <!-- Khuyến mãi & Ưu đãi -->
-        <?php include 'pages/promotion.php'; ?>
-        <!-- <?php include 'pages/spinner/spinner.php'; ?> -->
-        <br> 
-        <br>
-        <!-- Combo gợi ý -->
-        <section class="max-w-5xl mx-auto mt-12">
-            <h3 class="text-xl font-bold text-gray-800 mb-4">Combo gợi ý</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-white rounded-xl shadow p-6 flex items-center gap-4">
-                    <img src="Photos/test1.jpg" class="w-20 h-20 object-cover rounded-lg" />
-                    <div>
-                        <div class="font-bold text-pink-600">Combo Sáng Năng Lượng</div>
-                        <div class="text-gray-600 text-sm">Cà phê sữa đá + Bánh mặn</div>
-                    </div>
-                </div>
-                <div class="bg-white rounded-xl shadow p-6 flex items-center gap-4">
-                    <img src="Photos/test2.jpg" class="w-20 h-20 object-cover rounded-lg" />
-                    <div>
-                        <div class="font-bold text-pink-600">Combo Trà & Bánh</div>
-                        <div class="text-gray-600 text-sm">Trà đào cam sả + Bánh ngọt</div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
+       
         <!-- 💬 Câu chuyện nhỏ -->
-        <section class="max-w-6xl mx-auto mt-16 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-2xl p-8 shadow-lg section-card">
+        <section class="max-w-6xl mx-auto mt-16 bg-white rounded-2xl p-8 shadow-lg section-card">
             <div class="text-center mb-8">
                 <h2 class="text-4xl font-bold text-cyan-800 mb-4">💬 Câu chuyện nhỏ</h2>
                 <img src="Photos/stories.jpg" alt="Khách hàng vui vẻ" class="w-full max-w-md h-64 object-cover rounded-xl shadow-md mx-auto mb-6 transition-transform duration-300 hover:scale-105">
@@ -241,11 +184,6 @@ ini_set('display_errors', 1);
             </div>
         </section>
         <?php include 'includes/chat-zalo.php'; ?>
-        <section id="spinner-section" class="max-w-4xl mx-auto mt-16 mb-12">
-            <h2 class="text-2xl font-extrabold text-pink-600 mb-6 flex items-center gap-2 justify-center"><i class="fa fa-gamepad text-pink-500"></i> Vòng quay may mắn</h2>
-            <iframe id="spinner-frame" src="pages/spinner/spinner.php" style="width:100%;height:520px;border:none;border-radius:32px;box-shadow:0 8px 32px #f9a8d4;overflow:hidden;background:#fff5f8;" allowtransparency="true"></iframe>
-            <div id="spinner-message" class="mt-6 text-center text-lg font-bold text-green-600" style="display:none;"></div>
-        </section>
     </main>
     <?php include 'includes/footer.php'; ?>
     <script>
