@@ -23,7 +23,7 @@ if (isset($_SESSION['user_id'])) {
         <!-- Logo + Tên quán -->
         <div class="flex items-center gap-2">
             <img src="<?php echo $base_url; ?>/Photos/banner.jpg" alt="Logo" class="h-12 w-12 object-cover rounded-full shadow" />
-            <span class="text-2xl font-bold text-pink-600 tracking-wide select-none"><a href="<?php echo $base_url; ?>/index.php">Old Favour</a></span>
+            <span class="text-2xl font-bold text-pink-600 tracking-wide select-none"><a href="<?php echo $base_url; ?>/index.php">Old Flavour</a></span>
         </div>
 
         <!-- Menu điều hướng -->
@@ -34,6 +34,7 @@ if (isset($_SESSION['user_id'])) {
                 <li><a href="<?php echo $base_url; ?>/pages/promotion.php" class="relative text-gray-700 hover:text-pink-600 font-bold transition flex items-center gap-2"><i class="fa fa-gift text-pink-500"></i> Khuyến mãi</a></li>
                 <li><a href="<?php echo $base_url; ?>/pages/aboutUs.php" class="text-gray-700 hover:text-pink-600 font-medium transition">Về chúng tôi</a></li>
                 <li><a href="<?php echo $base_url; ?>/pages/contactUS.php" class="text-gray-700 hover:text-pink-600 font-medium transition">Liên hệ</a></li>
+                <li><a href="<?php echo $base_url; ?>/pages/blog.php" class="text-gray-700 hover:text-pink-600 font-medium transition">Blogs</a></li>
             </ul>
         </nav>
 
