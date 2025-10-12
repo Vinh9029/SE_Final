@@ -2,27 +2,27 @@
 session_start();
 include_once __DIR__ . '/database/db_connection.php';
 ?> -->
-<!-- <style>
+<style>
     footer {
         font-family: 'Merriweather', serif;
     }
     footer h1, footer h2, footer h3, footer h4, footer h5, footer h6 {
         font-family: 'Playfair Display', serif;
     }
-</style> -->
+</style>
 <footer class="bg-gray-900 text-gray-200 pt-10 pb-4 mt-10">
     <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
         <!-- Cột 1: Logo + slogan + liên hệ -->
         <div>
             <div class="flex items-center gap-2 mb-3">
                 <img src="<?php echo $base_url; ?>/Photos/banner.jpg" alt="Logo" class="h-12 w-10 object-cover rounded-full shadow" />
-                <span class="text-xl font-bold text-pink-400">Old Flavour</span>
+                <span class="text-xl font-bold text-pink-400">Old Favour</span>
             </div>
             <div class="mb-2 text-pink-200 italic">Hạnh phúc trong từng tách cà phê!</div>
             <div class="text-sm flex flex-col gap-1">
                 <span><i class="fa fa-map-marker-alt text-pink-400 mr-2"></i>123 Main St, Ho Chi Minh City</span>
                 <span><i class="fa fa-phone-alt text-pink-400 mr-2"></i>(123) 456-7890</span>
-                <span><i class="fa fa-envelope text-pink-400 mr-2"></i>info@oldflavourcoffee.com</span>
+                <span><i class="fa fa-envelope text-pink-400 mr-2"></i>info@oldfavourcoffee.com</span>
             </div>
         </div>
         <!-- Cột 2: Liên kết nhanh -->
@@ -63,6 +63,6 @@ include_once __DIR__ . '/database/db_connection.php';
         </div>
     </div>
     <div class="text-center text-xs text-gray-400 mt-8">
-        &copy; 2025 Old Flavour Coffee. All rights reserved.
+        &copy; 2025 Old Favour Coffee. All rights reserved.
     </div>
 </footer>

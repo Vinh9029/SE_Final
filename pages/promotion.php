@@ -250,17 +250,7 @@ ini_set('display_errors', 1);
         </div>
     </footer>
 
-    <!-- Popup Signup -->
-    <div class="popup" id="signupPopup">
-        <div class="bg-white rounded-xl p-8 max-w-md mx-4">
-            <h3 class="text-2xl font-bold mb-4 text-4B2E05">Nhận Voucher 15%</h3>
-            <p class="mb-4">Nhập email để nhận ưu đãi lần đầu!</p>
-            <input type="email" placeholder="Email của bạn" class="w-full p-3 border rounded mb-4">
-            <button class="cta-button text-white px-6 py-3 rounded-full font-semibold w-full">Đăng Ký</button>
-            <button onclick="closePopup()" class="mt-4 text-gray-500 underline">Đóng</button>
-        </div>
-    </div>
-
+    <?php include '../includes/popup_signup.php'; ?>
     <script>
         // Loading screen
         window.addEventListener('load', () => {
@@ -288,17 +278,10 @@ ini_set('display_errors', 1);
             slides.style.transform = `translateX(-${currentSlide * 100}%)`;
         }
 
-        // Popup
-        function openPopup() {
-            document.getElementById('signupPopup').classList.add('show');
-        }
-
-        function closePopup() {
-            document.getElementById('signupPopup').classList.remove('show');
-        }
-
         // Auto open popup after 5 seconds
-        setTimeout(openPopup, 5000);
+        setTimeout(() => {
+            document.getElementById('signupPopup').classList.add('show');
+        }, 5000);
 
         // Parallax effect
         window.addEventListener('scroll', () => {

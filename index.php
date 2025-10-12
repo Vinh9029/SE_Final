@@ -55,10 +55,55 @@ ini_set('display_errors', 1);
         .text-brown { color: #4B2E05; }
         .text-gold { color: #C4A35A; }
         .bg-beige { background-color: #E6D3B1; }
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #4B2E05;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            animation: fadeOut 3s ease-out forwards;
+        }
+        @keyframes fadeOut {
+            to { opacity: 0; visibility: hidden; }
+        }
+        .logo-animation {
+            animation: fadeInUp 2s ease-out;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+        }
+        .popup.show {
+            display: flex;
+        }
     </style>
     
 </head>
 <body style="background-color: #E6D3B1;">
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loading">
+        <div class="text-center text-white">
+            <h1 class="text-4xl font-bold mb-4">Old Flavour Coffee</h1>
+            <div class="animate-pulse">☕</div>
+        </div>
+    </div>
     <?php include 'includes/header.php'; ?>
     <!-- Body Content -->
     <main style="background-color: #E6D3B1;">
@@ -69,7 +114,7 @@ ini_set('display_errors', 1);
                 <img src="Photos/test1.jpg" class="slider-img absolute inset-0 w-full h-full object-cover transition-opacity duration-700 opacity-0" style="z-index:1;" />
                 <img src="Photos/test2.jpg" class="slider-img absolute inset-0 w-full h-full object-cover transition-opacity duration-700 opacity-0" style="z-index:0;" />
                 <div class="hero-overlay absolute inset-0 z-5"></div>
-                <div class="absolute inset-0 flex items-center justify-center z-10 text-center text-white">
+                <div class="absolute inset-0 flex items-center justify-center z-10 text-center text-white logo-animation">
                     <div>
                         <h1 class="text-4xl md:text-6xl font-bold mb-4 drop-shadow-lg">Chào mừng đến Old Flavour</h1>
                         <p class="text-lg md:text-xl mb-6 drop-shadow">Hương vị cà phê nguyên bản, không gian ấm cúng</p>
@@ -86,13 +131,13 @@ ini_set('display_errors', 1);
             </div>
         </div>
         <!-- Giới thiệu ngắn -->
-        <section class="max-w-4xl mx-auto mt-10 text-center">
+        <section class="max-w-4xl mx-auto mt-10 text-center fade-in">
             <h2 class="text-2xl font-bold text-brown mb-2">Chào mừng đến với Old Flavour Coffee</h2>
             <p class="text-gray-700 text-lg">Nơi bạn tận hưởng hương vị cà phê nguyên bản, không gian ấm cúng và dịch vụ tận tâm.</p>
         </section>
 
         <!-- ☕ Câu chuyện thương hiệu -->
-        <section class="max-w-6xl mx-auto mt-20 bg-white rounded-2xl p-8 shadow-lg section-card">
+        <section class="max-w-6xl mx-auto mt-20 bg-white rounded-2xl p-8 shadow-lg section-card fade-in">
             <div class="flex flex-col lg:flex-row items-center gap-8">
                 <div class="lg:w-1/2">
                     <img src="Photos/artisan.jpg" alt="Nghệ nhân rang xay" class="w-full h-80 object-cover rounded-xl shadow-md transition-transform duration-300 hover:scale-105">
@@ -109,7 +154,7 @@ ini_set('display_errors', 1);
         </section>
 
         <!-- 🪑 Không gian quán -->
-        <section class="max-w-6xl mx-auto mt-16 bg-white rounded-2xl p-8 shadow-lg section-card">
+        <section class="max-w-6xl mx-auto mt-16 bg-white rounded-2xl p-8 shadow-lg section-card fade-in">
             <div class="flex flex-col lg:flex-row-reverse items-center gap-8">
                 <div class="lg:w-1/2">
                     <img src="Photos/interior.jpg" alt="Nội thất quán" class="w-full h-80 object-cover rounded-xl shadow-md transition-transform duration-300 hover:scale-105">
@@ -125,7 +170,7 @@ ini_set('display_errors', 1);
         </section>
 
         <!-- 🕯️ Lời chào từ người sáng lập -->
-        <section class="max-w-4xl mx-auto mt-16 bg-white rounded-2xl p-8 shadow-lg text-center section-card">
+        <section class="max-w-4xl mx-auto mt-16 bg-white rounded-2xl p-8 shadow-lg text-center section-card fade-in">
             <h2 class="text-4xl font-bold text-brown-800 mb-6">🕯️ Lời chào từ người sáng lập</h2>
             <div class="text-gray-700 leading-relaxed mb-6">
                 <p class="mb-4">Chào bạn,</p>
@@ -138,7 +183,7 @@ ini_set('display_errors', 1);
         </section>
        
         <!-- 💬 Câu chuyện nhỏ -->
-        <section class="max-w-6xl mx-auto mt-16 bg-white rounded-2xl p-8 shadow-lg section-card">
+        <section class="max-w-6xl mx-auto mt-16 bg-white rounded-2xl p-8 shadow-lg section-card fade-in">
             <div class="text-center mb-8">
                 <h2 class="text-4xl font-bold text-cyan-800 mb-4">💬 Câu chuyện nhỏ</h2>
                 <img src="Photos/stories.jpg" alt="Khách hàng vui vẻ" class="w-full max-w-md h-64 object-cover rounded-xl shadow-md mx-auto mb-6 transition-transform duration-300 hover:scale-105">
@@ -163,28 +208,109 @@ ini_set('display_errors', 1);
         </section>
 
         <!-- Đánh giá khách hàng -->
-        <section class="max-w-5xl mx-auto mt-12 section-card">
+        <section class="max-w-5xl mx-auto mt-12 bg-white rounded-2xl p-8 shadow-lg section-card fade-in">
             <h3 class="text-xl font-bold text-gray-800 mb-4">Khách hàng nói gì về chúng tôi?</h3>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="bg-white rounded-xl shadow p-6 flex flex-col items-center transition-transform duration-300 hover:scale-105 hover:bg-gray-50">
-                    <img src="https://randomuser.me/api/portraits/men/32.jpg" class="w-16 h-16 object-cover rounded-full mb-2" />
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="reviewContainer">
+                <div class="bg-white rounded-xl shadow p-6 flex flex-col items-center transition-transform duration-300 hover:scale-105 hover:bg-gray-50 review-card" data-index="0">
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" class="w-16 h-16 object-cover rounded-full mb-2">
                     <div class="font-semibold">Nguyễn Văn A</div>
                     <div class="text-gray-500 text-sm text-center">“Không gian rất chill, cà phê ngon, nhân viên thân thiện!”</div>
                 </div>
-                <div class="bg-white rounded-xl shadow p-6 flex flex-col items-center transition-transform duration-300 hover:scale-105 hover:bg-gray-50">
-                    <img src="https://randomuser.me/api/portraits/women/44.jpg" class="w-16 h-16 object-cover rounded-full mb-2" />
+                <div class="bg-white rounded-xl shadow p-6 flex flex-col items-center transition-transform duration-300 hover:scale-105 hover:bg-gray-50 review-card" data-index="1">
+                    <img src="https://randomuser.me/api/portraits/women/44.jpg" class="w-16 h-16 object-cover rounded-full mb-2">
                     <div class="font-semibold">Trần Thị B</div>
                     <div class="text-gray-500 text-sm text-center">“Bánh ngọt mềm, trà đào thơm, giá hợp lý!”</div>
                 </div>
-                <div class="bg-white rounded-xl shadow p-6 flex flex-col items-center transition-transform duration-300 hover:scale-105 hover:bg-gray-50">
-                    <img src="https://randomuser.me/api/portraits/men/65.jpg" class="w-16 h-16 object-cover rounded-full mb-2" />
+                <div class="bg-white rounded-xl shadow p-6 flex flex-col items-center transition-transform duration-300 hover:scale-105 hover:bg-gray-50 review-card" data-index="2">
+                    <img src="https://randomuser.me/api/portraits/men/65.jpg" class="w-16 h-16 object-cover rounded-full mb-2">
                     <div class="font-semibold">Lê Minh C</div>
                     <div class="text-gray-500 text-sm text-center">“Combo bữa sáng tiện lợi, rất thích!”</div>
                 </div>
+                <div class="bg-white rounded-xl shadow p-6 flex flex-col items-center transition-transform duration-300 hover:scale-105 hover:bg-gray-50 review-card hidden" data-index="3">
+                    <img src="https://randomuser.me/api/portraits/women/18.jpg" class="w-16 h-16 object-cover rounded-full mb-2">
+                    <div class="font-semibold">Phạm Thị D</div>
+                    <div class="text-gray-500 text-sm text-center">“Cà phê đậm đà, không gian yên tĩnh lý tưởng để làm việc.”</div>
+                </div>
+                <div class="bg-white rounded-xl shadow p-6 flex flex-col items-center transition-transform duration-300 hover:scale-105 hover:bg-gray-50 review-card hidden" data-index="4">
+                    <img src="https://randomuser.me/api/portraits/men/21.jpg" class="w-16 h-16 object-cover rounded-full mb-2">
+                    <div class="font-semibold">Hoàng Văn E</div>
+                    <div class="text-gray-500 text-sm text-center">“Dịch vụ nhanh chóng, giá cả phải chăng, sẽ quay lại!”</div>
+                </div>
+                <div class="bg-white rounded-xl shadow p-6 flex flex-col items-center transition-transform duration-300 hover:scale-105 hover:bg-gray-50 review-card hidden" data-index="5">
+                    <img src="https://randomuser.me/api/portraits/women/67.jpg" class="w-16 h-16 object-cover rounded-full mb-2">
+                    <div class="font-semibold">Vũ Thị F</div>
+                    <div class="text-gray-500 text-sm text-center">“Trà sữa ngon, topping tươi, nhân viên nhiệt tình.”</div>
+                </div>
+                <div class="bg-white rounded-xl shadow p-6 flex flex-col items-center transition-transform duration-300 hover:scale-105 hover:bg-gray-50 review-card hidden" data-index="6">
+                    <img src="https://randomuser.me/api/portraits/men/88.jpg" class="w-16 h-16 object-cover rounded-full mb-2">
+                    <div class="font-semibold">Đặng Minh G</div>
+                    <div class="text-gray-500 text-sm text-center">“Món latte art đẹp mắt, hương vị tuyệt vời.”</div>
+                </div>
             </div>
+            <!-- Điều hướng -->
+            <div class="flex justify-between items-center mt-6">
+                <button id="prevReview" class="bg-white hover:bg-gray-100 text-brown rounded-full p-2 shadow"><i class="fa fa-chevron-left"></i></button>
+                <div class="flex gap-2">
+                    <span class="review-dot w-3 h-3 rounded-full bg-gold cursor-pointer"></span>
+                    <span class="review-dot w-3 h-3 rounded-full bg-gray-300 cursor-pointer"></span>
+                    <span class="review-dot w-3 h-3 rounded-full bg-gray-300 cursor-pointer"></span>
+                </div>
+                <button id="nextReview" class="bg-white hover:bg-gray-100 text-brown rounded-full p-2 shadow"><i class="fa fa-chevron-right"></i></button>
+            </div>
+            <style>
+                .fade-up {animation: fadeUp 1s cubic-bezier(.4,0,.2,1);}
+                @keyframes fadeUp {from {opacity:0;transform:translateY(30px);} to {opacity:1;transform:translateY(0);}}
+            </style>
         </section>
+        <script>
+        // Review carousel logic
+        const reviewCards = document.querySelectorAll('.review-card');
+        const dots = document.querySelectorAll('.review-dot');
+        let current = 0;
+        let timer;
+        const sets = [
+            [0, 1, 2],
+            [3, 4, 5],
+            [4, 5, 6]
+        ];
+        function showReviews(idx) {
+            current = idx;
+            reviewCards.forEach((card, i) => {
+                if (sets[idx].includes(i)) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+            dots.forEach((dot, i) => {
+                dot.className = 'review-dot w-3 h-3 rounded-full cursor-pointer ' + (i === idx ? 'bg-gold' : 'bg-gray-300');
+            });
+        }
+        function nextReview() {
+            current = (current + 1) % sets.length;
+            showReviews(current);
+        }
+        function prevReview() {
+            current = (current - 1 + sets.length) % sets.length;
+            showReviews(current);
+        }
+        dots.forEach((dot, i) => {dot.onclick = () => showReviews(i);});
+        document.getElementById('nextReview').onclick = nextReview;
+        document.getElementById('prevReview').onclick = prevReview;
+        function startAutoPlay() {timer = setInterval(nextReview, 5000);}
+        function stopAutoPlay() {clearInterval(timer);}
+        document.getElementById('reviewContainer').addEventListener('mouseenter', stopAutoPlay);
+        document.getElementById('reviewContainer').addEventListener('mouseleave', startAutoPlay);
+        showReviews(0);
+        startAutoPlay();
+        </script>
         <?php include 'includes/chat-zalo.php'; ?>
     </main>
+    <?php include 'includes/popup_signup.php'; ?>
+    <!-- Scroll to Top Button -->
+    <button id="scrollTopBtn" class="fixed bottom-5 right-5 bg-white text-brown-500 border border-brown-500 p-4 rounded-full shadow-lg opacity-0 transition-opacity duration-300 hover:bg-brown-500 hover:text-white">
+        <i class="fas fa-arrow-up"></i>
+    </button>
     <?php include 'includes/footer.php'; ?>
     <script>
     // Dropdown for menu
@@ -241,6 +367,34 @@ ini_set('display_errors', 1);
             setTimeout(function() { msgBox.style.display = 'none'; }, 4000);
         }
     });
+    // Loading screen
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            document.getElementById('loading').style.display = 'none';
+        }, 3000);
+    });
+
+
+    // Scroll to top button
+    const scrollTopBtn = document.getElementById('scrollTopBtn');
+    window.addEventListener('scroll', () => {
+        if (window.pageYOffset > 100) {
+            scrollTopBtn.classList.remove('opacity-0');
+            scrollTopBtn.classList.add('opacity-100');
+        } else {
+            scrollTopBtn.classList.remove('opacity-100');
+            scrollTopBtn.classList.add('opacity-0');
+        }
+    });
+    scrollTopBtn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // Auto open popup after 5 seconds
+    setTimeout(() => {
+        document.getElementById('signupPopup').classList.add('show');
+    }, 5000);
+
     </script>
 </body>
 </html>
