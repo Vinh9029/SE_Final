@@ -1,5 +1,5 @@
 <!-- Popup Signup -->
-<div class="popup show" id="signupPopup">
+<div class="popup" id="signupPopup">
     <div class="bg-white rounded-xl p-8 max-w-md mx-4 text-center">
         <img src="/SE_Final-Cart-Checkout/Photos/10_discount.jpg" alt="Voucher 10%" class="mx-auto mb-4 rounded-lg shadow">
         <h3 class="text-2xl font-bold mb-4 text-4B2E05">Nhận Voucher 10%</h3>
@@ -10,6 +10,11 @@
         </div>
     </div>
 </div>
+<script>
+    setTimeout(function() {
+        document.getElementById('signupPopup').classList.add('show');
+    }, 4000);
+</script>
 <?php
 // Nếu muốn xử lý backend cho popup signup, hãy thêm code tại đây
 ?>

@@ -3,11 +3,14 @@ include_once __DIR__ . '/../includes/header.php';
 ?>
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Những Câu Chuyện Quanh Tách Cà Phê - Blog</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Merriweather:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
             font-family: 'Merriweather', serif;
@@ -15,17 +18,22 @@ include_once __DIR__ . '/../includes/header.php';
             color: #333;
             line-height: 1.8;
             background-image: radial-gradient(circle at 20% 50%, rgba(194, 139, 88, 0.1) 0%, transparent 50%),
-                              radial-gradient(circle at 80% 20%, rgba(139, 69, 19, 0.05) 0%, transparent 50%);
+                radial-gradient(circle at 80% 20%, rgba(139, 69, 19, 0.05) 0%, transparent 50%);
             background-attachment: fixed;
         }
-        h1, h2, h3 {
+
+        h1,
+        h2,
+        h3 {
             font-family: 'Playfair Display', serif;
             color: #C28B58;
         }
+
         h1:hover {
             letter-spacing: 1px;
             transition: all 0.3s ease;
         }
+
         .hero {
             background: linear-gradient(135deg, #d4a574 0%, #f4e1d2 100%);
             background-attachment: fixed;
@@ -34,9 +42,10 @@ include_once __DIR__ . '/../includes/header.php';
             padding: 5rem 2rem;
             text-align: center;
             border-radius: 0 0 3rem 3rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             position: relative;
         }
+
         .hero h1 {
             font-size: 3.5rem;
             margin-bottom: 1rem;
@@ -45,35 +54,40 @@ include_once __DIR__ . '/../includes/header.php';
             justify-content: center;
             gap: 1rem;
         }
+
         .section {
             max-width: 900px;
             margin: 4rem auto;
             padding: 2.5rem;
             background: rgba(255, 255, 255, 0.9);
             border-radius: 16px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
             opacity: 0;
             transform: translateY(50px);
             transition: opacity 0.6s ease, transform 0.6s ease;
         }
+
         .section.visible {
             opacity: 1;
             transform: translateY(0);
         }
+
         .article {
             margin-bottom: 3rem;
             padding: 2.5rem;
             background: linear-gradient(135deg, #fef7f0 0%, #fff 100%);
             border-radius: 16px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
             border-left: 5px solid #C28B58;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
+
         .article:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
             background-color: #fff9f5;
         }
+
         .story {
             margin-bottom: 2rem;
             padding: 2rem;
@@ -83,12 +97,14 @@ include_once __DIR__ . '/../includes/header.php';
             opacity: 0;
             transform: translateX(-50px);
             transition: opacity 0.6s ease, transform 0.6s ease;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
         }
+
         .story.visible {
             opacity: 1;
             transform: translateX(0);
         }
+
         blockquote {
             border-left: 3px solid #C28B58;
             padding-left: 1rem;
@@ -96,11 +112,13 @@ include_once __DIR__ . '/../includes/header.php';
             color: #6b4a28;
             margin: 1rem 0;
         }
+
         .divider {
             height: 1px;
             background: linear-gradient(to right, transparent, #C28B58, transparent);
             margin: 2rem 0;
         }
+
         .image-placeholder {
             width: 100%;
             height: 200px;
@@ -113,6 +131,7 @@ include_once __DIR__ . '/../includes/header.php';
             color: #8B4513;
             font-style: italic;
         }
+
         .signature {
             text-align: center;
             font-style: italic;
@@ -122,15 +141,17 @@ include_once __DIR__ . '/../includes/header.php';
             background: rgba(255, 250, 247, 0.8);
             border-radius: 12px;
         }
+
         .related-posts {
             max-width: 900px;
             margin: 4rem auto;
             padding: 2rem;
             background: rgba(255, 255, 255, 0.9);
             border-radius: 16px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
             text-align: center;
         }
+
         .back-to-top {
             position: fixed;
             bottom: 2rem;
@@ -142,20 +163,35 @@ include_once __DIR__ . '/../includes/header.php';
             width: 50px;
             height: 50px;
             cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
             transition: background 0.3s ease;
         }
+
         .back-to-top:hover {
             background: #8B4513;
         }
+
         @keyframes steam {
-            0% { opacity: 0; transform: translateY(0); }
-            50% { opacity: 1; transform: translateY(-10px); }
-            100% { opacity: 0; transform: translateY(-20px); }
+            0% {
+                opacity: 0;
+                transform: translateY(0);
+            }
+
+            50% {
+                opacity: 1;
+                transform: translateY(-10px);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
         }
+
         .steam {
             position: relative;
         }
+
         .steam::after {
             content: '☕';
             position: absolute;
@@ -165,46 +201,57 @@ include_once __DIR__ . '/../includes/header.php';
             animation: steam 2s infinite;
             font-size: 1.5rem;
         }
+
         .content-flex {
             display: flex;
             gap: 2rem;
             align-items: center;
         }
+
         .image-left {
             flex: 0 0 500px;
         }
+
         .text-right {
             flex: 1;
         }
+
         .image-right {
             flex: 0 0 500px;
         }
+
         .text-left {
             flex: 1;
         }
+
         .image-center {
             text-align: center;
             margin: 2rem 0;
         }
+
         .image-center img {
             max-width: 800px;
             height: auto;
             border-radius: 8px;
         }
+
         .story:nth-child(1) h3::before {
             content: '☕';
             margin-right: 0.5rem;
         }
+
         .story:nth-child(2) h3::before {
             content: '🌿';
             margin-right: 0.5rem;
         }
+
         .story:nth-child(3) h3::before {
             content: '💬';
             margin-right: 0.5rem;
         }
     </style>
 </head>
+
 <body>
     <main>
         <section class="hero">
@@ -319,7 +366,9 @@ include_once __DIR__ . '/../includes/header.php';
                     entry.target.classList.add('visible');
                 }
             });
-        }, { threshold: 0.1 });
+        }, {
+            threshold: 0.1
+        });
 
         document.querySelectorAll('.section, .story, .related-posts').forEach(el => {
             observer.observe(el);
@@ -327,7 +376,7 @@ include_once __DIR__ . '/../includes/header.php';
 
         // Smooth scrolling for navigation (if needed)
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
+            anchor.addEventListener('click', function(e) {
                 e.preventDefault();
                 document.querySelector(this.getAttribute('href')).scrollIntoView({
                     behavior: 'smooth'
@@ -357,8 +406,9 @@ include_once __DIR__ . '/../includes/header.php';
         document.querySelector('.back-to-top').style.display = 'none';
     </script>
 
-<?php
-include_once __DIR__ . '/../includes/footer.php';
-?>
+    <?php
+    include_once __DIR__ . '/../includes/footer.php';
+    ?>
 </body>
+
 </html>

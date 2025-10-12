@@ -6,6 +6,7 @@ ini_set('display_errors', 1);
 ?>
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,42 +20,70 @@ ini_set('display_errors', 1);
             scroll-behavior: smooth;
             background-color: #E6D3B1;
         }
-        h1, h2, h3 {
+
+        h1,
+        h2,
+        h3 {
             font-family: 'Playfair Display', serif;
         }
+
         .hero-overlay {
             background: linear-gradient(135deg, rgba(75, 46, 5, 0.6) 0%, rgba(196, 163, 90, 0.4) 100%);
         }
+
         .section-card {
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
+
         .section-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
         }
+
         .parallax {
             background-attachment: fixed;
             background-size: cover;
             background-position: center;
         }
+
         .fade-in {
             animation: fadeIn 1s ease-out;
         }
+
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
+
         .cta-button {
             background: linear-gradient(135deg, #4B2E05 0%, #C4A35A 100%);
             transition: all 0.3s ease;
         }
+
         .cta-button:hover {
             background: linear-gradient(135deg, #C4A35A 0%, #4B2E05 100%);
             transform: scale(1.05);
         }
-        .text-brown { color: #4B2E05; }
-        .text-gold { color: #C4A35A; }
-        .bg-beige { background-color: #E6D3B1; }
+
+        .text-brown {
+            color: #4B2E05;
+        }
+
+        .text-gold {
+            color: #C4A35A;
+        }
+
+        .bg-beige {
+            background-color: #E6D3B1;
+        }
+
         .loading-screen {
             position: fixed;
             top: 0;
@@ -68,16 +97,30 @@ ini_set('display_errors', 1);
             z-index: 9999;
             animation: fadeOut 3s ease-out forwards;
         }
+
         @keyframes fadeOut {
-            to { opacity: 0; visibility: hidden; }
+            to {
+                opacity: 0;
+                visibility: hidden;
+            }
         }
+
         .logo-animation {
             animation: fadeInUp 2s ease-out;
         }
+
         @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(50px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
+
         .popup {
             display: none;
             position: fixed;
@@ -85,17 +128,19 @@ ini_set('display_errors', 1);
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0, 0, 0, 0.5);
             z-index: 10000;
             align-items: center;
             justify-content: center;
         }
+
         .popup.show {
             display: flex;
         }
     </style>
-    
+
 </head>
+
 <body style="background-color: #E6D3B1;">
     <!-- Loading Screen -->
     <div class="loading-screen" id="loading">
@@ -181,7 +226,7 @@ ini_set('display_errors', 1);
                 <a href="pages/aboutUs.php" class="cta-button text-white px-6 py-3 rounded-full font-semibold inline-block">Gặp gỡ người sáng lập</a>
             </div>
         </section>
-       
+
         <!-- 💬 Câu chuyện nhỏ -->
         <section class="max-w-6xl mx-auto mt-16 bg-white rounded-2xl p-8 shadow-lg section-card fade-in">
             <div class="text-center mb-8">
@@ -258,51 +303,75 @@ ini_set('display_errors', 1);
                 <button id="nextReview" class="bg-white hover:bg-gray-100 text-brown rounded-full p-2 shadow"><i class="fa fa-chevron-right"></i></button>
             </div>
             <style>
-                .fade-up {animation: fadeUp 1s cubic-bezier(.4,0,.2,1);}
-                @keyframes fadeUp {from {opacity:0;transform:translateY(30px);} to {opacity:1;transform:translateY(0);}}
+                .fade-up {
+                    animation: fadeUp 1s cubic-bezier(.4, 0, .2, 1);
+                }
+
+                @keyframes fadeUp {
+                    from {
+                        opacity: 0;
+                        transform: translateY(30px);
+                    }
+
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
             </style>
         </section>
         <script>
-        // Review carousel logic
-        const reviewCards = document.querySelectorAll('.review-card');
-        const dots = document.querySelectorAll('.review-dot');
-        let current = 0;
-        let timer;
-        const sets = [
-            [0, 1, 2],
-            [3, 4, 5],
-            [4, 5, 6]
-        ];
-        function showReviews(idx) {
-            current = idx;
-            reviewCards.forEach((card, i) => {
-                if (sets[idx].includes(i)) {
-                    card.classList.remove('hidden');
-                } else {
-                    card.classList.add('hidden');
-                }
-            });
+            // Review carousel logic
+            const reviewCards = document.querySelectorAll('.review-card');
+            const dots = document.querySelectorAll('.review-dot');
+            let current = 0;
+            let timer;
+            const sets = [
+                [0, 1, 2],
+                [3, 4, 5],
+                [4, 5, 6]
+            ];
+
+            function showReviews(idx) {
+                current = idx;
+                reviewCards.forEach((card, i) => {
+                    if (sets[idx].includes(i)) {
+                        card.classList.remove('hidden');
+                    } else {
+                        card.classList.add('hidden');
+                    }
+                });
+                dots.forEach((dot, i) => {
+                    dot.className = 'review-dot w-3 h-3 rounded-full cursor-pointer ' + (i === idx ? 'bg-gold' : 'bg-gray-300');
+                });
+            }
+
+            function nextReview() {
+                current = (current + 1) % sets.length;
+                showReviews(current);
+            }
+
+            function prevReview() {
+                current = (current - 1 + sets.length) % sets.length;
+                showReviews(current);
+            }
             dots.forEach((dot, i) => {
-                dot.className = 'review-dot w-3 h-3 rounded-full cursor-pointer ' + (i === idx ? 'bg-gold' : 'bg-gray-300');
+                dot.onclick = () => showReviews(i);
             });
-        }
-        function nextReview() {
-            current = (current + 1) % sets.length;
-            showReviews(current);
-        }
-        function prevReview() {
-            current = (current - 1 + sets.length) % sets.length;
-            showReviews(current);
-        }
-        dots.forEach((dot, i) => {dot.onclick = () => showReviews(i);});
-        document.getElementById('nextReview').onclick = nextReview;
-        document.getElementById('prevReview').onclick = prevReview;
-        function startAutoPlay() {timer = setInterval(nextReview, 5000);}
-        function stopAutoPlay() {clearInterval(timer);}
-        document.getElementById('reviewContainer').addEventListener('mouseenter', stopAutoPlay);
-        document.getElementById('reviewContainer').addEventListener('mouseleave', startAutoPlay);
-        showReviews(0);
-        startAutoPlay();
+            document.getElementById('nextReview').onclick = nextReview;
+            document.getElementById('prevReview').onclick = prevReview;
+
+            function startAutoPlay() {
+                timer = setInterval(nextReview, 5000);
+            }
+
+            function stopAutoPlay() {
+                clearInterval(timer);
+            }
+            document.getElementById('reviewContainer').addEventListener('mouseenter', stopAutoPlay);
+            document.getElementById('reviewContainer').addEventListener('mouseleave', startAutoPlay);
+            showReviews(0);
+            startAutoPlay();
         </script>
         <?php include 'includes/chat-zalo.php'; ?>
     </main>
@@ -313,88 +382,96 @@ ini_set('display_errors', 1);
     </button>
     <?php include 'includes/footer.php'; ?>
     <script>
-    // Dropdown for menu
-    function toggleDropdown(id) {
-        var el = document.getElementById(id);
-        if (el.classList.contains('opacity-0')) {
-            el.classList.remove('opacity-0', 'invisible');
-            el.classList.add('opacity-100', 'visible');
-        } else {
-            el.classList.remove('opacity-100', 'visible');
-            el.classList.add('opacity-0', 'invisible');
+        // Dropdown for menu
+        function toggleDropdown(id) {
+            var el = document.getElementById(id);
+            if (el.classList.contains('opacity-0')) {
+                el.classList.remove('opacity-0', 'invisible');
+                el.classList.add('opacity-100', 'visible');
+            } else {
+                el.classList.remove('opacity-100', 'visible');
+                el.classList.add('opacity-0', 'invisible');
+            }
         }
-    }
-    // Close dropdown when clicking outside
-    window.addEventListener('click', function(e) {
-        var menu = document.getElementById('menuDropdown');
-        if (menu && !menu.contains(e.target) && !e.target.closest('[onclick*="toggleDropdown"]')) {
-            menu.classList.remove('opacity-100', 'visible');
-            menu.classList.add('opacity-0', 'invisible');
-        }
-    });
-    // Slider JS
-    let currentSlide = 0;
-    const slides = document.querySelectorAll('.slider-img');
-    const dots = document.querySelectorAll('.slider-dot');
-    function showSlide(idx) {
-        slides.forEach((img, i) => {
-            img.style.opacity = i === idx ? '1' : '0';
+        // Close dropdown when clicking outside
+        window.addEventListener('click', function(e) {
+            var menu = document.getElementById('menuDropdown');
+            if (menu && !menu.contains(e.target) && !e.target.closest('[onclick*="toggleDropdown"]')) {
+                menu.classList.remove('opacity-100', 'visible');
+                menu.classList.add('opacity-0', 'invisible');
+            }
         });
-        dots.forEach((dot, i) => {
-            dot.className = 'slider-dot w-3 h-3 rounded-full ' + (i === idx ? 'bg-pink-500' : 'bg-gray-300');
-        });
-        currentSlide = idx;
-    }
-    function nextSlide() {
-        let idx = (currentSlide + 1) % slides.length;
-        showSlide(idx);
-    }
-    function prevSlide() {
-        let idx = (currentSlide - 1 + slides.length) % slides.length;
-        showSlide(idx);
-    }
-    document.querySelectorAll('.slider-dot').forEach((dot, i) => {
-        dot.onclick = () => showSlide(i);
-    });
-    setInterval(nextSlide, 5000);
-    showSlide(0);
-    window.addEventListener('message', function(event) {
-        // Chỉ nhận message từ spinner.php
-        if (event.data && event.data.type === 'spinner-result') {
-            var msgBox = document.getElementById('spinner-message');
-            msgBox.textContent = 'Chúc mừng! Bạn đã nhận được: ' + event.data.prize;
-            msgBox.style.display = 'block';
-            setTimeout(function() { msgBox.style.display = 'none'; }, 4000);
+        // Slider JS
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slider-img');
+        const dots = document.querySelectorAll('.slider-dot');
+
+        function showSlide(idx) {
+            slides.forEach((img, i) => {
+                img.style.opacity = i === idx ? '1' : '0';
+            });
+            dots.forEach((dot, i) => {
+                dot.className = 'slider-dot w-3 h-3 rounded-full ' + (i === idx ? 'bg-pink-500' : 'bg-gray-300');
+            });
+            currentSlide = idx;
         }
-    });
-    // Loading screen
-    window.addEventListener('load', () => {
+
+        function nextSlide() {
+            let idx = (currentSlide + 1) % slides.length;
+            showSlide(idx);
+        }
+
+        function prevSlide() {
+            let idx = (currentSlide - 1 + slides.length) % slides.length;
+            showSlide(idx);
+        }
+        document.querySelectorAll('.slider-dot').forEach((dot, i) => {
+            dot.onclick = () => showSlide(i);
+        });
+        setInterval(nextSlide, 5000);
+        showSlide(0);
+        window.addEventListener('message', function(event) {
+            // Chỉ nhận message từ spinner.php
+            if (event.data && event.data.type === 'spinner-result') {
+                var msgBox = document.getElementById('spinner-message');
+                msgBox.textContent = 'Chúc mừng! Bạn đã nhận được: ' + event.data.prize;
+                msgBox.style.display = 'block';
+                setTimeout(function() {
+                    msgBox.style.display = 'none';
+                }, 4000);
+            }
+        });
+        // Loading screen
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loading').style.display = 'none';
+            }, 3000);
+        });
+
+
+        // Scroll to top button
+        const scrollTopBtn = document.getElementById('scrollTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 100) {
+                scrollTopBtn.classList.remove('opacity-0');
+                scrollTopBtn.classList.add('opacity-100');
+            } else {
+                scrollTopBtn.classList.remove('opacity-100');
+                scrollTopBtn.classList.add('opacity-0');
+            }
+        });
+        scrollTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Auto open popup after 5 seconds
         setTimeout(() => {
-            document.getElementById('loading').style.display = 'none';
-        }, 3000);
-    });
-
-
-    // Scroll to top button
-    const scrollTopBtn = document.getElementById('scrollTopBtn');
-    window.addEventListener('scroll', () => {
-        if (window.pageYOffset > 100) {
-            scrollTopBtn.classList.remove('opacity-0');
-            scrollTopBtn.classList.add('opacity-100');
-        } else {
-            scrollTopBtn.classList.remove('opacity-100');
-            scrollTopBtn.classList.add('opacity-0');
-        }
-    });
-    scrollTopBtn.addEventListener('click', () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-
-    // Auto open popup after 5 seconds
-    setTimeout(() => {
-        document.getElementById('signupPopup').classList.add('show');
-    }, 5000);
-
+            document.getElementById('signupPopup').classList.add('show');
+        }, 5000);
     </script>
 </body>
+
 </html>
